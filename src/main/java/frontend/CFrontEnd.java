@@ -14,7 +14,7 @@ public class CFrontEnd extends FrontEnd{
     public static final String FUNCTION_REGEX = "[a-zA-Z]+(\\*?)+\\s(\\*?)[a-zA-Z]+\\s?\\(.*\\)\\s?\\{";
     public static final String DOUBLE_SLASH_COMMENT_REGEX = "(\\/\\/[a-zA-ZÀ-Ùà-ùá-ú0-9?�Ã-ã\\p{Punct} ]+)";
     public static final String DOUBLE_ASTERISK_COMMENT_REGEX = "((\\/\\*)(.*)(\\\\*\\/)$)";
-    public static final String FUNCTION_CALL_REGEX = "[a-zA-Z0-9]+(\\((.*)\\){1})\\;?";
+    public static final String FUNCTION_CALL_REGEX = "[a-zA-Z0-9]+(\\((.*)\\))\\;";
     public static final Logger LOGGER = Logger.getLogger(CFrontEnd.class.getName());
     @Override
     public void convertFunctionsOccurrencesToToken(String codeText) {
