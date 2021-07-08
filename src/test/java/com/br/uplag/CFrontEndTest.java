@@ -56,4 +56,14 @@ public class CFrontEndTest {
         final String result = matcher.replaceAll(substitute);
         Assert.assertEquals(true, result.contains(substitute));
     }
+
+    @Test
+    public void shouldConvertFunctionCallsToAppropriateToken() {
+        final String functionCallRegex = CFrontEnd.FUNCTION_CALL_REGEX;
+        final String substitute = "F_CALL";
+        final Pattern pattern = Pattern.compile(functionCallRegex, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(code);
+        final String result = matcher.replaceAll(substitute);
+        Assert.assertEquals(true, result.contains(substitute));
+    }
 }
