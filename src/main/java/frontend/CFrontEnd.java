@@ -16,14 +16,16 @@ public class CFrontEnd extends FrontEnd{
     public static final String DOUBLE_ASTERISK_COMMENT_REGEX = "((\\/\\*)(.*)(\\\\*\\/)$)";
     public static final String FUNCTION_CALL_REGEX = "[a-zA-Z0-9]+(\\((.*)\\))\\;";
     public static final String VARIABLE_ASSIGNMENT_REGEX = "[*a-zA-Z-> ]+\\s?\\=\\s?([*a-zA-Z\\d\\-> ]|[[a-zA-Z0-9]+(\\((.*)\\))\\;])+\\;";
+    public static final String IMPORT_REGEX = "#(include)[a-zA-Zp{Punct}\\s<\"].+";
+    public static final String DEFINE_REGEX = "#(define)\\s?[A-Z-a-z\\d \\S]+";
+
     public static final Logger LOGGER = Logger.getLogger(CFrontEnd.class.getName());
     @Override
     public void convertFunctionsOccurrencesToToken(String codeText) {
         Pattern pattern = Pattern.compile(FUNCTION_REGEX);
         Matcher matcher = pattern.matcher(codeText);
         while (matcher.find()) {
-            System.out.println(matcher.group(0));
-            System.out.println("New string: " + matcher.group(0).replaceAll(FUNCTION_REGEX, FUNCTION_TOKEN));
+            LOGGER.info(matcher.group(0));
         }
         LOGGER.log(Level.INFO,"Number of functions {0}", matcher.groupCount());
     }

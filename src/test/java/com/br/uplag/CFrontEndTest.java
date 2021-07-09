@@ -16,6 +16,7 @@ public class CFrontEndTest {
             + "#include<stdlib.h>\n"
             + "#include<math.h>\n"
             + "#include \"SkipList.h\"\n\n"
+            + "#define MAX 6 \n"
             + "// Recebe uma skilist e o valor que deseja-se saber se pertence a ela.\n"
             + "// Retorna 0 caso ela nao tenha sido alocada ou esteja vazia.\n"
             + "// Retorna 1 caso o elemento esteja na lista.\n"
@@ -64,6 +65,26 @@ public class CFrontEndTest {
         final Pattern pattern = Pattern.compile(functionCallRegex, Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(code);
         final String result = matcher.replaceAll(substitute);
+        Assert.assertEquals(true, result.contains(substitute));
+    }
+
+    @Test
+    public void shouldConvertImportToImportToken() {
+        String importRegex = CFrontEnd.IMPORT_REGEX;
+        String substitute = "IMPORT";
+        Pattern pattern = Pattern.compile(importRegex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(substitute);
+        Assert.assertEquals(true, result.contains(substitute));
+    }
+
+    @Test
+    public void shouldConvertDefinitionToConstToken() {
+        String definitionREGEX = CFrontEnd.DEFINE_REGEX;
+        String substitute = "CONST";
+        Pattern pattern = Pattern.compile(definitionREGEX, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(substitute);
         Assert.assertEquals(true, result.contains(substitute));
     }
 }
