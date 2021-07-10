@@ -25,7 +25,35 @@ public class CFrontEndTest {
             + "	if(vaziaSkipList(sk)){\n"
             + "        printf(\"Lista nao alocada ou vazia.\\n\");\n"
             + "		return 0;\n"
-            + "}\n";
+            + "}\n" +
+            "void liberaSkipList(skiplist *sk){\n" +
+            "    if(sk != NULL){\n" +
+            "        no *aux = sk->inicio->prox;\n" +
+            "        no *auxLiberar;\n" +
+            "\n" +
+            "        while(aux != NULL){\n" +
+            "            auxLiberar = aux->prox;\n" +
+            "\n" +
+            "            // Anda pro lado liberando os n�s\n" +
+            "            while(auxLiberar != NULL){\n" +
+            "                no *aux2 = auxLiberar;\n" +
+            "                auxLiberar = auxLiberar->prox;\n" +
+            "                free(aux2);\n" +
+            "            }\n" +
+            "\n" +
+            "            // Apos liberar todos na mesma linha, anda pra baixo\n" +
+            "            no *aux3 = aux;\n" +
+            "            aux = aux->abaixo;\n" +
+            "            free(aux3);\n" +
+            "        }\n" +
+            "\n" +
+            "        // Libera o aux e o ponteiro que apontava pro cabe�alho\n" +
+            "        aux = sk->inicio;\n" +
+            "        free(aux);\n" +
+            "        free(sk);\n" +
+            "        sk = NULL; // Coloca null para corrigir possiveis erros quando for checar se est� vazia.\n" +
+            "    }\n" +
+            "}";
     @Test
     public void shouldRemoveComments() {
         final String regex = CFrontEnd.DOUBLE_ASTERISK_COMMENT_REGEX;
@@ -86,5 +114,17 @@ public class CFrontEndTest {
         Matcher matcher = pattern.matcher(code);
         String result = matcher.replaceAll(substitute);
         Assert.assertEquals(true, result.contains(substitute));
+    }
+
+    @Test
+    public void shouldGetAllIfConditions() {
+        String conditionREGEX = "(if|switch)\\s?\\(.*\\)";
+        String insideConditionRegex = "(?<=if|switch)(.*?)(?=\\{)";
+        String substitute = "COND";
+        Pattern pattern = Pattern.compile(conditionREGEX, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        while (matcher.find()) {
+            System.out.println(matcher.group());
+        }
     }
 }
