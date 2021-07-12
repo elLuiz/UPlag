@@ -127,4 +127,15 @@ public class CFrontEndTest {
             System.out.println(matcher.group());
         }
     }
+
+    @Test
+    public void shouldGetConditionalReturn() {
+        String conditionalReturnREGEX = "(return)\\s[a-zA-Z\\d?:=&!<>\\s]+";
+        String code = "return code >= 5";
+        String substitute = "COND";
+        Pattern pattern = Pattern.compile(conditionalReturnREGEX);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(substitute);
+        Assert.assertEquals("COND", result);
+    }
 }
