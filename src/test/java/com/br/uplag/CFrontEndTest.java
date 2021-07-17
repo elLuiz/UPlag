@@ -138,4 +138,42 @@ public class CFrontEndTest {
         String result = matcher.replaceAll(substitute);
         Assert.assertEquals("COND", result);
     }
+
+    @Test
+    public void shouldConvertTextToLowerCase() {
+        String lowerCaseString = code.toLowerCase();
+        Assert.assertEquals(true, lowerCaseString.contains("max"));
+    }
+
+    @Test
+    public void shouldRemoveAllBreakLine() {
+        String singleLineCode = code.replaceAll("\n", " ");
+        singleLineCode = singleLineCode.replaceAll("\\s", "");
+        Assert.assertEquals(1, singleLineCode.split("\n").length);
+    }
+
+    @Test
+    public void shouldGetAllWhileOccurrences() {
+        String whileRegex = CFrontEnd.WHILE_LOOP_REGEX;
+        Pattern pattern = Pattern.compile(whileRegex, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        Assert.assertEquals(true, matcher.find());
+    }
+
+    @Test
+    public void shouldSplitRelationalOperations() {
+        Pattern pattern = Pattern.compile(CFrontEnd.WHILE_LOOP_REGEX, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        if (matcher.find()) {
+            Assert.assertEquals(3, matcher.group(2).split(CFrontEnd.RELATIONAL_OPERATOR_REGEX).length);
+        }
+    }
+
+    @Test
+    public void shouldConvertRelationalOperationToItsToken() {
+        Pattern pattern = Pattern.compile(CFrontEnd.RELATIONAL_OPERATOR_REGEX, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll("R_OP");
+        Assert.assertEquals(true, result.contains("R_OP"));
+    }
 }
