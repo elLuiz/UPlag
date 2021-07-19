@@ -30,6 +30,7 @@ public class CFrontEndTest {
             "    if(sk != NULL){\n" +
             "        no *aux = sk->inicio->prox;\n" +
             "        no *auxLiberar;\n" +
+            "    i++" +
             "\n" +
             "        while(aux != NULL){\n" +
             "            auxLiberar = aux->prox;\n" +
@@ -175,5 +176,13 @@ public class CFrontEndTest {
         Matcher matcher = pattern.matcher(code);
         String result = matcher.replaceAll("R_OP");
         Assert.assertEquals(true, result.contains("R_OP"));
+    }
+
+    @Test
+    public void shouldGetAllIncrementOperations() {
+        Pattern pattern = Pattern.compile(CFrontEnd.VARIABLE_ASSIGNMENT_INCREMENT, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll("ASSIGN");
+        Assert.assertEquals(true, result.contains("ASSIGN"));
     }
 }

@@ -15,17 +15,18 @@ public class CFrontEnd extends FrontEnd{
 
     // Foremost - Convert the text to lowercase & break lines
     // First phase tokens - Remove style stuff from the code
-    public static final String DOUBLE_SLASH_COMMENT_REGEX = "(\\/\\/[a-zA-ZÀ-Ùà-ùá-ú0-9?�Ã-ã\\p{Punct} ]+)";
+    public static final String DOUBLE_SLASH_COMMENT_REGEX = "(\\/\\/[a-zA-ZÀ-Ùà-ùá-ú0-9?�Ã-ã,-\\\\p{Punct} ]+)";
     public static final String DOUBLE_ASTERISK_COMMENT_REGEX = "((\\/\\*)(.*)(\\\\*\\/)$)";
     public static final String IMPORT_REGEX = "#(include)[a-zA-Zp{Punct}\\s<\"].+";
+    public static final String DEFINE_REGEX = "#(define)\\s?[A-Z-a-z\\d \\S]+";
     // Second phase tokens - Convert functions to their appropriate tokens
-    public static final String FUNCTION_REGEX = "[a-zA-Z]+\\*?\\s\\*?[a-zA-Z]+\\s?\\(.*\\)\\s?\\{";
+    public static final String FUNCTION_REGEX = "[a-zA-Z]+\\*?\\s\\*?[a-zA-Z]+\\s?\\(.*\\)\\s?";
     // Better to convert functions calls to their token
     public static final String FOR_LOOP_REGEX = "for[()[\\]a-zA-z-\\s.=<>!+\\d;]+\\{?";
-    public static final String WHILE_LOOP_REGEX = "(while)(\\((?:[^()]++)*\\))";
+    public static final String WHILE_LOOP_REGEX = "(while|for)(\\((?:[^()]++)*\\))";
     // Third phase tokens - Convert variable definitions to their token
     public static final String VARIABLE_ASSIGNMENT_REGEX = "[ *a-zA-Z\\[\\]\\d\\->]+\\s?[+\\-*%\\/]?\\=\\s?[a-z-A-Z\\[\\]( )->]+;";
-    public static final String DEFINE_REGEX = "#(define)\\s?[A-Z-a-z\\d \\S]+";
+    public static final String VARIABLE_ASSIGNMENT_INCREMENT = "([a-z->]+(\\-\\-))|([a-z->]+(\\+\\+))";
     // FOURTH PHASE TOKEN - Convert relational & logical operator to a common token
     public static final String RELATIONAL_OPERATOR_REGEX = "((\\=\\=)|(\\&\\&)|(\\!\\=)|(\\<\\=)|(\\<)|(\\>\\=)|(\\>))(?<!\\-\\>)";
     public static final String LOGICAL_OPERATOR_REGEX = "(\\&\\&)|(\\|\\|)|(\\!)";
