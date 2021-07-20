@@ -166,7 +166,7 @@ public class CFrontEndTest {
         Pattern pattern = Pattern.compile(CFrontEnd.WHILE_LOOP_REGEX, Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(code);
         if (matcher.find()) {
-            Assert.assertEquals(3, matcher.group(2).split(CFrontEnd.RELATIONAL_OPERATOR_REGEX).length);
+            Assert.assertEquals(2, matcher.group(2).split(CFrontEnd.RELATIONAL_OPERATOR_REGEX).length);
         }
     }
 
@@ -184,5 +184,11 @@ public class CFrontEndTest {
         Matcher matcher = pattern.matcher(code);
         String result = matcher.replaceAll("ASSIGN");
         Assert.assertEquals(true, result.contains("ASSIGN"));
+    }
+
+    @Test
+    public void shouldTurnTextIntoSingleLine() {
+        String converted = code.replaceAll("\n", " ");
+        Assert.assertEquals(false, converted.contains("\n"));
     }
 }
