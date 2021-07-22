@@ -191,4 +191,38 @@ public class CFrontEndTest {
         String converted = code.replaceAll("\n", " ");
         Assert.assertEquals(false, converted.contains("\n"));
     }
+
+    @Test
+    public void shouldConvertAllOccurrencesOfLeftCurlyBraces() {
+        Pattern pattern = Pattern.compile(CFrontEnd.LEFT_CURLY_BRACES_REGEX);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(" L_C ");
+        Assert.assertEquals(true, result.contains("L_C"));
+    }
+
+    @Test
+    public void shouldConvertAllRightCurlyBracesToItsToken() {
+        Pattern pattern = Pattern.compile(CFrontEnd.RIGHT_CURLY_BRACES_REGEX);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(" R_C ");
+        Assert.assertEquals(true, result.contains("R_C"));
+    }
+
+    @Test
+    public void shouldConvertAllLeftParenthesis() {
+        Pattern pattern = Pattern.compile(CFrontEnd.LEFT_PARENTHESIS_REGEX);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(" L_P ");
+        Assert.assertEquals(true, result.contains("L_P"));
+    }
+
+    @Test
+    public void shouldConvertAllRightParenthesis() {
+        Pattern pattern = Pattern.compile(CFrontEnd.RIGHT_PARENTHESIS_REGEX);
+        Matcher matcher = pattern.matcher(code);
+        String result = matcher.replaceAll(" R_P ");
+        Assert.assertEquals(true, result.contains("R_P"));
+    }
+
+
 }
