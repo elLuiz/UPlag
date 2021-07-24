@@ -1,6 +1,6 @@
 package frontend;
 
-import frontendenum.CommonsEnum;
+import c.CommonsEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +23,8 @@ public class CFrontEnd extends FrontEnd{
     public static final String WHILE_LOOP_REGEX = "(while)" + CommonsEnum.RECURSIVE_PARENTHESES_REGEX.getRegex();
     public static final String RELATIONAL_OPERATOR_REGEX = "((\\=\\=)|(\\&\\&)|(\\!\\=)|(\\<\\=)|(\\<)|(\\>\\=)|(\\>))(?<!\\-\\>)";
     public static final String LOGICAL_OPERATOR_REGEX = "(\\&\\&)|(\\|\\|)|(\\!)";
-    public static final String VARIABLE_ASSIGNMENT_REGEX = CommonsEnum.VARIABLE_ASSIGNMENT_REGEX.getRegex() + "[+\\-*%\\/]?\\=\\s?[a-z-A-Z\\[\\]( )->]+;";
+    public static final String VARIABLE_ASSIGNMENT_REGEX = "([A-Za-z*]+\\s?[*a-zA-Z\\[\\]\\d\\->]+\\s?[+\\-*%\\/]?\\=(?!=))";
+    public static final String VARIABLE_ASSIGNMENT_WITH_CASTING = "ASSIGN \\([a-zA-Z*]+\\)";
     public static final String VARIABLE_ASSIGNMENT_INCREMENT = "[a-z->]+\\s?+((\\-\\-))|(\\+\\+))";
     public static final String CONDITIONAL_VARIABLE_ASSIGNMENT = "([a-z]+\\s)?([*a-zA-Z\\[\\]\\d\\->]+\\s?\\=\\s?[!a-z\\[\\]A-Z->]+\\s" + RELATIONAL_OPERATOR_REGEX + "\\s?[a-zA-Z->:\\d\\s?+\\-%\\/]+);";
     // RESTRUCTURE THIS
