@@ -1,7 +1,7 @@
 package c.misc;
 
 public enum CommentsRegex {
-    DOUBLE_SLASH_COMMENTS("(\\/\\/[a-zA-ZÀ-Ùà-ùá-ú0-9?�Ã-ã,-p{Punct} ]+)", ""),
+    DOUBLE_SLASH_COMMENTS("\\/\\/.*", ""),
     DOUBLE_ASTERISK_COMMENT_REGEX("(?<=\\/\\*)[\\S\\s]*(?=\\*\\/)", ""),
     SLASH_ASTERISK("\\/\\*\\*\\/", "");
 

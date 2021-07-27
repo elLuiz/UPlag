@@ -40,6 +40,6 @@ public class AssignmentLexicalAnalyzerTest {
         AssignmentLexicalAnalyzer assignmentLexicalAnalyzer = new AssignmentLexicalAnalyzer();
         String result = assignmentLexicalAnalyzer.analyzeCommonVariableAssignment(code, CFrontEnd.VARIABLE_ASSIGNMENT_REGEX, VariableTokens.ASSIGN);
         result = assignmentLexicalAnalyzer.analyzeCommonVariableAssignment(result, CFrontEnd.VARIABLE_ASSIGNMENT_WITH_CASTING, VariableTokens.CAST);
-        Assert.assertEquals("ASSIGN CAST", result);
+        Assert.assertEquals(true, result.contains("ASSIGN CAST"));
     }
 }

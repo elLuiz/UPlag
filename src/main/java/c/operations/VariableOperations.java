@@ -1,13 +1,13 @@
-package c.directive;
+package c.operations;
 
-public enum DirectiveRegex {
-    IMPORT("#include[a-zA-Zp{Punct}<.>\"\\s]+", ""),
-    DEFINE("#define\\s[A-Za-z_]+\\s[a-zA-Z_]?\\s?(-?)\\d{1,1000}", "CONST");
+public enum VariableOperations {
+    INCREMENT_REGEX("[a-z_]+\\s?\\+{2};?", "ASSIGN PLUS NUM"),
+    DECREMENT_REGEX("[a-z_]+\\s?\\+{2};?", "ASSIGN MINUS NUM");
 
     private final String regex;
     private final String token;
 
-    DirectiveRegex(String regex, String token) {
+    VariableOperations(String regex, String token) {
         this.regex = regex;
         this.token = token;
     }
