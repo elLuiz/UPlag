@@ -1,7 +1,7 @@
 package c.directive;
 
 public enum DirectiveRegex {
-    IMPORT("#include[a-zA-Zp{Punct}<.>\"\\s]+", ""),
+    IMPORT("(#include\\s?[a-zA-Zp{Punct}<.>\"]+)", ""),
     DEFINE("#define\\s[A-Za-z_]+\\s[a-zA-Z_]?\\s?(-?)\\d{1,1000}", "CONST");
 
     private final String regex;

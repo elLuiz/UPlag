@@ -18,7 +18,7 @@ public class CFrontEnd{
     public static final String DOUBLE_ASTERISK_COMMENT_REGEX = "((\\/\\*)(.*)(\\\\*\\/)$)";
     public static final String IMPORT_REGEX = "#(include)[a-zA-Zp{Punct}<.> \"]+$";
     public static final String DEFINE_REGEX = "#(define)\\s?[A-Z-a-z]+\\s[a-z]?\\s?(\\d{1,10})";
-    public static final String FUNCTION_REGEX = "[a-zA-Z]+\\*?\\s\\*?[a-z_A-Z\\d]+\\s?\\(.*\\)\\s?";
+    public static final String FUNCTION_REGEX = "[a-zA-Z]+\\*?\\s\\*?[a-z_A-Z\\d]+\\s?\\(.*\\)\\s?\\{";
     public static final String FOR_LOOP_REGEX = "for[()[\\]a-zA-z-\\s.=<>!+\\d;]+";
     // Quando apenas sobra um grupo é sinal que a operação não utiliza operadores
     public static final String WHILE_LOOP_REGEX = "(while)" + CommonsEnum.RECURSIVE_PARENTHESES_REGEX.getRegex();
