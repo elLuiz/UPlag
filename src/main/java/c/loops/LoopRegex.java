@@ -1,13 +1,12 @@
-package c.operations;
+package c.loops;
 
-public enum VariableOperations {
-    INCREMENT_REGEX("[a-z_]+\\s?\\+{2};?", "ASSIGN PLUS NUM"),
-    DECREMENT_REGEX("[a-z_]+\\s?\\-{2};?", "ASSIGN MINUS NUM");
+public enum LoopRegex {
+    LOOP_REGEX("(while|for)", " LOOP ");
 
     private final String regex;
     private final String token;
 
-    VariableOperations(String regex, String token) {
+    LoopRegex(String regex, String token) {
         this.regex = regex;
         this.token = token;
     }

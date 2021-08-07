@@ -1,7 +1,7 @@
 package c.statements;
 
 public enum StatementsRegex {
-    RETURN("return(?!\\;)", "STMT");
+    RETURN("return(?!\\;)", " STMT ");
 
     private final String regex;
     private String token;

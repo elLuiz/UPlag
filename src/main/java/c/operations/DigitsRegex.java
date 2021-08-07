@@ -1,14 +1,12 @@
-package c.statements;
+package c.operations;
 
-public enum JumpStatementsRegex {
-    BREAK("break;", "JUMP"),
-    RETURN("return;", "JUMP"),
-    CONTINUE("continue;", "JUMP");
+public enum DigitsRegex {
+    DIGITS_REGEX("[+-]?([0-9]*[.])?[0-9]+", "DIG");
 
     private final String regex;
     private final String token;
 
-    JumpStatementsRegex(String regex, String token) {
+    DigitsRegex(String regex, String token) {
         this.regex = regex;
         this.token = token;
     }
@@ -21,4 +19,3 @@ public enum JumpStatementsRegex {
         return token;
     }
 }
-

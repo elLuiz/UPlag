@@ -2,7 +2,8 @@ package c.misc;
 
 public enum CommentsRegex {
     DOUBLE_SLASH_COMMENTS("\\/\\/.*", ""),
-    DOUBLE_ASTERISK_COMMENT_REGEX("(?<=\\/\\*)[\\S\\s]*(?=\\*\\/)", ""),
+    DOUBLE_ASTERISK_COMMENT_REGEX("(\\/\\*[\\S\\s]*?\\*\\/)", ""),
+    INLINE_DOUBLE_ASTERISK_REGEX("\\/\\*.*\\*\\/", ""),
     SLASH_ASTERISK("\\/\\*\\*\\/", "");
 
     private final String regex;

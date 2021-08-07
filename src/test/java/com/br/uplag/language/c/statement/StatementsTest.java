@@ -1,10 +1,15 @@
 package com.br.uplag.language.c.statement;
 
+import c.conditionals.ConditionalsRegex;
+import c.operators.ArithmeticOperatorsRegex;
 import c.statements.StatementsRegex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(JUnit4.class)
 public class StatementsTest {
@@ -48,5 +53,29 @@ public class StatementsTest {
     @Test
     public void shouldConvertReturnCallsToReturnToken() {
         Assert.assertEquals(true, code.replaceAll(StatementsRegex.RETURN.getRegex(), StatementsRegex.RETURN.getToken()).contains(StatementsRegex.RETURN.getToken()));
+    }
+
+    @Test
+    public void shouldConvertMultipleRegexesInTheSameText() {
+        StringBuilder codeText = new StringBuilder();
+        Pattern pattern = Pattern.compile(StatementsRegex.RETURN.getRegex(), Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(code);
+        while (matcher.find()) {
+            matcher.appendReplacement(codeText, StatementsRegex.RETURN.getToken());
+        }
+
+        pattern = Pattern.compile( ArithmeticOperatorsRegex.SUB.getRegex(), Pattern.MULTILINE);
+        matcher = pattern.matcher(codeText);
+        while (matcher.find()) {
+            codeText.replace(matcher.start(), matcher.end(), ArithmeticOperatorsRegex.SUB.getToken());
+        }
+
+        pattern = Pattern.compile( ConditionalsRegex.IF_CONDITIONAL_STATEMENT.getRegex(), Pattern.MULTILINE);
+        matcher = pattern.matcher(codeText);
+        while (matcher.find()) {
+            codeText.replace(matcher.start(), matcher.end(), ConditionalsRegex.IF_CONDITIONAL_STATEMENT.getToken());
+        }
+
+        System.out.println(codeText);
     }
 }
