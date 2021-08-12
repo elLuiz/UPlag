@@ -24,6 +24,7 @@ public class FrontEND {
     public String convertTextToLowerCase() {
         return codeText.toLowerCase();
     }
+
     public String tokenizeDigits(String codeText) {
         LOGGER.info("Tokenizing digits");
         pattern = Pattern.compile(DigitsRegex.DIGITS_REGEX.getRegex());
