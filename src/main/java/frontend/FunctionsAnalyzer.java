@@ -1,44 +1,38 @@
 package frontend;
 
-import c.functions.FunctionRegex;
-
-import java.util.regex.Pattern;
+import static c.functions.FunctionRegex.*;
 
 public class FunctionsAnalyzer extends FrontEND {
-    public String convertFunctionsCreationToItsToken(String codeText) {
-        LOGGER.info("Running functions creations phase");
-        pattern = Pattern.compile(FunctionRegex.FUNCTION_CREATION_REGEX.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(FunctionRegex.FUNCTION_CREATION_REGEX.getToken());
+    private static FunctionsAnalyzer functionsAnalyzer;
+    private FunctionsAnalyzer(){}
 
-        return codeText;
+    public static FunctionsAnalyzer getInstance() {
+        if (functionsAnalyzer == null)
+            functionsAnalyzer = new FunctionsAnalyzer();
+        return functionsAnalyzer;
+    }
+
+    public String tokenize(String code) {
+        String result = convertFunctionsCreationToItsToken(code);
+        result = convertInlineFunctionsCalls(result);
+        result = convertFunctionCallsInsideParenthesis(result);
+        result = convertFunctionBetweenOperatorsAndParenthesis(result);
+        return result;
+    }
+
+    public String convertFunctionsCreationToItsToken(String codeText) {
+       return compileMatcher(codeText, FUNCTION_CREATION_REGEX.getRegex(), FUNCTION_CREATION_REGEX.getToken());
     }
 
     public String convertInlineFunctionsCalls(String codeText) {
-        pattern = Pattern.compile(FunctionRegex.FUNCTION_CALL_REGEX.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(FunctionRegex.FUNCTION_CALL_REGEX.getToken());
-
-        return codeText;
+       return compileMatcher(codeText, FUNCTION_CALL_REGEX.getRegex(), FUNCTION_CALL_REGEX.getToken());
     }
 
     public String convertFunctionCallsInsideParenthesis(String codeText) {
-        pattern = Pattern.compile(FunctionRegex.FUNCTION_CALL_BETWEEN_PARENTHESES.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(FunctionRegex.FUNCTION_CALL_BETWEEN_PARENTHESES.getToken());
-
-        return codeText;
+        return compileMatcher(codeText, FUNCTION_CALL_BETWEEN_PARENTHESES.getRegex(), FUNCTION_CREATION_REGEX.getToken());
     }
 
     public String convertFunctionBetweenOperatorsAndParenthesis(String codeText) {
-        pattern = Pattern.compile(FunctionRegex.FUNCTION_CALL_BETWEEN_PARENTHESES_AND_OPERATORS.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(FunctionRegex.FUNCTION_CALL_BETWEEN_PARENTHESES_AND_OPERATORS.getToken());
-
-        return codeText;
+        return compileMatcher(codeText, FUNCTION_CALL_BETWEEN_PARENTHESES_AND_OPERATORS.getRegex(), FUNCTION_CALL_BETWEEN_PARENTHESES_AND_OPERATORS.getToken());
     }
 }

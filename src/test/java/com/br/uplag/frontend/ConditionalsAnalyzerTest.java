@@ -11,8 +11,8 @@ import org.junit.runners.JUnit4;
 public class ConditionalsAnalyzerTest {
     @Test
     public void shouldConvertAllConditionsToCommonToken() {
-        ConditionalsAnalyzer conditionalsAnalyzer = new ConditionalsAnalyzer();
-        String code = conditionalsAnalyzer.convertConditionsToItsToken(CodeText.binaryTreeCode);
+        ConditionalsAnalyzer conditionalsAnalyzer = ConditionalsAnalyzer.getInstance();
+        String code = conditionalsAnalyzer.tokenize(CodeText.binaryTreeCode);
         Assert.assertEquals(true, code.contains("COND"));
     }
 }

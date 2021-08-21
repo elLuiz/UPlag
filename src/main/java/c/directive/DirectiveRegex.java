@@ -3,7 +3,7 @@ package c.directive;
 public enum DirectiveRegex {
     IMPORT("(#include\\s?[a-zA-Zp{Punct}<.>\"]+)", ""),
     DEFINE("#define\\s.+", "CONST"),
-    STRUCT("struct[\\s\\S]*?};", "");
+    STRUCT("(typedef\\s)?struct\\s[\\w]+\\s?\\{[\\s\\S]*?\\}\\s?[a-z]*?;", "");
 
 
     private final String regex;

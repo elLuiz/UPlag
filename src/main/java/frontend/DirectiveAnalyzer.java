@@ -1,34 +1,41 @@
 package frontend;
 
-import c.directive.DirectiveRegex;
+import c.operations.DigitsRegex;
 
-import java.util.regex.Pattern;
+import static c.directive.DirectiveRegex.*;
 
 public class DirectiveAnalyzer extends FrontEND {
-    public String convertImportsToToken(String codeText) {
-        pattern = Pattern.compile(DirectiveRegex.IMPORT.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(DirectiveRegex.IMPORT.getToken());
+    private static DirectiveAnalyzer directiveAnalyzer;
+    private DirectiveAnalyzer() {}
 
-        return codeText;
+    public static DirectiveAnalyzer getInstance() {
+        if (directiveAnalyzer == null)
+            directiveAnalyzer = new DirectiveAnalyzer();
+
+        return directiveAnalyzer;
     }
 
-    public String convertDefineToToken(String codeText) {
-        pattern = Pattern.compile(DirectiveRegex.DEFINE.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(DirectiveRegex.DEFINE.getToken());
-
-        return codeText;
+    public String tokenize(String code) {
+        String result = convertImportsToToken(code);
+        result = convertDefineToToken(result);
+        result = removeStructOccurrences(result);
+        result = convertDigitsOccurrences(result);
+        return result;
     }
 
-    public String removeStructOccurrences(String codeText) {
-        pattern = Pattern.compile(DirectiveRegex.STRUCT.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(DirectiveRegex.STRUCT.getToken());
+    public String convertImportsToToken(String code) {
+        return compileMatcher(code, IMPORT.getRegex(), IMPORT.getToken());
+    }
 
-        return codeText;
+    public String convertDefineToToken(String code) {
+        return compileMatcher(code, DEFINE.getRegex(), DEFINE.getToken());
+    }
+
+    public String removeStructOccurrences(String code) {
+       return compileMatcher(code, STRUCT.getRegex(), STRUCT.getToken());
+    }
+
+    public String convertDigitsOccurrences(String code) {
+        return compileMatcher(code, DigitsRegex.DIGITS_REGEX.getRegex(), DigitsRegex.DIGITS_REGEX.getToken());
     }
 }

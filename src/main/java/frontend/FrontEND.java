@@ -1,5 +1,6 @@
 package frontend;
 
+import c.misc.CommentsRegex;
 import c.misc.StylizationRegex;
 import c.operations.DigitsRegex;
 import lombok.Getter;
@@ -21,10 +22,6 @@ public class FrontEND {
         return matcher.find();
     }
 
-    public String convertTextToLowerCase() {
-        return codeText.toLowerCase();
-    }
-
     public String tokenizeDigits(String codeText) {
         LOGGER.info("Tokenizing digits");
         pattern = Pattern.compile(DigitsRegex.DIGITS_REGEX.getRegex());
@@ -37,5 +34,14 @@ public class FrontEND {
         pattern = Pattern.compile(stylizationRegex.getRegex(), Pattern.MULTILINE);
         matcher = pattern.matcher(codeText);
         return matcher.replaceAll(stylizationRegex.getToken());
+    }
+
+    protected String compileMatcher(String code,String regex, String token) {
+        pattern = Pattern.compile(regex);
+        matcher = pattern.matcher(code);
+        if (stringMatchesPattern(matcher))
+            return matcher.replaceAll(token);
+
+        return code;
     }
 }

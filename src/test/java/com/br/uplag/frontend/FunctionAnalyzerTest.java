@@ -11,7 +11,7 @@ import org.junit.runners.JUnit4;
 public class FunctionAnalyzerTest {
     @Test
     public void shouldConvertFunctionsCreationPhase() {
-        FunctionsAnalyzer functionsAnalyzer = new FunctionsAnalyzer();
+        FunctionsAnalyzer functionsAnalyzer = FunctionsAnalyzer.getInstance();
         String result = functionsAnalyzer.convertFunctionsCreationToItsToken(CodeText.binaryTreeCode);
         Assert.assertEquals(true, result.contains("FUN"));
     }

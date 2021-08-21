@@ -1,10 +1,12 @@
 package c.misc;
 
 public enum StylizationRegex {
-    LEFT_CURLY_BRACES("\\{", " L_C "),
-    RIGHT_CURLY_BRACES("\\}", " R_C "),
-    LEFT_PARENTHESES("\\(", " L_P "),
-    RIGHT_PARENTHESES("\\)", " R_P ");
+    LEFT_CURLY_BRACES("\\{", " LC "),
+    RIGHT_CURLY_BRACES("\\}", " RC "),
+    LEFT_PARENTHESES("\\(", " LP "),
+    RIGHT_PARENTHESES("\\)", " RP "),
+    COMMA("\\,", ""),
+    SEMICOLON("\\;", "");
 
     private final String regex;
     private final String token;

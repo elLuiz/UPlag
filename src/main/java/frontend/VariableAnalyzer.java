@@ -2,16 +2,16 @@ package frontend;
 
 import c.operations.VariableOperationsRegex;
 
-import java.util.regex.Pattern;
 
 public class VariableAnalyzer extends FrontEND{
+    private static VariableAnalyzer variableAnalyzer;
+    private VariableAnalyzer() {}
+    public static VariableAnalyzer getInstance() {
+        if (variableAnalyzer == null)
+            variableAnalyzer = new VariableAnalyzer();
+        return variableAnalyzer;
+    }
     public String tokenizeVariable(String codeText, VariableOperationsRegex variableTokens) {
-        LOGGER.info("Tokenizing variable assignments");
-        pattern = Pattern.compile(variableTokens.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(variableTokens.getToken());
-
-        return codeText;
+        return compileMatcher(codeText, variableTokens.getRegex(), variableTokens.getToken());
     }
 }

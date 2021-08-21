@@ -15,13 +15,15 @@ public class CommentsAnalyzerTest {
 
     @Test
     public void shouldRemoveAllOccurrencesOfDoubleSlashComments() {
-        CommentsAnalyzer commentsAnalyzer = new CommentsAnalyzer();
+        CommentsAnalyzer commentsAnalyzer = CommentsAnalyzer.getInstance();
+        commentsAnalyzer.setCodeText(CodeText.code);
         Assert.assertEquals(false, commentsAnalyzer.convertDoubleSlashCommentsToToken(CodeText.code).contains("//"));
     }
 
     @Test
     public void shouldRemoveAllOccurrencesOfAsterisksComments() {
-        CommentsAnalyzer commentsAnalyzer = new CommentsAnalyzer();
+        CommentsAnalyzer commentsAnalyzer = CommentsAnalyzer.getInstance();
+        commentsAnalyzer.setCodeText(CodeText.code);
         Assert.assertEquals(false, commentsAnalyzer.convertAsterisksCommentsToToken(CodeText.code).contains("/*"));
     }
 }

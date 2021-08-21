@@ -28,4 +28,10 @@ public class StringUtilTest {
     public void shouldReplaceDotCharacter() {
         Assert.assertEquals("c", StringUtil.replaceBy(".", "", ".c"));
     }
+
+    @Test
+    public void shouldGetTheMatchResult() {
+        String input = "src/main/test/font.c";
+        Assert.assertEquals("font", StringUtil.getFileNameAfterLastSlash(input));
+    }
 }

@@ -2,6 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,16 +59,18 @@ public class FileInputUtil {
     public static String readFromInputStream(String directory) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(directory));
+            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
             String line;
             while ((line = bufferedReader.readLine()) != null)
-                stringBuilder.append(line).append("\n");
+                if (!line.isEmpty() || !line.isBlank())
+                    stringBuilder.append(line).append("\n");
         } catch (IOException ioException) {
             LOGGER.log(Level.SEVERE, "An exception occurred for {0}", directory);
+            LOGGER.severe(ioException.getMessage());
             return "";
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().toLowerCase();
     }
     private static boolean isValidFileInputSize(int upperBound) {
         if (upperBound < 5) {

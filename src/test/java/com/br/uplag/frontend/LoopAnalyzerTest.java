@@ -11,8 +11,8 @@ import org.junit.runners.JUnit4;
 public class LoopAnalyzerTest {
     @Test
     public void shouldConvertLoopsOccurrences() {
-        LoopAnalyzer loopAnalyzer = new LoopAnalyzer();
-        String result = loopAnalyzer.convertLoopsToCommonToken(CodeText.code);
+        LoopAnalyzer loopAnalyzer = LoopAnalyzer.getInstance();
+        String result = loopAnalyzer.tokenize(CodeText.code);
         Assert.assertEquals(true, result.contains("LOOP"));
     }
 }

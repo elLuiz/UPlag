@@ -1,8 +1,10 @@
 package com.br.uplag.reader;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import reader.CReader;
 import reader.Reader;
 import util.FileInputUtil;
 
@@ -20,8 +22,8 @@ public class ReaderTest {
         args[4] = "-p";
         args[5] = ".c";
         List<String> files = FileInputUtil.getAllFilesPath(args[1], args);
-        Reader reader = new Reader(files);
-        reader.startReadingInputFiles();
+        Reader reader = new CReader();
+        Assert.assertEquals(false, reader.startReadingInputFiles(files).isEmpty());
     }
 }
 

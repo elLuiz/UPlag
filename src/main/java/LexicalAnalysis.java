@@ -1,10 +1,12 @@
 import parameters.ParametersInputRegex;
-import reader.Reader;
+import processor.CodeProcessor;
+import reader.CReader;
 import util.FileInputUtil;
 import util.PropertyInputUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
 // args 0 - directory
 // args 2 - language
 // args 4 - programs
@@ -21,10 +23,10 @@ public class LexicalAnalysis {
             programs = FileInputUtil.getAllFilesPath(directoryPath, args);
         }
 
-        Reader reader = new Reader(programs);
-        reader.startReadingInputFiles();
-        System.out.println(directoryPath);
-        System.out.println(language);
-        programs.forEach(System.out::println);
+        if ("c".equalsIgnoreCase(language)) {
+            CodeProcessor codeProcessor = new CodeProcessor(new CReader());
+            codeProcessor.setPrograms(programs);
+            codeProcessor.createInvertedIndex();
+        }
     }
 }

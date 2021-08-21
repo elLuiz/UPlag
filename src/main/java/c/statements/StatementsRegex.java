@@ -1,10 +1,13 @@
 package c.statements;
 
 public enum StatementsRegex {
+    BREAK("break;", "JUMP"),
+    JUMP("return;", "JUMP"),
+    CONTINUE("continue;", "JUMP"),
     RETURN("return(?!\\;)", " STMT ");
 
     private final String regex;
-    private String token;
+    private final String token;
 
     StatementsRegex(String regex, String token) {
         this.regex = regex;

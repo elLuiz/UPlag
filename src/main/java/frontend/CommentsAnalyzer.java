@@ -2,26 +2,29 @@ package frontend;
 
 import c.misc.CommentsRegex;
 
-import java.util.regex.Pattern;
-
 public class CommentsAnalyzer extends FrontEND {
-    public String convertDoubleSlashCommentsToToken(String codeText) {
-        LOGGER.info("Analyzing double slash comments occurrences");
-        pattern = Pattern.compile(CommentsRegex.DOUBLE_SLASH_COMMENTS.getRegex(), Pattern.MULTILINE);
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(CommentsRegex.DOUBLE_SLASH_COMMENTS.getToken());
+    private static CommentsAnalyzer commentsAnalyzer;
+    private CommentsAnalyzer() {
 
-        return codeText;
     }
 
-    public String convertAsterisksCommentsToToken(String codeText) {
-        LOGGER.info("Analyzing asterisk comments occurrences");
-        pattern = Pattern.compile(CommentsRegex.DOUBLE_ASTERISK_COMMENT_REGEX.getRegex());
-        matcher = pattern.matcher(codeText);
-        if (stringMatchesPattern(matcher))
-            return matcher.replaceAll(CommentsRegex.DOUBLE_ASTERISK_COMMENT_REGEX.getToken());
+    public static CommentsAnalyzer getInstance() {
+        if (commentsAnalyzer == null)
+           commentsAnalyzer = new CommentsAnalyzer();
+        return commentsAnalyzer;
+    }
 
-        return codeText;
+    public String tokenize(String code) {
+        String result = convertDoubleSlashCommentsToToken(code);
+        result = convertAsterisksCommentsToToken(result);
+        return result;
+    }
+
+    public String convertDoubleSlashCommentsToToken(String code) {
+        return compileMatcher(code, CommentsRegex.DOUBLE_SLASH_COMMENTS.getRegex(), CommentsRegex.DOUBLE_SLASH_COMMENTS.getToken());
+    }
+
+    public String convertAsterisksCommentsToToken(String code) {
+        return compileMatcher(code, CommentsRegex.DOUBLE_ASTERISK_COMMENT_REGEX.getRegex(), CommentsRegex.DOUBLE_ASTERISK_COMMENT_REGEX.getToken());
     }
 }

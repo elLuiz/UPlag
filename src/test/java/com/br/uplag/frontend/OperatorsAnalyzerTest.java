@@ -13,21 +13,21 @@ import org.junit.runners.JUnit4;
 public class OperatorsAnalyzerTest {
     @Test
     public void shouldTokenizeEqualRelationalOperator() {
-        OperatorsAnalyzer operatorsAnalyzer = new OperatorsAnalyzer();
+        OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeRelationalOperator(CodeText.binaryTreeCode, RelationOperatorRegex.EQ);
         Assert.assertEquals(true, result.contains("EQ"));
     }
 
     @Test
     public void shouldTokenizeGreaterThanRelationalOperator() {
-        OperatorsAnalyzer operatorsAnalyzer = new OperatorsAnalyzer();
+        OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeRelationalOperator(CodeText.binaryTreeCode, RelationOperatorRegex.GT);
         Assert.assertEquals(true, result.contains("GT"));
     }
 
     @Test
     public void shouldTokenizeAndOperators() {
-        OperatorsAnalyzer operatorsAnalyzer =new OperatorsAnalyzer();
+        OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeLogicalOperators(CodeText.binaryTreeCode, LogicalOperatorsRegexEnum.AND);
         Assert.assertEquals(true, result.contains("AND"));
     }

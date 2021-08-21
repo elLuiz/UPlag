@@ -52,16 +52,16 @@ public class StatementsTest {
 
     @Test
     public void shouldConvertReturnCallsToReturnToken() {
-        Assert.assertEquals(true, code.replaceAll(StatementsRegex.RETURN.getRegex(), StatementsRegex.RETURN.getToken()).contains(StatementsRegex.RETURN.getToken()));
+        Assert.assertEquals(true, code.replaceAll(StatementsRegex.JUMP.getRegex(), StatementsRegex.JUMP.getToken()).contains(StatementsRegex.JUMP.getToken()));
     }
 
     @Test
     public void shouldConvertMultipleRegexesInTheSameText() {
         StringBuilder codeText = new StringBuilder();
-        Pattern pattern = Pattern.compile(StatementsRegex.RETURN.getRegex(), Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(StatementsRegex.JUMP.getRegex(), Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(code);
         while (matcher.find()) {
-            matcher.appendReplacement(codeText, StatementsRegex.RETURN.getToken());
+            matcher.appendReplacement(codeText, StatementsRegex.JUMP.getToken());
         }
 
         pattern = Pattern.compile( ArithmeticOperatorsRegex.SUB.getRegex(), Pattern.MULTILINE);

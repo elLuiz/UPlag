@@ -14,20 +14,20 @@ public class DirectiveAnalyzerTest {
     private static final Logger LOGGER = Logger.getLogger("CommentsAnalyzerTest");
     @Test
     public void shouldRemoveAllImports() {
-        DirectiveAnalyzer directiveAnalyzer = new DirectiveAnalyzer();
+        DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
         Assert.assertEquals(false, directiveAnalyzer.convertImportsToToken(CodeText.code).contains("#include"));
     }
 
     @Test
     public void shouldConvertAllDefineToItsToken() {
-        DirectiveAnalyzer directiveAnalyzer = new DirectiveAnalyzer();
+        DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
         Assert.assertEquals(true, directiveAnalyzer.convertDefineToToken(CodeText.code).contains("CONST"));
     }
 
     @Test
     public void shouldRemoveAllStructOccurrences() {
-        DirectiveAnalyzer directiveAnalyzer = new DirectiveAnalyzer();
-        String result = directiveAnalyzer.removeStructOccurrences(CodeText.binaryTreeCode);
+        DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
+        String result = directiveAnalyzer.removeStructOccurrences(CodeText.code);
         Assert.assertEquals(false, result.contains("struct NO{"));
     }
 }
