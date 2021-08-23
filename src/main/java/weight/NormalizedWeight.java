@@ -21,7 +21,7 @@ public class NormalizedWeight extends Weight{
                 int maxTF = documentsMaxTF.get(document);
                 this.setTermFrequencyInCollection(invertedIndexEntry.getValue().size());
                 Double weight = calculateWeight(termFrequency, maxTF);
-                insertWeightIntoMap(invertedIndexEntry, document, weight);
+                insertTermWeightIntoMap(invertedIndexEntry, document, weight);
             }
         }
         return termWeightMap;

@@ -21,7 +21,7 @@ public abstract class Weight {
         return Math.log10((double) collectionSize / termFrequencyInCollection);
     }
 
-    protected void insertWeightIntoMap(Map.Entry<String, Map<String, Integer>> invertedIndexEntry, String document, Double weight) {
+    protected void insertTermWeightIntoMap(Map.Entry<String, Map<String, Integer>> invertedIndexEntry, String document, Double weight) {
         Map<String, Double> documentWeightMap = new HashMap<>();
         documentWeightMap.put(invertedIndexEntry.getKey(), weight);
         if (termWeightMap.get(document) == null)

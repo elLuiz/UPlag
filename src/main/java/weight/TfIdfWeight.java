@@ -1,6 +1,5 @@
 package weight;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TfIdfWeight extends Weight{
@@ -16,7 +15,7 @@ public class TfIdfWeight extends Weight{
                 Integer termFrequency = termFrequencyMap.getValue();
                 this.setTermFrequencyInCollection(invertedIndexEntry.getValue().size());
                 Double weight = calculateWeight(termFrequency);
-                insertWeightIntoMap(invertedIndexEntry, document, weight);
+                insertTermWeightIntoMap(invertedIndexEntry, document, weight);
             }
         }
         return termWeightMap;
