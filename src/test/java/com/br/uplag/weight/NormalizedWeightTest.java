@@ -39,6 +39,6 @@ public class NormalizedWeightTest {
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(stringStringMap);
         NormalizedWeight normalizedWeight = new NormalizedWeight(invertedIndex.getInvertedIndex(), files.size());
-        normalizedWeight.getTermsWeight();
+        normalizedWeight.calculateTermWeight();
     }
 }

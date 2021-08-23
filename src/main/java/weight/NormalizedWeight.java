@@ -5,12 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class NormalizedWeight extends Weight{
+    private static final Double SMOOTHING_FACTOR = 0.4;
     public NormalizedWeight(Map<String, Map<String, Integer>> invertedIndexMap, Integer collectionSize) {
         super(invertedIndexMap, collectionSize);
     }
 
     @Override
-    public Map<String, Map<String, Double>> getTermsWeight() {
+    public Map<String, Map<String, Double>> calculateTermWeight() {
         Map<String, Integer> documentsMaxTF = findTheMaxTermFrequencyInDocument();
         Map<String, Map<String, Double>> termWeightMap = new LinkedHashMap<>();
         for (Map.Entry<String, Map<String, Integer>> invertedIndexEntry : invertedIndexMap.entrySet()) {
@@ -18,22 +19,17 @@ public class NormalizedWeight extends Weight{
                 String document = termFrequencyMap.getKey();
                 Integer termFrequency = termFrequencyMap.getValue();
                 int maxTF = documentsMaxTF.get(document);
-                Double weight = calculateWeight(termFrequency, maxTF) * calculateIDF(termFrequency);
-                Map<String, Double> documentWeightMap = new HashMap<>();
-                documentWeightMap.put(invertedIndexEntry.getKey(), weight);
-                if (termWeightMap.get(document) == null)
-                    termWeightMap.put(document, documentWeightMap);
-                else
-                    termWeightMap.get(document).put(invertedIndexEntry.getKey(), weight);
+                this.setTermFrequencyInCollection(invertedIndexEntry.getValue().size());
+                Double weight = calculateWeight(termFrequency, maxTF);
+                insertWeightIntoMap(invertedIndexEntry, document, weight);
             }
         }
         return termWeightMap;
     }
 
-    @Override
-    public float calculateWeight(int tf, int maxTF) {
+    public double calculateWeight(int tf, int maxTF) {
         if (maxTF > 0)
-            return (float) (0.4 + 0.6 * ((float) tf / maxTF));
+            return (SMOOTHING_FACTOR + (1 - SMOOTHING_FACTOR) * ((float) tf / maxTF)) * calculateIDF();
         return 0.0F;
     }
 
