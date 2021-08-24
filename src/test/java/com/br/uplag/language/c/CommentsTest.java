@@ -1,6 +1,6 @@
 package com.br.uplag.language.c;
 
-import c.misc.CommentsRegex;
+import com.br.uplag.c.misc.CommentsRegex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

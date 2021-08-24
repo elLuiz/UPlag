@@ -4,13 +4,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import util.StringUtil;
 
 @RunWith(JUnit4.class)
 public class StringUtilTest {
     @Test
     public void shouldReturnTrueWhenStringIsValid() {
-        String input = "Files.c";
+        String input = "Files.com.br.uplag.c";
         Assert.assertEquals(true, StringUtil.isValid(input));
     }
 
@@ -26,12 +25,12 @@ public class StringUtilTest {
 
     @Test
     public void shouldReplaceDotCharacter() {
-        Assert.assertEquals("c", StringUtil.replaceBy(".", "", ".c"));
+        Assert.assertEquals("com/br/uplag/c", StringUtil.replaceBy(".", "", ".com.br.uplag.c"));
     }
 
     @Test
     public void shouldGetTheMatchResult() {
-        String input = "src/main/test/font.c";
+        String input = "src/main/test/font.com.br.uplag.c";
         Assert.assertEquals("font", StringUtil.getFileNameAfterLastSlash(input));
     }
 }

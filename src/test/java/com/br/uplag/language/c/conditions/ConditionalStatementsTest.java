@@ -1,6 +1,6 @@
 package com.br.uplag.language.c.conditions;
 
-import c.conditionals.ConditionalsRegex;
+import com.br.uplag.c.conditionals.ConditionalsRegex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

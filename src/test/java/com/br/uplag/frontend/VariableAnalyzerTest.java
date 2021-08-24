@@ -1,8 +1,7 @@
 package com.br.uplag.frontend;
 
-import c.operations.VariableOperationsRegex;
+import com.br.uplag.c.operations.VariableOperationsRegex;
 import com.br.uplag.CodeText;
-import frontend.VariableAnalyzer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

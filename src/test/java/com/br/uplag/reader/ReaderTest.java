@@ -4,9 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import reader.CReader;
-import reader.Reader;
-import util.FileInputUtil;
+import com.br.uplag.util.FileInputUtil;
 
 import java.util.List;
 
@@ -18,9 +16,9 @@ public class ReaderTest {
         args[0] = "-d";
         args[1] = "src/test/resources/";
         args[2] = "-l";
-        args[3] = "c";
+        args[3] = "com/br/uplag/c";
         args[4] = "-p";
-        args[5] = ".c";
+        args[5] = ".com.br.uplag.c";
         List<String> files = FileInputUtil.getAllFilesPath(args[1], args);
         Reader reader = new CReader();
         Assert.assertEquals(false, reader.startReadingInputFiles(files).isEmpty());

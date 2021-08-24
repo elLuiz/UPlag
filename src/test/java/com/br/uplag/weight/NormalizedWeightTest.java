@@ -1,14 +1,13 @@
 package com.br.uplag.weight;
 
-import index.InvertedIndex;
+import com.br.uplag.index.InvertedIndex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import reader.CReader;
-import reader.Reader;
-import util.FileInputUtil;
-import weight.NormalizedWeight;
+import com.br.uplag.reader.CReader;
+import com.br.uplag.reader.Reader;
+import com.br.uplag.util.FileInputUtil;
 
 import java.util.*;
 
@@ -33,12 +32,12 @@ public class NormalizedWeightTest {
 
     @Test
     public void shouldGetTermsWeight() {
-        List<String> files = FileInputUtil.walkTroughDirectory("src/test/resources", "c");
+        List<String> files = FileInputUtil.walkTroughDirectory("src/test/resources", "com/br/uplag/c");
         Reader reader = new CReader();
         Map<String, String> stringStringMap = reader.startReadingInputFiles(files);
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(stringStringMap);
         NormalizedWeight normalizedWeight = new NormalizedWeight(invertedIndex.getInvertedIndex(), files.size());
-        normalizedWeight.getTermsWeight();
+        normalizedWeight.calculateTermWeight();
     }
 }
