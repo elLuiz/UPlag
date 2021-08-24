@@ -1,7 +1,6 @@
 package com.br.uplag.frontend;
 
 import com.br.uplag.CodeText;
-import frontend.FunctionsAnalyzer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

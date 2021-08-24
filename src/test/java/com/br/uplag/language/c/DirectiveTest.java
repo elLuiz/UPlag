@@ -1,6 +1,6 @@
 package com.br.uplag.language.c;
 
-import c.directive.DirectiveRegex;
+import com.br.uplag.c.directive.DirectiveRegex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

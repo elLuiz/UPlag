@@ -1,8 +1,8 @@
 package com.br.uplag.language.c.statement;
 
-import c.conditionals.ConditionalsRegex;
-import c.operators.ArithmeticOperatorsRegex;
-import c.statements.StatementsRegex;
+import com.br.uplag.c.conditionals.ConditionalsRegex;
+import com.br.uplag.c.operators.ArithmeticOperatorsRegex;
+import com.br.uplag.c.statements.StatementsRegex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

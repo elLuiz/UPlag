@@ -1,9 +1,8 @@
 package com.br.uplag.frontend;
 
-import c.operators.LogicalOperatorsRegexEnum;
-import c.operators.RelationOperatorRegex;
+import com.br.uplag.c.operators.LogicalOperatorsRegexEnum;
+import com.br.uplag.c.operators.RelationOperatorRegex;
 import com.br.uplag.CodeText;
-import frontend.OperatorsAnalyzer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

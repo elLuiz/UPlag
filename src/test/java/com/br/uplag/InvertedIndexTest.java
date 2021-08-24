@@ -1,13 +1,13 @@
 package com.br.uplag;
 
-import index.InvertedIndex;
+import com.br.uplag.index.InvertedIndex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import reader.CReader;
-import reader.Reader;
-import util.FileInputUtil;
+import com.br.uplag.reader.CReader;
+import com.br.uplag.reader.Reader;
+import com.br.uplag.util.FileInputUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class InvertedIndexTest {
     @Test
     public void shouldCreateInvertedIndex() {
-        List<String> codePaths = FileInputUtil.walkTroughDirectory("src/test/resources/", "c");
+        List<String> codePaths = FileInputUtil.walkTroughDirectory("src/test/resources/", "com/br/uplag/c");
         Reader reader = new CReader();
         Map<String, String> filesContent = reader.startReadingInputFiles(codePaths);
         InvertedIndex invertedIndex = new InvertedIndex();
