@@ -1,14 +1,14 @@
 package com.br.uplag.c.operations;
 
 public enum VariableOperationsRegex {
-    INCREMENT_REGEX("([->a-z_]+\\s?\\+{2}|\\s?\\+{2}[->\\w]+);?", " ASSIGN ADD DIG "),
-    DECREMENT_REGEX("([->a-z_]+\\s?\\-{2}|\\s?\\-{2}[->\\w_]+);?", " ASSIGN SUB DIG "),
-    NORMAL_ASSIGNMENT_REGEX("[\\da-z*]{0,}\\s?[*a-z_\\d\\->]+(\\[.*\\])?\\s?\\=", " ASSIGN "),
-    ASSIGNMENT_WITH_CASTING("ASSIGN\\s+\\(.+?\\)", " ASSIGN CAST "),
-    ASSIGNMENT_ADD("\\+\\=", " ASSIGN ADD "),
-    ASSIGNMENT_SUB("\\-\\=", " ASSIGN SUB "),
-    ASSIGNMENT_DIV("\\/\\=", " ASSIGN DIV "),
-    ASSIGNMENT_MULT("\\*\\=", " ASSIGN MULT ");
+    INCREMENT_REGEX("([->a-z_]+\\s?\\+{2}|\\s?\\+{2}[->\\w]+);?", " A + D "),
+    DECREMENT_REGEX("([->a-z_]+\\s?\\-{2}|\\s?\\-{2}[->\\w_]+);?", " A - D "),
+    NORMAL_ASSIGNMENT_REGEX("[\\da-z*]{0,}\\s?[*a-z_\\d\\->]+(\\[.*\\])?\\s?\\=", " A "),
+    ASSIGNMENT_WITH_CASTING("ASSIGN\\s+\\(.+?\\)", " A j "),
+    ASSIGNMENT_ADD("\\+\\=", " A + "),
+    ASSIGNMENT_SUB("\\-\\=", " A - "),
+    ASSIGNMENT_DIV("\\/\\=", " A / "),
+    ASSIGNMENT_MULT("\\*\\=", " A * ");
 
 
     private final String regex;

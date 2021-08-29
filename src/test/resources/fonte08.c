@@ -1,191 +1,164 @@
+
+#include "skiplist.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "SkipListT.h"
-#define INT_MIN  (-2147483648)
-#define MAX 20
-/*
-    Grupo TDF
-    Integrantes:
-    Thiago Mota Carvalho - 11811BCC026
-    Dahlan Pereira Gardim - 11811BCC030
-    Felipe Augusto Nunes Cintra - 11811BCC039
-*/
-struct sl {
-    int info;
-    struct sl *prox;
-    struct sl *baixo;
+#define MAXN 15
+
+
+
+
+//Define a estrutura da skiplist
+struct skiplist {
+    int val, size, lvl;
+    struct skiplist **vet;
 };
 
-SkipList *criaSkipList(){
-    //Cria-se uma "lista" de elementos e retorna o ponteiro que está no nivel mais acima
-    SkipList *P;
-    SkipList *aux;
-    for (int i=0;i<MAX;i++){
-        SkipList *N=(SkipList*)malloc(sizeof(SkipList));
-        N->info  = INT_MIN; //menor inteiro negativo
-        N->baixo = NULL;
-        N->prox  = NULL;
-
-        if(i==0){ //aponta o ponteiro para o primeiro elemento
-            P=N;
-            aux=N;
-        }else{
-            aux->baixo=N;
-            aux=N;
-        }
-    }
-    return P;
+//Criaremos a skiplist com um "nó-fantasma" para facilitar, ele terá a quantidade máxima de níveis
+SkipList* criaSkipList(){
+    SkipList* sl = (SkipList*)malloc(sizeof(SkipList));
+    if(sl == NULL){
+	   	return NULL;
+	}
+	//aloca a quantidade máxima de níveis ao "nó-fantasma"
+    sl->vet = (SkipList**)malloc(MAXN * sizeof(SkipList*));
+    if(sl->vet == NULL) return NULL;
+    for (int i=0; i<MAXN; i++) sl->vet[i] = NULL;
+    //O valor do nó fantasma deve ser irrelevante, por isso adotaremos -1
+    sl->val = -1;
+    //No campo "size" do nó fantasma será salvo o tamanho de toda a SkipList, assim conseguiremos esse tamanho em O(1)
+    sl->size = 0;
+    return sl;
 }
 
-int insereSkipList(SkipList *SL, int elem){
-    //sorteamos um numero aleatorio e tiramos ele do maximo para sabermos o nivel que começaremos a colocar o nó
-    //a partir dai, criamos um loop com o nivel e percorremos todas as linhas parando no elemento anterior , para que assim,
-    //possamos criar e inserir um novo nó
-    int random,lvl;
-    random=rand()%MAX+1;
-    lvl = MAX-random; //level
-    while(lvl--){
-        SL=SL->baixo;
+//Recebe um ponteiro pra ponteiro para poder liberar e marcar como NULL o primeiro nó
+void liberaSkipList(SkipList **sl){
+	if(sl == NULL || (*sl) == NULL || (*sl)->vet == NULL) {
+		return ;
+	}
+	liberaSkipList(&((*sl)->vet[0]));
+	for (int i=0; i<(*sl)->lvl; i++){
+		free((*sl)->vet[i]);
+		(*sl)->vet[i] = NULL;
+	}
+	free((*sl)->vet);
+	(*sl)->vet = NULL;
+	free((*sl));
+	(*sl) = NULL;
+}
+
+
+//Gera a quantidade de níveis do vértice a ser inserido aleatoriamente
+int geraNivel(){
+	int lvl = 1+rand()%MAXN;
+	return lvl;
+}
+
+//"Constrói" o novo nó, o alocando e definindo o seu valor
+SkipList* buildNode(int val){
+    SkipList* newNode = (SkipList*)malloc(sizeof(SkipList));
+    int lvl = geraNivel();
+    newNode->val = val;
+    newNode->lvl = val;
+    printf("val: %d | lvl: %d\n", val, lvl);
+    return newNode;
+}
+
+//Insere um novo nó na skiplist (desde que não já haja um nó com esse mesmo "val")
+int insereSkipList(SkipList* sl, int val){
+    SkipList *node = buildNode(val);
+    if(node == NULL) return 0;
+    int lvl = node->lvl;
+	//Aloca a quantidade de níveis que esse novo nó terá
+    node->vet = (SkipList**)malloc(lvl * sizeof(SkipList*));
+    for (int i=0; i<lvl; i++) node->vet[i] = NULL;
+
+    if(node == NULL || sl == NULL){
+		return 0;
     }
-    SkipList *aux;
-    SkipList *aux2;
-    for(int i=0;i<random;i++){
-    aux=SL;
-        while(aux->prox!=NULL && aux->prox->info < elem){
-            aux = aux->prox;
+    SkipList *cab = sl;
+    //Insere o nó na posição correta em cada nível da SkipList
+    for (int i = MAXN-1; i >= 0; i--){
+        while(sl->vet[i] != NULL && sl->vet[i]->val <= val){
+			sl = sl->vet[i];
         }
-    SkipList *N=(SkipList*)malloc(sizeof(SkipList));
-
-    if(N==NULL)
-        return 0;
-
-    N->info=elem;
-    N->baixo=NULL;
-    N->prox=aux->prox;
-    aux->prox=N;
-    if(i!=0)
-        aux2->baixo=N;
-    aux2=N;
-    SL=SL->baixo;
-    }
+        if(sl->vet[i] != NULL && sl->vet[i]->val == val){
+			free(node);
+			return 0;
+		}
+       	if(lvl > i) {
+       		node->vet[i] = sl->vet[i];
+       		sl->vet[i] = node;
+       	}
+	}
+	//Se chegar até aqui conseguimos inserir, então incrementamos no tamanho da skiplist (atualizando o campo "size" do "nó-fantasma")
+    cab->size++;
     return 1;
 }
 
-int removeSkipList(SkipList *SL, int elem){
-    //temos que percorrer todas as linhas procurando pelo elemento requisitado
-    //O nó para 1 antes do que queremos
-    //um auxiliar2 é criado para deletar o nó e religar os ponteiros que sobraram
-    //depois disso, descemos por toda a coluna, e , esse mesmo procedimento, é feito para todas as linhas.
-    if(vaziaSkipList(SL)){
-        return 0;
-    }else{
-        while(SL!=NULL){
-            SkipList *aux=SL;
-            while(aux->prox!=NULL && aux->prox->info<elem)
-                aux=aux->prox;
-
-            if(aux->prox!=NULL && aux->prox->info==elem){
-                SkipList *aux2= aux->prox;
-                aux->prox=aux2->prox;
-                free(aux2);
-            }
-            SL=SL->baixo;
-        }
-        return 1;
-    }
+//Função que remove um nó da skiplist (caso ele exista)
+int removeSkipList(SkipList* sl, int val){
+	if(sl == NULL){
+		return 0;
+	}
+	SkipList *cab = sl;
+	int flag = 0;
+	for (int i=MAXN-1; i >= 0; i--){
+		while(sl->vet[i] != NULL && sl->vet[i]->val < val) {
+			sl = sl->vet[i];
+		}
+		if(sl->vet[i] != NULL && sl->vet[i]->val == val){
+			//Marca que um nó foi excluído
+			flag = 1;
+			SkipList *aux = sl->vet[i];
+			sl->vet[i] = aux->vet[i];
+			//Só posso liberar quando chegar no último nível
+			if(i == 0) free(aux);
+		}
+	}
+	//Se a operação de remoção foi bem sucedida, isto é flag == 1, devo diminuir o tamanho da skiplist
+	if(flag) cab->size--;
+	return flag;
 }
 
-int vaziaSkipList(SkipList *SL){
-    //percorremos a primeira coluna checando se o proximo é igual a null, se em todas as colunas
-    //o proximo for igual a NULL, então a lista está vazia
-    while(SL->baixo!=NULL){
-        if(SL->prox!=NULL){
-            return 0;
-        }
-        SL=SL->baixo;
-    }
-    return 1;
+//Checa a existencia de determinado valor na skiplist
+int buscaSkipList(SkipList* sl, int val){
+	if(sl == NULL){
+		return 0;
+	}
+	//Ando o máximo possível em uma autura da árvore até encontrar o nó desejado (então parar) ou algum nó maior do que ele (e então descer de nível)
+	for (int i=MAXN-1; i >= 0; i--){
+		while (sl->vet[i] != NULL && sl->vet[i]->val < val) {
+			sl = sl->vet[i];
+		}
+		if(sl->vet[i] != NULL && sl->vet[i]->val == val)
+			return 1;
+	}
+	return 0;
 }
 
-void imprimeSkipList(SkipList *SL){
-    //O ponteiro desce até a ultima linha e, apos isso, percorre-se a base percorrendo todos os elementos,
-    //pois todos os elementos tem nivel 1
-    if(!vaziaSkipList(SL)){
-        while(SL->baixo!=NULL)
-            SL = SL->baixo;
-        SL = SL->prox;
-        while(SL->prox!=NULL){
-            printf("%d ", SL->info);
-            SL = SL->prox;
-        }
-        printf("%d\n", SL->info);
-    }
+//Retorna o tamanho da skiplist (valor salvo no campo "size" do nó-fantasma da skiplist)
+int tamanhoSkipList(SkipList *sl){
+	if(sl == NULL) return 0;
+	return sl->size;
 }
 
-int buscaSkipList(SkipList *SL,int elem){
-    //percorremos cada linha da skiplist , checando se existe o elemento desejado.
-    //Caso nao exista na linha, descemos com o ponteiro para a linha abaixo
-    if(vaziaSkipList(SL)){
-        return 0;
-    }else{
-        while(SL!=NULL){
-            SkipList*aux=SL;
-            while(aux->prox!=NULL && aux->info<elem)
-                aux=aux->prox;
-
-            if(aux->info==elem)
-                return 1;
-
-            SL=SL->baixo;
-        }
-        return 0;
-    }
+//Se o tamanho da skiplist for igual a 0 retorna verdadeiro, pois a skiplist está vazia, caso contrario retorna falso
+int vaziaSkipList(SkipList* sl){
+	return (tamanhoSkipList(sl) == 0);
 }
 
-//int buscaSkipList(SkipList *lst,int num){
-//    if(vaziaSkipList(lst)){
-//        return 0;
-//    }else{
-//        while(1){
-//            while(lst->prox != NULL && lst->prox->info<num)
-//                lst=lst->prox;
-//                if(lst->prox->info>num)
-//                    lst=lst->baixo;
-//
-//                if(lst->baixo==NULL && lst->prox == NULL) return 0;
-//                if(lst->prox->info==num) return 1;
-//
-//        }
-//    }
-//}
-
-int tamanhoSkipList(SkipList *SL){
-    int tam=0; //começa de cada nó , a partir do menor inteiro possivel(-infinito).
-    //A partir disso, toda linha da skiplist é percorrida com um auxiliar. A cada passo,
-    // adiciona-se 1 ao tamanho
-    while(SL!=NULL){
-            SkipList*aux=SL;
-            while(aux!=NULL){
-                aux=aux->prox;
-                tam++;
-            }
-            SL=SL->baixo;
-        }
-    return tam;
-}
-
-void liberaSkipList(SkipList *SL){
-    //Para essa, três auxiliares são utilizados. Um para marcar a primeira coluna e , os outros dois,
-    //para percorrer as linhas e ir deletando.
-    while(SL!=NULL){
-        SkipList *aux=SL;
-        SkipList *aux2=aux;
-        SL=SL->baixo;
-        while(aux!=NULL){
-            aux2=aux;
-            aux=aux->prox;
-            free(aux2);
-        }
-    }
+//imprime todos os valores presentes atualmente na skiplist
+void imprimeSkipList(SkipList *sl){
+	if(sl == NULL || sl->vet[0] == NULL){
+		puts("SkipList vazia ou nao criada!");
+		return ;
+	}
+	printf("%d", sl->vet[0]->val);
+	sl = sl->vet[0];
+	while (sl->vet[0] != NULL){
+		printf(" -> %d", sl->vet[0]->val);
+		sl = sl->vet[0];
+	}
+	puts("");
 }

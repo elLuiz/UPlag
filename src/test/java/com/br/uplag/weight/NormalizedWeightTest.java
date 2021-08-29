@@ -26,18 +26,18 @@ public class NormalizedWeightTest {
         Map<String, Integer> funMapDoc2 = new HashMap<>();
         funMapDoc2.put("doc3", 10);
         weightMap.put("FUNC", funMapDoc2);
-        NormalizedWeight normalizedWeight = new NormalizedWeight(weightMap, 2);
+        NormalizedWeight normalizedWeight = new NormalizedWeight(weightMap, Arrays.asList("doc1", "doc3"));
         Assert.assertEquals(Arrays.asList(10, 6), new ArrayList<>(normalizedWeight.findTheMaxTermFrequencyInDocument().values()));
     }
 
     @Test
     public void shouldGetTermsWeight() {
-        List<String> files = FileInputUtil.walkTroughDirectory("src/test/resources", "com/br/uplag/c");
+        List<String> files = FileInputUtil.walkTroughDirectory("src/test/resources/", "c");
         Reader reader = new CReader();
         Map<String, String> stringStringMap = reader.startReadingInputFiles(files);
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(stringStringMap);
-        NormalizedWeight normalizedWeight = new NormalizedWeight(invertedIndex.getInvertedIndex(), files.size());
+        NormalizedWeight normalizedWeight = new NormalizedWeight(invertedIndex.getInvertedIndex(), files);
         normalizedWeight.calculateTermWeight();
     }
 }

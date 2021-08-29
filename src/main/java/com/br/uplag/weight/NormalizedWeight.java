@@ -1,24 +1,27 @@
 package com.br.uplag.weight;
 
+import com.br.uplag.util.StringUtil;
+
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NormalizedWeight extends Weight{
     private static final Double SMOOTHING_FACTOR = 0.4;
-    public NormalizedWeight(Map<String, Map<String, Integer>> invertedIndexMap, Integer collectionSize) {
-        super(invertedIndexMap, collectionSize);
+
+    public NormalizedWeight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
+        super(invertedIndexMap, programs);
     }
 
     @Override
     public Map<String, Map<String, Double>> calculateTermWeight() {
         Map<String, Integer> documentsMaxTF = findTheMaxTermFrequencyInDocument();
-        Map<String, Map<String, Double>> termWeightMap = new LinkedHashMap<>();
         for (Map.Entry<String, Map<String, Integer>> invertedIndexEntry : invertedIndexMap.entrySet()) {
-            for (Map.Entry<String, Integer> termFrequencyMap : invertedIndexEntry.getValue().entrySet()) {
-                String document = termFrequencyMap.getKey();
-                Integer termFrequency = termFrequencyMap.getValue();
-                int maxTF = documentsMaxTF.get(document);
+            for (String document : programs) {
+                document = StringUtil.getFileNameAfterLastSlash(document);
+                Integer termFrequency = invertedIndexEntry.getValue().get(document);
+                termFrequency = termFrequency == null ? 0 : termFrequency;
+                int maxTF = documentsMaxTF.get(document) == null ? 0 : documentsMaxTF.get(document) ;
                 this.setTermFrequencyInCollection(invertedIndexEntry.getValue().size());
                 Double weight = calculateWeight(termFrequency, maxTF);
                 insertTermWeightIntoMap(invertedIndexEntry, document, weight);

@@ -58,7 +58,7 @@ public class FrontEndFacade {
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.RIGHT_PARENTHESES);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.COMMA);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.SEMICOLON);
-        return tokenized.replaceAll("[^A-Z]+", " ");
+        return tokenized.replaceAll("[a-z->\\[\\]*]+", " ");
     }
 
     private String tokenizeRelationalOperators(String tokenized) {

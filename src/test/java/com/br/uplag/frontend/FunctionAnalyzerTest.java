@@ -12,6 +12,6 @@ public class FunctionAnalyzerTest {
     public void shouldConvertFunctionsCreationPhase() {
         FunctionsAnalyzer functionsAnalyzer = FunctionsAnalyzer.getInstance();
         String result = functionsAnalyzer.convertFunctionsCreationToItsToken(CodeText.binaryTreeCode);
-        Assert.assertEquals(true, result.contains("FUN"));
+        Assert.assertEquals(true, result.contains("F"));
     }
 }

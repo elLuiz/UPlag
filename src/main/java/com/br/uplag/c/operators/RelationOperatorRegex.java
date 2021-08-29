@@ -1,12 +1,12 @@
 package com.br.uplag.c.operators;
 
 public enum RelationOperatorRegex {
-    EQ("\\=\\=", " EQ "),
-    GT("(?<!\\-)\\>(?!\\=)", " GT "),
-    LT("\\<(?!\\=)", " LT "),
-    NE("\\!\\=", " NE "),
-    GE("\\>\\=", " GE "),
-    LE("\\<\\=", " LE ");
+    EQ("\\=\\=", " \\= "),
+    GT("(?<!\\-)\\>(?!\\=)", " \\> "),
+    LT("\\<(?!\\=)", " \\< "),
+    NE("\\!\\=", " \\- "),
+    GE("\\>\\=", " \\~ "),
+    LE("\\<\\=", " Q ");
 
     private final String regex;
     private final String token;

@@ -19,7 +19,8 @@ public class CReader implements Reader{
         Map<String, String> fileContentMap = new HashMap<>();
         for (String path : codeFilePath) {
             String codeText = readFromInputStream(path);
-            codeText = frontEndFacade.createTokenSequence(codeText);
+            codeText = frontEndFacade.createTokenSequence(codeText).replace("\n", "");
+            codeText = codeText.replace(" ", "");
             fileContentMap.put(path, codeText);
         }
 

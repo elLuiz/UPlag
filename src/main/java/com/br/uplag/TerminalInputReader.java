@@ -49,6 +49,8 @@ public class TerminalInputReader {
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
             Weight weight = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
+            CosineSimilarity cosineSimilarity = new CosineSimilarity(documentsWeightMap);
+            cosineSimilarity.calculateSimilarity();
         } else {
             LOGGER.info("Invalid language");
             LOGGER.info("Available languages: c");
@@ -57,8 +59,8 @@ public class TerminalInputReader {
 
     private Weight defineTermWeightingTechnique(Map<String, Map<String, Integer>> invertedIndex) {
         if (ParametersInputRegex.TF_IDF.getParameter().equals(weightingTechnique))
-            return new TfIdfWeight(invertedIndex, programs.size());
+            return new TfIdfWeight(invertedIndex, programs);
         else
-            return new NormalizedWeight(invertedIndex, programs.size());
+            return new NormalizedWeight(invertedIndex, programs);
     }
 }

@@ -1,160 +1,185 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <SkipList.h>
-#include <limits.h>
-#include "SkipList.h"
-#define alturamax 6
+#include <time.h>
+#include "SkipListT.h"
+#define INT_MIN  (-2147483648)
+#define MAX 20
 
-/*
-Grupo PMV
-Integrantes:
-Polyanna Alves Ribeiro - 11811BCC031
-Matheus Humberto Graciano Fontes Costa - 11811BCC006
-Victor Barcelos Melazo - 11611BCC018
-*/
-
-struct no {
-    int key;
+struct sl {
     int info;
-    struct NO **prox;
+    struct sl *prox;
+    struct sl *baixo;
 };
 
-struct skiplist {
-    int altura;
-    struct NO *novo;
-};
+SkipList *criaSkipList(){
+    //Cria-se uma "lista" de elementos e retorna o ponteiro que está no nivel mais acima
+    SkipList *P;
+    SkipList *aux;
+    for (int i=0;i<MAX;i++){
+        SkipList *N=(SkipList*)malloc(sizeof(SkipList));
+        N->info  = INT_MIN; //menor inteiro negativo
+        N->baixo = NULL;
+        N->prox  = NULL;
 
-SkipList* criaSkipList(SkipList *ls) {
-    int i;
-    NO *novo = (NO*) malloc(sizeof(struct NO));
-    ls->novo = novo;
-    novo->key = INT_MAX;
-    novo->prox = (NO**) malloc(sizeof(NO)*(alturamax + 1));
-    for (i = 0; i <= alturamax; i++) {
-        novo->prox[i] = ls->novo;
+        if(i==0){ //aponta o ponteiro para o primeiro elemento
+            P=N;
+            aux=N;
+        }else{
+            aux->baixo=N;
+            aux=N;
+        }
     }
-    ls->altura = 1;
-    return list;
+    return P;
 }
 
-static int rand_altura() {
-    int altura = 1;
-    while (rand() < RAND_MAX / 2 && altura < alturamax)
-        altura++;
-    return altura;
-}
-
-int insereSkipList(SkipList *ls, int key, int info) {
-    NO *update[alturamax + 1];
-    NO *x = ls->novo;
-    int i, altura;
-    for (i = ls->altura; i >= 1; i--) {
-        while (x->prox[i]->key < key)
-            x = x->prox[i];
-            update[i] = x;
+int insereSkipList(SkipList *SL, int elem){
+    //sorteamos um numero aleatorio e tiramos ele do maximo para sabermos o nivel que começaremos a colocar o nó
+    //a partir dai, criamos um loop com o nivel e percorremos todas as linhas parando no elemento anterior , para que assim,
+    //possamos criar e inserir um novo nó
+    int random,lvl;
+    random=rand()%MAX+1;
+    lvl = MAX-random; //level
+    while(lvl--){
+        SL=SL->baixo;
     }
-    x = x->prox[1];
+    SkipList *aux;
+    SkipList *aux2;
+    for(int i=0;i<random;i++){
+    aux=SL;
+        while(aux->prox!=NULL && aux->prox->info < elem){
+            aux = aux->prox;
+        }
+    SkipList *N=(SkipList*)malloc(sizeof(SkipList));
 
-    if (key == x->key) {
-        x->info = info;
+    if(N==NULL)
         return 0;
-    } else {
-        altura = rand_altura();
-        if (altura > ls->altura) {
-            for (i = ls->altura + 1; i <= altura; i++) {
-                update[i] = ls->novo;
-            }
-            ls->altura = altura;
-        }
 
-        x = (NO*) malloc(sizeof(NO));
-        x->key = key;
-        x->info = info;
-        x->prox = (NO**) malloc(sizeof(NO)*(altura + 1));
-        for (i = 1; i <= altura; i++) {
-            x->prox[i] = update[i]->prox[i];
-            update[i]->prox[i] = x;
-        }
-    }
-    return 0;
-}
-
-int *buscaSkipList(SkipList *ls, int key) {
-    NO *x = ls->novo;
-    int i;
-    for (i = ls->altura; i >= 1; i--) {
-        while (x->prox[i]->key < key)
-            x = x->prox[i];
-    }
-    if (x->prox[1]->key == key) {
-        return 1; // busca obteve sucesso
-    } else {
-        return 0; // busca falhou
-    }
-
-}
-
-static void limpa_no(NO *x) {
-    if (x) {
-        free(x->prox);
-        free(x);
-    }
-}
-
-int removeSkipList(SkipList *ls, int key) {
-    int i;
-    NO *update[alturamax + 1];
-    NO *x = ls->novo;
-    for (i = ls->altura; i >= 1; i--) {
-        while (x->prox[i]->key < key)
-            x = x->prox[i];
-        update[i] = x;
-    }
-
-    x = x->prox[1];
-    if (x->key == key) {
-        for (i = 1; i <= ls->altura; i++) {
-            if (update[i]->prox[i] != x)
-                break;
-            update[i]->prox[i] = x->prox[i];
-        }
-        limpa_no(x);
-
-        while (ls->altura > 1 && ls->novo->prox[ls->altura] == ls->novo)
-            ls->altura--;
-        return 0;
+    N->info=elem;
+    N->baixo=NULL;
+    N->prox=aux->prox;
+    aux->prox=N;
+    if(i!=0)
+        aux2->baixo=N;
+    aux2=N;
+    SL=SL->baixo;
     }
     return 1;
 }
 
-void liberaSkipList(SkipList *ls){
-    NO *atual = ls->novo->prox[1];
-    while(atual != ls->novo) {
-        NO *prox_no = atual->prox[1];
-        free(atual->prox);
-        free(atual);
-        atual = prox_no;
+int removeSkipList(SkipList *SL, int elem){
+    //temos que percorrer todas as linhas procurando pelo elemento requisitado
+    //O nó para 1 antes do que queremos
+    //um auxiliar2 é criado para deletar o nó e religar os ponteiros que sobraram
+    //depois disso, descemos por toda a coluna, e , esse mesmo procedimento, é feito para todas as linhas.
+    if(vaziaSkipList(SL)){
+        return 0;
+    }else{
+        while(SL!=NULL){
+            SkipList *aux=SL;
+            while(aux->prox!=NULL && aux->prox->info<elem)
+                aux=aux->prox;
+
+            if(aux->prox!=NULL && aux->prox->info==elem){
+                SkipList *aux2= aux->prox;
+                aux->prox=aux2->prox;
+                free(aux2);
+            }
+            SL=SL->baixo;
+        }
+        return 1;
     }
-    free(atual->prox);
-    free(atual);
-    free(ls);
 }
 
-static void imprimeSkipList(SkipList *ls) {
-    NO *x = ls->novo;
-    while (x && x->prox[1] != ls->novo) {
-        printf("%d[%d]->", x->prox[1]->key, x->prox[1]->info);
-        x = x->prox[1];
+int vaziaSkipList(SkipList *SL){
+    //percorremos a primeira coluna checando se o proximo é igual a null, se em todas as colunas
+    //o proximo for igual a NULL, então a lista está vazia
+    while(SL->baixo!=NULL){
+        if(SL->prox!=NULL){
+            return 0;
+        }
+        SL=SL->baixo;
     }
-    printf("NIL\n");
+    return 1;
 }
 
-int tamanhoSkipList(SkipList *ls) {
-    NO *x = ls->novo;
-    int cont = 0;
-    while (x && x->prox[1] != ls->novo) {
-        cont++;
-        x = x->prox[1];
+void imprimeSkipList(SkipList *SL){
+    //O ponteiro desce até a ultima linha e, apos isso, percorre-se a base percorrendo todos os elementos,
+    //pois todos os elementos tem nivel 1
+    if(!vaziaSkipList(SL)){
+        while(SL->baixo!=NULL)
+            SL = SL->baixo;
+        SL = SL->prox;
+        while(SL->prox!=NULL){
+            printf("%d ", SL->info);
+            SL = SL->prox;
+        }
+        printf("%d\n", SL->info);
     }
-    return cont;
+}
+
+int buscaSkipList(SkipList *SL,int elem){
+    //percorremos cada linha da skiplist , checando se existe o elemento desejado.
+    //Caso nao exista na linha, descemos com o ponteiro para a linha abaixo
+    if(vaziaSkipList(SL)){
+        return 0;
+    }else{
+        while(SL!=NULL){
+            SkipList*aux=SL;
+            while(aux->prox!=NULL && aux->info<elem)
+                aux=aux->prox;
+
+            if(aux->info==elem)
+                return 1;
+
+            SL=SL->baixo;
+        }
+        return 0;
+    }
+}
+
+//int buscaSkipList(SkipList *lst,int num){
+//    if(vaziaSkipList(lst)){
+//        return 0;
+//    }else{
+//        while(1){
+//            while(lst->prox != NULL && lst->prox->info<num)
+//                lst=lst->prox;
+//                if(lst->prox->info>num)
+//                    lst=lst->baixo;
+//
+//                if(lst->baixo==NULL && lst->prox == NULL) return 0;
+//                if(lst->prox->info==num) return 1;
+//
+//        }
+//    }
+//}
+
+int tamanhoSkipList(SkipList *SL){
+    int tam=0; //começa de cada nó , a partir do menor inteiro possivel(-infinito).
+    //A partir disso, toda linha da skiplist é percorrida com um auxiliar. A cada passo,
+    // adiciona-se 1 ao tamanho
+    while(SL!=NULL){
+            SkipList*aux=SL;
+            while(aux!=NULL){
+                aux=aux->prox;
+                tam++;
+            }
+            SL=SL->baixo;
+        }
+    return tam;
+}
+
+void liberaSkipList(SkipList *SL){
+    //Para essa, três auxiliares são utilizados. Um para marcar a primeira coluna e , os outros dois,
+    //para percorrer as linhas e ir deletando.
+    while(SL!=NULL){
+        SkipList *aux=SL;
+        SkipList *aux2=aux;
+        SL=SL->baixo;
+        while(aux!=NULL){
+            aux2=aux;
+            aux=aux->prox;
+            free(aux2);
+        }
+    }
 }

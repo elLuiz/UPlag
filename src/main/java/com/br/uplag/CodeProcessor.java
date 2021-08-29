@@ -1,6 +1,7 @@
 package com.br.uplag;
 
 import com.br.uplag.index.InvertedIndex;
+import com.br.uplag.ngram.NGram;
 import com.br.uplag.reader.Reader;
 import com.br.uplag.weight.Weight;
 
@@ -20,8 +21,18 @@ public class CodeProcessor {
 
     public Map<String, Map<String, Integer>> createInvertedIndex() {
         Map<String, String> filesCodeText = getFilesCodeText();
+        createNGrams(filesCodeText);
         invertedIndex.createInvertedIndex(filesCodeText);
         return invertedIndex.getInvertedIndex();
+    }
+
+    public void createNGrams(Map<String, String> filesContent) {
+        NGram nGram = new NGram(4);
+        for (Map.Entry<String, String> fileEntry : filesContent.entrySet()) {
+            String content = fileEntry.getValue();
+            String key = fileEntry.getKey();
+            filesContent.put(key, nGram.createNGrams(content));
+        }
     }
 
     public Map<String, String> getFilesCodeText() {

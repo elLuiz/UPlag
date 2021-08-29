@@ -20,6 +20,7 @@ public class DirectiveAnalyzer extends FrontEND {
         result = convertDefineToToken(result);
         result = removeStructOccurrences(result);
         result = convertDigitsOccurrences(result);
+        result = convertNullOccurrences(result);
         return result;
     }
 
@@ -37,5 +38,9 @@ public class DirectiveAnalyzer extends FrontEND {
 
     public String convertDigitsOccurrences(String code) {
         return compileMatcher(code, DigitsRegex.DIGITS_REGEX.getRegex(), DigitsRegex.DIGITS_REGEX.getToken());
+    }
+
+    public String convertNullOccurrences(String code) {
+        return compileMatcher(code, NULL.getRegex(), NULL.getToken());
     }
 }

@@ -1,13 +1,13 @@
 package com.br.uplag.c.operators;
 
 public enum ArithmeticOperatorsRegex {
-    ADD("(?<!\\+)\\+(?!\\+)", " ADD "),
-    SUB("(?<!\\-)\\-(?!\\>)", " SUB "),
+    ADD("(?<!\\+)\\+(?!\\+)", " + "),
+    SUB("(?<!\\-)\\-(?!\\>)", " - "),
     // PROBLEM: WHAT IS COMMENT OR MULTIPLICATION
     // TODO: WORK ON THAT REGEX
-    MULT("\\*", " MULT "),
-    DIV("\\/", " DIV "),
-    MOD("\\%", " MOD ");
+    MULT("\\*", " * "),
+    DIV("\\/", " / "),
+    MOD("\\%", " % ");
 
     private final String regex;
     private final String token;

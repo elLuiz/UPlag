@@ -13,24 +13,24 @@ public class VariableAnalyzerTest {
     @Test
     public void shouldTokenizeVariableIncrement() {
         String token = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.INCREMENT_REGEX);
-        Assert.assertEquals(true, token.contains("ASSIGN ADD DIG"));
+        Assert.assertEquals(true, token.contains("A a D"));
     }
 
     @Test
-    public void shouldTokenizeVariableDecrementIfAny() {
+    public void shouldNotTokenizeVariablePlusEqualAssignmentWhenThereIsNone() {
         String result = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.DECREMENT_REGEX);
-        Assert.assertEquals(true, result.contains("ASSIGN SUB DIG"));
+        Assert.assertEquals(false, result.contains("A s D"));
     }
 
     @Test
     public void shouldTokenizeVariableAssignment() {
         String result = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.NORMAL_ASSIGNMENT_REGEX);
-        Assert.assertEquals(true, result.contains("ASSIGN"));
+        Assert.assertEquals(true, result.contains("A"));
     }
 
     @Test
-    public void shouldNotTokenizeVariablePlusEqualAssignmentWhenThereIsNone() {
+    public void shouldTokenizeVariableDecrementIfAny() {
         String result = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.ASSIGNMENT_ADD);
-        Assert.assertEquals(false, result.contains("ASSIGN ADD"));
+        Assert.assertEquals(true, result.contains("A a"));
     }
 }

@@ -1,9 +1,9 @@
 package com.br.uplag.c.operators;
 
 public enum LogicalOperatorsRegexEnum {
-    AND("\\&\\&", " AND "),
-    OR("\\|\\|", " OR "),
-    NOT("\\!", " NOT ");
+    AND("\\&\\&", " \\& "),
+    OR("\\|\\|", " \\| "),
+    NOT("\\!", " \\! ");
 
     private final String regex;
     private final String token;

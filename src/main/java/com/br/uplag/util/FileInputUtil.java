@@ -58,20 +58,36 @@ public class FileInputUtil {
     // @Font: Baeldung
     public static String readFromInputStream(String directory) {
         StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = null;
         try {
-            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
+            bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
             String line;
             while ((line = bufferedReader.readLine()) != null)
                 if (!line.isEmpty() || !line.isBlank())
                     stringBuilder.append(line).append("\n");
+            bufferedReader.close();
         } catch (IOException ioException) {
             LOGGER.log(Level.SEVERE, "An com.br.uplag.exception occurred for {0}", directory);
             LOGGER.severe(ioException.getMessage());
             return "";
+        } finally {
+            closeBufferReader(bufferedReader);
+
         }
 
         return stringBuilder.toString().toLowerCase();
     }
+
+    private static void closeBufferReader(BufferedReader bufferedReader) {
+        if (bufferedReader != null) {
+            try {
+                bufferedReader.close();
+            } catch (IOException ioException) {
+                LOGGER.severe(ioException.getMessage());
+            }
+        }
+    }
+
     private static boolean isValidFileInputSize(int upperBound) {
         if (upperBound < 5) {
             LOGGER.severe("Invalid number of files");

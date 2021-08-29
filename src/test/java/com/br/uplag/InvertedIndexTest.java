@@ -16,7 +16,7 @@ import java.util.Map;
 public class InvertedIndexTest {
     @Test
     public void shouldCreateInvertedIndex() {
-        List<String> codePaths = FileInputUtil.walkTroughDirectory("src/test/resources/", "com/br/uplag/c");
+        List<String> codePaths = FileInputUtil.walkTroughDirectory("src/test/resources/", "c");
         Reader reader = new CReader();
         Map<String, String> filesContent = reader.startReadingInputFiles(codePaths);
         InvertedIndex invertedIndex = new InvertedIndex();

@@ -1,290 +1,178 @@
-/*
-    GRUPO YVJ
-    YAGO VINICIUS FERREIRA DE CASTRO - 11721BCC020
-    VICTOR HUGO EUSTAQUIO LOPES - 11721BCC011
-    JULIA MENDONÇA BIASI - 11721BCC033
-*/
 
-#include "Skip_List.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+#include "GrupoLM.h"
 #include <time.h>
-#define nivel_max 4
+#define MenosInf -2147483648
+#define MAX 10
 
-struct nodulo{
-    int valor;
-    int nivel;
-    struct nodulo **prox;
+struct elem{ //Cada elemento possui um ponteiro indicando o pr�ximo elemento e o elemento de baixo
+    int num;
+    struct elem *prox;
+    struct elem *baixo;
 };
 
-struct skip_list{
-    int tam;
-    int level;
-    struct nodulo *cabeca;
-};
+Elem *criaSkipList( ){
+    Elem *Skip;
+    int cont;
+    Elem *aux;
+    for(cont=0; cont<MAX; cont++){              // Cria os n�s iniciais com o menor inteiro poss�vel de acordo com a altura m�xima definida pelo MAX;
+        Elem *no = (Elem*) malloc(sizeof(Elem));
+        no->num = MenosInf; //define o menor inteiro
+        no->baixo = NULL; //faz o ponteiro de baixo apontar para o NULL no menor n�vel
+        no->prox = NULL;
 
-
-//Função para gerar o level de um nódulo na inserção em uma SkipList.
-//Basicamente é como jogar uma moeda e somar os sucessos(cara) até a ocorrência de um fracasso(coroa)
-static int gerar_level(){
-    int level = 1;
-
-    while (rand() < RAND_MAX / 2 && level < nivel_max)
-        level++;
-
-    return level;
-}
-
-SkipList* criaSkipList(){
-    int i;
-
-    SkipList* skp;
-    skp = (SkipList*)malloc(sizeof(SkipList)); //Alocando a SKip List
-
-    No* cabecalho;
-    cabecalho = (No*)malloc(sizeof(struct nodulo)); //Alocando um nódulo para servir de cabeçalho para a minha SkipList
-
-    skp->cabeca = cabecalho;
-
-    cabecalho->prox = (No**)malloc(sizeof(No*) * (nivel_max + 1)) ; //Este nódulo deve possuir um array de ponteiros que aponte para todas as camadas da SKipList
-
-    for(i = 0; i < nivel_max; i++){
-            cabecalho->prox[i] = NULL; //Inicializando todos os ponteiros do meu cabeçalho para NULL
+        if(cont==0){
+            Skip = no;
+            aux = no;
+        }else{ //Se o elemento n�o estiver no �ltimo n�vel da SkipList
+            aux->baixo = no;
+            aux = no;
         }
-
-    skp->level = 0; //Setando o level da SkipList para 0 e seu tamanho para 0
-    skp->tam = 0;
-
-    return skp;
+    }
+    return Skip; // retorna o ponteiro para o primeiro elemento da SkipList
 }
 
-//Esta função checa o tamanho da SkipList para dizer se ela está vazia
-int vaziaSkipList(SkipList* skp){
-    if(skp->tam == 0)
-        return 1;
-    else
-        return 0;
-}
-
-
-int insereSkipList(SkipList** skp, int chave)
+int insereSkipList(Elem* sl, int N)
 {
-    int x;
-    int i;
+    int random, level, i;
+    random = rand()%MAX+1;
+    level = MAX - random;   //Sorteia um n�mero para a altura do novo n�
 
-    No* old[nivel_max]; //Este é meu nódulo de atualização
-    No* N = (*skp)->cabeca; //Começo usando meu N como um nó auxiliar que aponta para meu nódulo cabeçalho da SkipList
+    while(level--)
+        sl = sl->baixo; //reajustar o ponteiro da SkipList para a altura definida pelo n�vel
 
-    for(i = (*skp)->level; i >= 0; i--){
-        while(N->prox[i] != NULL && chave > N->prox[i]->valor){
-            N = N->prox[i];
-        }
-        old[i] = N;                           //Percorro minha SkipList e meu nódulo old assume a posição do nódulo que deve ter seu prox atualizado
+    Elem *aux, *aux2;
+
+    for(i=0; i<random; i++){
+        aux=sl;
+        while(aux->prox != NULL && aux->prox->num < N)
+            aux = aux->prox;
+
+        Elem *no = (Elem*) malloc (sizeof(Elem));   //insere os elementos de cima para baixo na SkipList
+        if(no==NULL) return 0;
+
+        no->num = N;
+        no->baixo = NULL;
+        no->prox = aux->prox;
+        aux->prox = no;
+        if(i!=0)
+            aux2->baixo = no;   //aponta o ponteiro (baixo) do elemento de cima para o novo n�
+        aux2 = no;
+        sl = sl->baixo;
     }
-
-    x = gerar_level();
-
-
-    if(x > (*skp)->level){
-        for( i = (*skp)->level+1; i < x; i++)
-            old[i] = (*skp)->cabeca;            //Caso o level do nódulo a ser inserido seja maior do que o level atual da SkipList
-                                                //meu nódulo old assume as posições necessárias no nódulo cabeçalho (que está apontando para NULL)
-        (*skp)->level = x;
-    }
-
-
-    N = (No*)malloc(sizeof(No)); //Aloco meu nódulo a ser inserido na SkipList e atualizo seu valor e nível
-    N->valor = chave;
-    N->nivel = x;
-
-    N->prox = (No**)malloc(sizeof(No*) * (x + 1)); //Este nódulo deve ter um array de ponteiros também, para que possa apontar para seus
-                                                   //seguintes nódulos em cada level da SkipList
-    for(i = 0; i < x; i++){
-        N->prox[i] = NULL;   //Ponteiros de N inicializados em NULL
-    }
-
-
-    for(i = x - 1; i >= 0; i--){
-        N->prox[i] = old[i]->prox[i];       //Este loop atualiza a minha SKipList, fazendo com que o nódulo N seja inserido nela
-        old[i]->prox[i] = N;
-    }
-
-
-    (*skp)->tam++;  //Tamanho da minha SkipList é incrementado em 1
-
     return 1;
 }
 
-int removeSkipList(SkipList** skp, int chave){
-    //Esta primeira parte do meu código, até depois do laço For, tem mais ou menos o mesmo intuito do início da inserção, que é achar o nó a ser removido
-    int i;
-    No* old[nivel_max];
-    No* N;
-
-    if(vaziaSkipList(*skp) == 1)
+int removeSkipList(Elem* sl, int N){
+    int removido = 0;
+    if(vaziaSkipList(sl))
         return 0;
+    else{
+        while(sl!=NULL){ //Enquanto n�o chegar no �ltimo n�vel da SkipList
+            Elem *aux = sl;
+            while(aux->prox!=NULL && aux->prox->num < N)
+                aux = aux->prox;
 
-    for(i = (*skp)->level; i >= 0; i--){
-        while(N->prox[i] != NULL && chave != N->prox[i]->valor){
-            N = N->prox[i];
-        }
-        old[i] = N;
-    }
-
-    N = N->prox[0]; //Aponto meu No auxiliar para A primeira camada para checar se encontrei meu no com a chave desejada
-
-    if(N->valor == chave){
-        for(i = 0; i < (*skp)->level; i++){
-            if(old[i]->prox[i] != N){      //Caso eu chegue a um nivel onde meu no de atualizacao
-                break;                           //nao aponte mais para o no que eu desejo remover, eu dou um break no loop
+            if(aux->prox!=NULL && aux->prox->num==N){
+                Elem *aux2 = aux->prox; //Define um aux2 apontando para o elemento a ser removido e depois da um free
+                aux->prox = aux2->prox;
+                free(aux2);
+                removido++;
             }
-            old[i]->prox[i] = N->prox[i];
+            sl = sl->baixo;
         }
-        free(N->prox);                     //Free no array de ponteiros e no nódulo em si
-        free(N);
-
-        while((*skp)->level > 0 && (*skp)->cabeca->prox[(*skp)->level - 1] == NULL){
-            (*skp)->level--;                                                           //Caso existam leveis vazios na SkipList, seu level é decrementado
-        }
-
-        return 1;
+        if(removido>0) return 1;
+        else return 0;
     }
+}
 
+int vaziaSkipList(Elem* sl){
+    while(sl->baixo!=NULL){ //Vai at� o n�vel mais baixo da SkipList e verifica se h� algum elemento nela, caso n�o tenha retorna 1
+        sl = sl->baixo;
+    }
+    if(sl->prox!=NULL)
+        return 0;
+    else
+        return 1;
+}
+
+void imprimeSkipList(Elem* sl){
+
+    if(vaziaSkipList(sl) == 0){
+        while(sl->baixo != NULL) //Imprime todos os elemento da SkipList (incluindo as repeti��es dada pelas alturas de cada elemento)
+            sl = sl->baixo;
+        sl = sl->prox;
+        while(sl!=NULL){
+            printf("%d  ", sl->num);
+            sl = sl->prox;
+        }
+    }
+}
+
+void imprimetudo(Elem* sl){ //imprime todos os elementos da SkipList, incluindo as repeti��es
+    if(!vaziaSkipList(sl)){
+        Elem *aux2 = sl;
+        Elem *aux = aux2;
+        while(aux2!=NULL){
+            aux = aux->prox;
+            while(aux!=NULL){
+                printf("%d ", aux->num);
+                aux = aux->prox;
+            }
+            puts("");
+            aux2 = aux2->baixo;
+            aux=aux2;
+        }
+
+    }
+}
+
+
+int buscaSkipList(Elem* sl, int N){ //Procura o elemento a come�ar pelo primeiro elemento da SkipList
+    if(vaziaSkipList(sl))  return 0;
+    Elem *aux = sl;
+
+    while(aux!=NULL){
+        while(aux->prox!=NULL && aux->prox->num <= N){
+            aux = aux->prox;
+        }
+
+        if(aux->num == N)
+            return 1;
+        aux = aux->baixo; //Pula os elementos anteriores e come�a a busca de um n�vel mais baixo
+    }
     return 0;
 }
 
-int buscaSkipList(SkipList* skp, int chave){
-    No* N = skp->cabeca;
 
-    if(vaziaSkipList(skp) == 1){
-        printf("Skip List Vazia!!\n");
-        return 0;
-    }
-
-    //Percorre a camada inicial [0] da minha SkipList a partir do meu nódulo cabeçalho e me diz se o elemento sendo procurado existe na minha SkipList
-    while(N->prox[0] != NULL && N->prox[0]->valor < chave)
-            N = N->prox[0];
-    if(N->prox[0] == NULL){
-        printf("O numero %d nao existe na Skip List\n", chave);
-        return 0;
-    }else if(N->prox[0]->valor == chave){
-                printf("O numero %d existe na Skip List e ele possui %d niveis!\n", chave, N->prox[0]->nivel);
-                return 1;
-    }
-
-}
-
-
-void liberaSkipList(SkipList** skp){
-    free((*skp)->cabeca->prox);
-    free((*skp)->cabeca);           //Free na SkipList e seus ponteiros
-    free(*skp);
-    printf("Skip list liberada da memoria!\n");
-}
-
-
-void imprimeSkipList(SkipList* skp){
-    int i;
-    No* N = skp->cabeca;       //Nódulo auxiliar N recebe o cabeçalho da SkipList
-
-    if(vaziaSkipList(skp) == 1){
-        printf("Skip List Vazia!!");
-    }
-
-        //Percorre a skipList, de seu level mais acima até o level [0], imprimindo cada level
-        for(i = skp->level - 1; i >= 0; i--){
-        printf("Skip List[%d]: ", i);
-        while(N->prox[i] != NULL){
-            printf("%d -> ", N->prox[i]->valor);
-            N = N->prox[i];
+int tamanhoSkipList(Elem *sl){ //Retorna o tamanho da SkipList (Todos os elementos incluindo as repeti��es da altura)
+    int tam = 0;
+    while(sl!=NULL){
+        Elem* aux = sl;
+        while(aux!=NULL){
+            aux = aux -> prox;
+            tam++; //inclementa a cada elemento encontrado
         }
-        N = skp->cabeca;                //O nódulo auxiliar N recebe o cabeçalho para que possa imprimir o proximo level do começo
-        printf("NULL\n");
-        }
-    printf("\n");
+        sl = sl->baixo;
+    }
+    return tam;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// int insereSkipList(SkipList* skp, int chave){
-//     No** N;
-//     int x = gerar_level();
-//     int i;
-
-//     N = (No**)malloc(x * sizeof(No*));
-
-//     (*N)->nivel = x;
-//     (*N)->valor = chave;
-
-//     if(vaziaSkipList(skp) == 1){
-//         skp->cabeca = *N;
-//         (*N)->prox[0] = NULL;
-//         skp->tam++;
-
-//         for(i = 1; i < x; i++){
-//             (*N)->prox[i] = NULL;
-//             skp->tam++; //incrementa o tamanho da skip list
-//         }
-//         return 1;
-//     }
-
-    // No N = *skp;
-
-    // if(chave < (*skp)->cabeca->valor){
-    //     N[0]->prox = (*skp)->cabeca;
-    //     (*skp)->cabeca = N[0];
-    //     (*skp)->tam++;
-
-    //     for(i = 1; i < nivel; i++){
-    //         N[i]->valor = chave;
-    //        // N[i]->prox = ;
-    //         (*skp)->tam++; //incrementa o tamanho da skip list
-    //     }
-
-    // }
-//     return 0;
-// }
-
-// void leSkipList(SkipList skp){
-//     if(vaziaSkipList (skp) == 1){
-//         printf("Skip List vazia!!");
-//     }
-
-//     int i;
-//     No *N;
-//     N = (No*)malloc(nivel_max * sizeof(No));
-
-//     N[0] = skp;
-
-//     for(i = 0; N[i]->valor != '\0'; i++){
-//         printf("Level [%d]: ", i+1);
-
-//         while(N[i]->prox != NULL ){
-//             printf("%d ", N[i]->valor);
-//             N[i] = N[i]->prox;
-//         }
-//         printf("\n");
-//     }
-// }
+void liberaSkipList(Elem** sl){ //Percorre elemento a elemento e utiliza um ponteiro auxiliar para indicar o elemento a ser removido enquanto o ponteiro "original" continua pecorrendo a SkipList
+    int fim = 0;
+    while(1){
+        Elem *aux = *sl;
+        Elem *aux2 = aux;
+        if((*sl)!=NULL)
+            (*sl) = (*sl)->baixo;
+        else fim=1;
+        while(aux!=NULL){
+            aux2=aux;
+            aux=aux->prox;
+            free(aux2);
+        }
+        if(fim) break;
+    }
+}

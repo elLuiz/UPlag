@@ -30,12 +30,12 @@ public class TfIdfWeightTest {
         invertedIndex.put("A", tfA);
         invertedIndex.put("B", tfB);
         invertedIndex.put("C", tfC);
-        weight = new TfIdfWeight(invertedIndex, 4);
+        weight = new TfIdfWeight(invertedIndex, Arrays.asList("doc1", "doc2", "doc3", "doc4"));
     }
 
     @Test
     public void shouldCalculateTermWeight() {
         Map<String, Map<String, Double>> resultMap = weight.calculateTermWeight();
-        Assert.assertEquals(Arrays.asList(0.18454966338194143, 0.3010299956639812), new ArrayList<>(resultMap.get("doc1").values()));
+        Assert.assertEquals(Arrays.asList(0.18454966338194143, 0.3010299956639812, 0.0), new ArrayList<>(resultMap.get("doc1").values()));
     }
 }
