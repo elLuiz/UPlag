@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 public class FileInputUtil {
     private static final Logger LOGGER = Logger.getLogger("File input");
 
+    private FileInputUtil() {
+    }
+
     public static List<String> getAllFilesPath(String directory, String ...args) {
         List<String> files = new ArrayList<>();
         int upperBound = args.length;
@@ -67,7 +70,7 @@ public class FileInputUtil {
                     stringBuilder.append(line).append("\n");
             bufferedReader.close();
         } catch (IOException ioException) {
-            LOGGER.log(Level.SEVERE, "An com.br.uplag.exception occurred for {0}", directory);
+            LOGGER.log(Level.SEVERE, "An exception occurred for {0}", directory);
             LOGGER.severe(ioException.getMessage());
             return "";
         } finally {

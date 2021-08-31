@@ -35,8 +35,10 @@ public class CosineSimilarity {
 
     public void displayResultsAboveThreshold(Map<String, Double> documentsSimilarityMap) {
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
-            if (fileEntry.getValue() >= 40)
+            if (fileEntry.getValue() >= 50) {
                 System.out.println(fileEntry.getKey() + "->" + fileEntry.getValue());
+
+            }
         }
     }
 

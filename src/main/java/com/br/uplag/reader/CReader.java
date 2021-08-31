@@ -20,8 +20,9 @@ public class CReader implements Reader{
         for (String path : codeFilePath) {
             String codeText = readFromInputStream(path);
             codeText = frontEndFacade.createTokenSequence(codeText).replace("\n", "");
+            codeText = codeText.replace("\t", "");
             codeText = codeText.replace(" ", "");
-            fileContentMap.put(path, codeText);
+           fileContentMap.put(path, codeText);
         }
 
         return fileContentMap;

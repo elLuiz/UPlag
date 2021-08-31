@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import com.br.uplag.c.loops.LoopRegex;
 
-public class LoopAnalyzer extends FrontEND {
+public class LoopAnalyzer extends FrontEnd {
     private static LoopAnalyzer loopAnalyzer;
     private LoopAnalyzer() {}
 

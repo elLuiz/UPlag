@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import static com.br.uplag.c.functions.FunctionRegex.*;
 
-public class FunctionsAnalyzer extends FrontEND {
+public class FunctionsAnalyzer extends FrontEnd {
     private static FunctionsAnalyzer functionsAnalyzer;
     private FunctionsAnalyzer(){}
 

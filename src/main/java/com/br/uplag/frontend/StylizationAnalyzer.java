@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import com.br.uplag.c.misc.StylizationRegex;
 
-public class StylizationAnalyzer extends FrontEND{
+public class StylizationAnalyzer extends FrontEnd {
     private static StylizationAnalyzer stylizationAnalyzer;
     private StylizationAnalyzer() {}
 

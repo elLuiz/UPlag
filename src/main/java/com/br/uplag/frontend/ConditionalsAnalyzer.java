@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import static com.br.uplag.c.conditionals.ConditionalsRegex.*;
 
-public class ConditionalsAnalyzer extends FrontEND {
+public class ConditionalsAnalyzer extends FrontEnd {
     private static ConditionalsAnalyzer conditionalsAnalyzer;
     private ConditionalsAnalyzer(){}
 

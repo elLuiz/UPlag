@@ -4,7 +4,7 @@ import com.br.uplag.c.operations.DigitsRegex;
 
 import static com.br.uplag.c.directive.DirectiveRegex.*;
 
-public class DirectiveAnalyzer extends FrontEND {
+public class DirectiveAnalyzer extends FrontEnd {
     private static DirectiveAnalyzer directiveAnalyzer;
     private DirectiveAnalyzer() {}
 
