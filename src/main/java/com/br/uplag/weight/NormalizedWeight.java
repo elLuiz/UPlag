@@ -31,9 +31,9 @@ public class NormalizedWeight extends Weight{
     }
 
     public double calculateWeight(int tf, int maxTF) {
-        if (maxTF > 0)
-            return (SMOOTHING_FACTOR + (1 - SMOOTHING_FACTOR) * ((float) tf / maxTF)) * calculateIDF();
-        return 0.0F;
+        if (tf > 0)
+            return (1 + Math.log10(tf)) * calculateIDF();
+        return 0.0;
     }
 
     public Map<String, Integer> findTheMaxTermFrequencyInDocument() {

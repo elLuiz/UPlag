@@ -2,6 +2,10 @@ package com.br.uplag;
 
 import com.br.uplag.parameters.ParametersInputRegex;
 import com.br.uplag.reader.CReader;
+import com.br.uplag.result.SimilarityResult;
+import com.br.uplag.similarity.CodeSimilarity;
+import com.br.uplag.similarity.CosineSimilarity;
+import com.br.uplag.similarity.DiceSimilarity;
 import com.br.uplag.util.FileInputUtil;
 import com.br.uplag.util.PropertyInputUtil;
 import com.br.uplag.weight.NormalizedWeight;
@@ -49,8 +53,10 @@ public class TerminalInputReader {
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
             Weight weight = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
-            CosineSimilarity cosineSimilarity = new CosineSimilarity(documentsWeightMap);
-            cosineSimilarity.calculateSimilarity();
+            CodeSimilarity codeSimilarity = weightingTechnique.equalsIgnoreCase(ParametersInputRegex.TF_IDF.getParameter()) ? new CosineSimilarity(documentsWeightMap) : new DiceSimilarity(documentsWeightMap);
+            Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
+            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap());
+            similarityResult.displaySimilarityResults();
         } else {
             LOGGER.info("Invalid language");
             LOGGER.info("Available languages: c");
