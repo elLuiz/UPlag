@@ -3,8 +3,8 @@ package com.br.uplag.similarity;
 import java.util.List;
 import java.util.Map;
 
-public class CosineSimilarity extends CodeSimilarity{
-    public CosineSimilarity(Map<String, Map<String, Double>> weightMap) {
+public class DiceSimilarity extends CodeSimilarity{
+    public DiceSimilarity(Map<String, Map<String, Double>> weightMap) {
         super(weightMap);
     }
 
@@ -17,11 +17,11 @@ public class CosineSimilarity extends CodeSimilarity{
             euclidianSecondDocument += Math.pow(secondDocument.get(i), 2);
         }
 
-        return Math.sqrt(euclidianFirstDocument) * Math.sqrt(euclidianSecondDocument);
-   }
+        return euclidianFirstDocument + euclidianSecondDocument;
+    }
 
     @Override
     public Double calculateSimilarity(Double dotProduct, Double distance) {
-        return dotProduct / distance;
+        return 2 * dotProduct / distance;
     }
 }

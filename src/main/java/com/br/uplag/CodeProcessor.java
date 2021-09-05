@@ -28,7 +28,7 @@ public class CodeProcessor {
     }
 
     public void createNGrams(Map<String, String> filesContent) {
-        NGram nGram = new NGram(6);
+        NGram nGram = new NGram(4);
         for (Map.Entry<String, String> fileEntry : filesContent.entrySet()) {
             String content = fileEntry.getValue();
             String key = fileEntry.getKey();

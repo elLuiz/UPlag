@@ -53,7 +53,7 @@ public class TerminalInputReader {
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
             Weight weight = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
-            CodeSimilarity codeSimilarity = weightingTechnique.equalsIgnoreCase(ParametersInputRegex.TF_IDF.getParameter()) ? new CosineSimilarity(documentsWeightMap) : new DiceSimilarity(documentsWeightMap);
+            CodeSimilarity codeSimilarity = weightingTechnique.equalsIgnoreCase(ParametersInputRegex.TF_IDF.getParameter()) ? new DiceSimilarity(documentsWeightMap) : new CosineSimilarity(documentsWeightMap);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
             SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap());
             similarityResult.displaySimilarityResults();
