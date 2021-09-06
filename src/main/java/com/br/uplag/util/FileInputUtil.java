@@ -24,9 +24,9 @@ public class FileInputUtil {
         List<String> files = new ArrayList<>();
         int upperBound = args.length;
         if (isValidFileInputSize(upperBound)) {
-            boolean filesTerminatedWith = args[6].matches("\\.[a-z]+");
+            boolean filesTerminatedWith = args[9].matches("\\.[a-z]+");
             if (filesTerminatedWith) {
-                String extension = StringUtil.replaceBy(".", "", args[6]);
+                String extension = StringUtil.replaceBy(".", "", args[9]);
                 files.addAll(walkTroughDirectory(directory, extension));
             } else {
                 for (int i = 5; i < upperBound; i++) {

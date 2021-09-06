@@ -5,6 +5,9 @@ public enum ParametersInputRegex {
     LANGUAGE("-l"),
     TF_IDF("-tfidf"),
     NIDF("-nidf"),
+    DICE("-dice"),
+    COSINE("-cosine"),
+    SIMILARITY("-t"),
     PROGRAMS("-p");
 
     private final String parameter;

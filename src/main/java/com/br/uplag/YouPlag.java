@@ -20,18 +20,19 @@ import java.util.logging.Logger;
 // args 2 - -l args 3 language
 // args 4 - -tf-idf/nidf
 // args 5 - -p args 6 programs
-public class TerminalInputReader {
-    private static final Logger LOGGER = Logger.getLogger(TerminalInputReader.class.getSimpleName());
+public class YouPlag {
+    private static final Logger LOGGER = Logger.getLogger(YouPlag.class.getSimpleName());
     private String directory;
     private String language;
     private String weightingTechnique;
     private List<String> programs;
-
+    private String similarityMeasure;
+    private Integer similarityThreshold;
 
     public static void main(String ...args) {
-        TerminalInputReader terminalInputReader = new TerminalInputReader();
-        terminalInputReader.readTerminalInput(args);
-        terminalInputReader.startReadingCodeFiles();
+        YouPlag youPlag = new YouPlag();
+        youPlag.readTerminalInput(args);
+        youPlag.startReadingCodeFiles();
     }
 
     public void readTerminalInput(String ...args) {
@@ -41,9 +42,20 @@ public class TerminalInputReader {
             language = args[3];
         if (PropertyInputUtil.verifyIfPropertyIsListed(args[4], ParametersInputRegex.NIDF) || PropertyInputUtil.verifyIfPropertyIsListed(args[4], ParametersInputRegex.TF_IDF))
             weightingTechnique = args[4];
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.PROGRAMS)) {
+        else
+            weightingTechnique = ParametersInputRegex.TF_IDF.getParameter();
+        if (PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.DICE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.COSINE)) {
+            similarityMeasure = args[5];
+        } else
+            similarityMeasure = ParametersInputRegex.COSINE.getParameter();
+        if (PropertyInputUtil.verifyIfPropertyIsListed(args[6], ParametersInputRegex.SIMILARITY))
+            similarityThreshold = Integer.valueOf(args[7]);
+        else
+            similarityThreshold = 50;
+        if (PropertyInputUtil.verifyIfPropertyIsListed(args[8], ParametersInputRegex.PROGRAMS)) {
             programs = FileInputUtil.getAllFilesPath(directory, args);
         }
+
     }
 
     public void startReadingCodeFiles() {
@@ -53,7 +65,7 @@ public class TerminalInputReader {
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
             Weight weight = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
-            CodeSimilarity codeSimilarity = weightingTechnique.equalsIgnoreCase(ParametersInputRegex.TF_IDF.getParameter()) ? new DiceSimilarity(documentsWeightMap) : new CosineSimilarity(documentsWeightMap);
+            CodeSimilarity codeSimilarity = similarityMeasure.equalsIgnoreCase(ParametersInputRegex.DICE.getParameter()) ? new DiceSimilarity(documentsWeightMap, similarityThreshold) : new CosineSimilarity(documentsWeightMap, similarityThreshold);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
             SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap());
             similarityResult.displaySimilarityResults();

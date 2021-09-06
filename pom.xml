@@ -45,7 +45,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.br.uplag.TerminalInputReader</mainClass>
+                            <mainClass>com.br.uplag.YouPlag</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

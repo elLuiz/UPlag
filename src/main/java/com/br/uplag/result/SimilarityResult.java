@@ -17,10 +17,8 @@ public class SimilarityResult {
     public void displaySimilarityResults() {
         Map<String, Double> documentsSimilarityMap = sortMapDescending();
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
-            if (fileEntry.getValue() >= 50) {
-                System.out.println(fileEntry.getKey() + " -> " + fileEntry.getValue() + "%");
-                displayStatisticalDataWithinDocumentsPairs(fileEntry.getKey());
-            }
+            System.out.println(fileEntry.getKey() + " -> " + fileEntry.getValue() + "%");
+            displayStatisticalDataWithinDocumentsPairs(fileEntry.getKey());
         }
     }
 
