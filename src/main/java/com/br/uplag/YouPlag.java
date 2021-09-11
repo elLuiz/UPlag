@@ -5,7 +5,7 @@ import com.br.uplag.reader.CReader;
 import com.br.uplag.result.SimilarityResult;
 import com.br.uplag.similarity.CodeSimilarity;
 import com.br.uplag.similarity.CosineSimilarity;
-import com.br.uplag.similarity.DiceSimilarity;
+import com.br.uplag.similarity.OverlapSimilarity;
 import com.br.uplag.util.FileInputUtil;
 import com.br.uplag.util.PropertyInputUtil;
 import com.br.uplag.weight.NormalizedWeight;
@@ -44,7 +44,7 @@ public class YouPlag {
             weightingTechnique = args[4];
         else
             weightingTechnique = ParametersInputRegex.TF_IDF.getParameter();
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.DICE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.COSINE)) {
+        if (PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.DICE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.COSINE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.OVERLAP)) {
             similarityMeasure = args[5];
         } else
             similarityMeasure = ParametersInputRegex.COSINE.getParameter();
@@ -65,7 +65,7 @@ public class YouPlag {
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
             Weight weight = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
-            CodeSimilarity codeSimilarity = similarityMeasure.equalsIgnoreCase(ParametersInputRegex.DICE.getParameter()) ? new DiceSimilarity(documentsWeightMap, similarityThreshold) : new CosineSimilarity(documentsWeightMap, similarityThreshold);
+            CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
             SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap());
             similarityResult.displaySimilarityResults();
@@ -80,5 +80,14 @@ public class YouPlag {
             return new TfIdfWeight(invertedIndex, programs);
         else
             return new NormalizedWeight(invertedIndex, programs);
+    }
+
+    private CodeSimilarity defineCodeSimilarityMethod(Map<String, Map<String, Double>> documentsWeightMap) {
+        if (ParametersInputRegex.DICE.getParameter().equalsIgnoreCase(similarityMeasure))
+            return new CosineSimilarity(documentsWeightMap, similarityThreshold);
+        else if (ParametersInputRegex.OVERLAP.getParameter().equalsIgnoreCase(similarityMeasure))
+            return new OverlapSimilarity(documentsWeightMap, similarityThreshold);
+        else
+            return new CosineSimilarity(documentsWeightMap, similarityThreshold);
     }
 }

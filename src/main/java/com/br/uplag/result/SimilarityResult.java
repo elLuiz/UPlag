@@ -8,7 +8,6 @@ import java.util.Map;
 public class SimilarityResult {
     private final Map<String, Double> similarityMap;
     private final Map<String, DocumentStatistics> documentStatisticsMap;
-
     public SimilarityResult(Map<String, Double> similarityMap, Map<String, DocumentStatistics> documentStatisticsMap) {
         this.similarityMap = similarityMap;
         this.documentStatisticsMap = documentStatisticsMap;
