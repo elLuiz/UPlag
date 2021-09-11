@@ -4,16 +4,16 @@ import java.util.*;
 
 public abstract class CodeSimilarity {
     protected final Map<String, Map<String, Double>> weightMap;
-    private final Integer threshold;
+    private final Double threshold;
 
     protected CodeSimilarity(Map<String, Map<String, Double>> weightMap) {
         this.weightMap = weightMap;
-        this.threshold = 50;
+        this.threshold = 50.0;
     }
 
     protected CodeSimilarity(Map<String, Map<String, Double>> weightMap, Integer threshold) {
         this.weightMap = weightMap;
-        this.threshold = threshold;
+        this.threshold = Double.valueOf(threshold);
     }
 
     public Map<String, Double> calculateSimilarity() {
@@ -28,8 +28,9 @@ public abstract class CodeSimilarity {
                     double distance = calculateDistance(firstDocumentWeights, secondDocumentWeights);
                     double similarity = calculateSimilarity(dotProduct, distance);
                     String documentPair = "(" + document + ", " + pair + ")";
-                    if (documentsSimilarityMap.get("(" + pair + ", " + document + ")") == null && similarity*100 >= threshold)
-                        documentsSimilarityMap.put(documentPair, similarity * 100);
+                    similarity = similarity * 100;
+                    if (documentsSimilarityMap.get("(" + pair + ", " + document + ")") == null && similarity >= threshold)
+                        documentsSimilarityMap.put(documentPair, similarity);
                 }
             }
         }
