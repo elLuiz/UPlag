@@ -8,9 +8,6 @@ public class DiceSimilarity extends CodeSimilarity{
         super(weightMap);
     }
 
-    public DiceSimilarity(Map<String, Map<String, Double>> weightMap, Integer threshold) {
-        super(weightMap, threshold);
-    }
 
     @Override
     public Double calculateDistance(List<Double> firstDocument, List<Double> secondDocument) {

@@ -8,10 +8,6 @@ public class OverlapSimilarity extends CodeSimilarity{
         super(weightMap);
     }
 
-    public OverlapSimilarity(Map<String, Map<String, Double>> weightMap, Integer threshold) {
-        super(weightMap, threshold);
-    }
-
     @Override
     public Double calculateDistance(List<Double> firstDocument, List<Double> secondDocument) {
         double euclidianFirstDocument = 0.0;

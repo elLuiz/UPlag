@@ -67,7 +67,7 @@ public class YouPlag {
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
             CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
-            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap());
+            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), null);
             similarityResult.displaySimilarityResults();
         } else {
             LOGGER.info("Invalid language");
@@ -84,10 +84,10 @@ public class YouPlag {
 
     private CodeSimilarity defineCodeSimilarityMethod(Map<String, Map<String, Double>> documentsWeightMap) {
         if (ParametersInputRegex.DICE.getParameter().equalsIgnoreCase(similarityMeasure))
-            return new CosineSimilarity(documentsWeightMap, similarityThreshold);
+            return new CosineSimilarity(documentsWeightMap);
         else if (ParametersInputRegex.OVERLAP.getParameter().equalsIgnoreCase(similarityMeasure))
-            return new OverlapSimilarity(documentsWeightMap, similarityThreshold);
+            return new OverlapSimilarity(documentsWeightMap);
         else
-            return new CosineSimilarity(documentsWeightMap, similarityThreshold);
+            return new CosineSimilarity(documentsWeightMap);
     }
 }

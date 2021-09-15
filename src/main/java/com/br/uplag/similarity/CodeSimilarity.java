@@ -1,19 +1,16 @@
 package com.br.uplag.similarity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class CodeSimilarity {
     protected final Map<String, Map<String, Double>> weightMap;
-    private final Double threshold;
 
-    protected CodeSimilarity(Map<String, Map<String, Double>> weightMap) {
+     protected CodeSimilarity(Map<String, Map<String, Double>> weightMap) {
         this.weightMap = weightMap;
-        this.threshold = 50.0;
-    }
-
-    protected CodeSimilarity(Map<String, Map<String, Double>> weightMap, Integer threshold) {
-        this.weightMap = weightMap;
-        this.threshold = Double.valueOf(threshold);
     }
 
     public Map<String, Double> calculateSimilarity() {
@@ -29,7 +26,7 @@ public abstract class CodeSimilarity {
                     double similarity = calculateSimilarity(dotProduct, distance);
                     String documentPair = "(" + document + ", " + pair + ")";
                     similarity = similarity * 100;
-                    if (documentsSimilarityMap.get("(" + pair + ", " + document + ")") == null && similarity >= threshold)
+                    if (documentsSimilarityMap.get("(" + pair + ", " + document + ")") == null)
                         documentsSimilarityMap.put(documentPair, similarity);
                 }
             }
