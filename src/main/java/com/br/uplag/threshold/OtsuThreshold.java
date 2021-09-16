@@ -19,12 +19,12 @@ public class OtsuThreshold {
     }
 
     public Double findMaxThresholdValue() {
-        Double position = 0.0;
-        Double maxThreshold = 0.0;
+        double position = 0.0;
+        double maxThreshold = 0.0;
         for (int i = 0; i < candidatesThresholds.size(); i++) {
             if (candidatesThresholds.get(i) > maxThreshold) {
                 maxThreshold = candidatesThresholds.get(i);
-                position = (double) i;
+                position =  i;
             }
         }
 

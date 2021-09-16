@@ -20,7 +20,7 @@ public class ReaderTest {
         args[4] = "-tfidf";
         args[5] = "-p";
         args[6] = ".c";
-        List<String> files = FileInputUtil.getAllFilesPath(args[1], args);
+        List<String> files = FileInputUtil.getAllFilesPath(args[1], 9, args);
         Reader reader = new CReader();
         Assert.assertEquals(false, reader.startReadingInputFiles(files).isEmpty());
     }

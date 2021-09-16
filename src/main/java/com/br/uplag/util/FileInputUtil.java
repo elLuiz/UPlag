@@ -20,25 +20,27 @@ public class FileInputUtil {
     private FileInputUtil() {
     }
 
-    public static List<String> getAllFilesPath(String directory, String ...args) {
+    public static List<String> getAllFilesPath(String directory, Integer index, String... args) {
         List<String> files = new ArrayList<>();
         int upperBound = args.length;
-        if (isValidFileInputSize(upperBound)) {
-            boolean filesTerminatedWith = args[9].matches("\\.[a-z]+");
-            if (filesTerminatedWith) {
-                String extension = StringUtil.replaceBy(".", "", args[9]);
-                files.addAll(walkTroughDirectory(directory, extension));
-            } else {
-                for (int i = 5; i < upperBound; i++) {
-                    if (isExistingFile(directory + args[i]))
-                        files.add(directory + args[i]);
-                    else
-                        LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
-                }
-            }
+        boolean filesTerminatedWith = args[index].matches("\\.[a-z]+");
+        if (filesTerminatedWith) {
+            String extension = StringUtil.replaceBy(".", "", args[index]);
+            files.addAll(walkTroughDirectory(directory, extension));
+        } else {
+            getSpecifiedFiles(directory, files, upperBound, args);
         }
 
         return files;
+    }
+
+    private static void getSpecifiedFiles(String directory, List<String> files, int upperBound, String[] args) {
+        for (int i = 5; i < upperBound; i++) {
+            if (isExistingFile(directory + args[i]))
+                files.add(directory + args[i]);
+            else
+                LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
+        }
     }
 
     public static List<String> walkTroughDirectory(String directory, String fileExtension) {

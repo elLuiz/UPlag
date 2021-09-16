@@ -1,13 +1,12 @@
 package com.br.uplag;
 
+import com.br.uplag.input.*;
 import com.br.uplag.parameters.ParametersInputRegex;
 import com.br.uplag.reader.CReader;
 import com.br.uplag.result.SimilarityResult;
 import com.br.uplag.similarity.CodeSimilarity;
 import com.br.uplag.similarity.CosineSimilarity;
 import com.br.uplag.similarity.OverlapSimilarity;
-import com.br.uplag.util.FileInputUtil;
-import com.br.uplag.util.PropertyInputUtil;
 import com.br.uplag.weight.NormalizedWeight;
 import com.br.uplag.weight.TfIdfWeight;
 import com.br.uplag.weight.Weight;
@@ -36,26 +35,25 @@ public class YouPlag {
     }
 
     public void readTerminalInput(String ...args) {
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[0], ParametersInputRegex.DIRECTORY))
-            directory = args[1];
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[2], ParametersInputRegex.LANGUAGE))
-            language = args[3];
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[4], ParametersInputRegex.NIDF) || PropertyInputUtil.verifyIfPropertyIsListed(args[4], ParametersInputRegex.TF_IDF))
-            weightingTechnique = args[4];
-        else
-            weightingTechnique = ParametersInputRegex.TF_IDF.getParameter();
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.DICE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.COSINE) || PropertyInputUtil.verifyIfPropertyIsListed(args[5], ParametersInputRegex.OVERLAP)) {
-            similarityMeasure = args[5];
-        } else
-            similarityMeasure = ParametersInputRegex.COSINE.getParameter();
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[6], ParametersInputRegex.SIMILARITY))
-            similarityThreshold = Integer.valueOf(args[7]);
-        else
-            similarityThreshold = 50;
-        if (PropertyInputUtil.verifyIfPropertyIsListed(args[8], ParametersInputRegex.PROGRAMS)) {
-            programs = FileInputUtil.getAllFilesPath(directory, args);
-        }
-
+        DirectoryInputReader directoryInputReader = new DirectoryInputReader(args);
+        directoryInputReader.defineParameter();
+        directory = directoryInputReader.getDirectory();
+        LanguageInputReader languageInputReader = new LanguageInputReader(args);
+        languageInputReader.defineParameter();
+        language = languageInputReader.getLanguage();
+        WeightingTechniqueInputReader weightingTechniqueInputReader = new WeightingTechniqueInputReader(args);
+        weightingTechniqueInputReader.defineParameter();
+        weightingTechnique = weightingTechniqueInputReader.getWeightingTechnique();
+        SimilarityMeasureInputReader similarityMeasureInputReader = new SimilarityMeasureInputReader(args);
+        similarityMeasureInputReader.defineParameter();
+        similarityMeasure = similarityMeasureInputReader.getSimilarityMeasure();
+        ThresholdInputReader thresholdInputReader = new ThresholdInputReader(args);
+        thresholdInputReader.defineParameter();
+        similarityThreshold = thresholdInputReader.getSimilarityThreshold();
+        ProgramsInputReader programsInputReader = new ProgramsInputReader(args);
+        programsInputReader.setDirectory(directory);
+        programsInputReader.defineParameter();
+        programs = programsInputReader.getPrograms();
     }
 
     public void startReadingCodeFiles() {
@@ -67,7 +65,8 @@ public class YouPlag {
             Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
             CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
-            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), null);
+            Double threshold = similarityThreshold == null ? null : Double.valueOf(similarityThreshold);
+            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), threshold);
             similarityResult.displaySimilarityResults();
         } else {
             LOGGER.info("Invalid language");

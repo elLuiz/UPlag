@@ -21,7 +21,7 @@ public class FileInputUtilTest {
         args[5] = "fonte01.c";
         args[6] = "fonte02.c";
         List<String> files = Arrays.asList("/home/luiz/Downloads/fontes/fonte01.c", "/home/luiz/Downloads/fontes/fonte02.c");
-        Assert.assertEquals(files, FileInputUtil.getAllFilesPath(args[1], args));
+        Assert.assertEquals(files, FileInputUtil.getAllFilesPath(args[1], 9, args));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class FileInputUtilTest {
         args[4] = "-tfidf";
         args[5] = "-p";
         args[6] = ".c";
-        Assert.assertEquals(true, !FileInputUtil.getAllFilesPath(args[1], args).isEmpty());
+        Assert.assertEquals(true, !FileInputUtil.getAllFilesPath(args[1], 9, args).isEmpty());
     }
 
     @Test

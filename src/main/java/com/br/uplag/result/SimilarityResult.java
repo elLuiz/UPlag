@@ -4,16 +4,13 @@ import com.br.uplag.threshold.ClassVariance;
 import com.br.uplag.threshold.Histogram;
 import com.br.uplag.util.DoubleUtil;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SimilarityResult {
     public static final int PLACES = 2;
     private final Map<String, Double> similarityMap;
     private final Map<String, DocumentStatistics> documentStatisticsMap;
-    private Double threshold;
+    private final Double threshold;
 
     public SimilarityResult(Map<String, Double> similarityMap, Map<String, DocumentStatistics> documentStatisticsMap, Double threshold) {
         this.similarityMap = similarityMap;
@@ -23,7 +20,7 @@ public class SimilarityResult {
             classVariance.calculateCumulativeProbability();
             this.threshold = classVariance.getOtsuThreshold().findMaxThresholdValue();
         } else
-            this.threshold = 50.0;
+            this.threshold = threshold;
     }
 
     public void displaySimilarityResults() {

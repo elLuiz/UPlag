@@ -1,58 +1,77 @@
 package com.br.uplag.input;
 
-import com.br.uplag.util.FileInputUtil;
+import com.br.uplag.parameters.ParametersInputRegex;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.br.uplag.parameters.ParametersInputRegex.*;
-import static com.br.uplag.util.PropertyInputUtil.verifyIfPropertyIsListed;
+import static com.br.uplag.parameters.ParametersInputRegex.DICE;
+import static com.br.uplag.parameters.ParametersInputRegex.TF_IDF;
 
+@Getter
 public class TerminalInputReader {
-    private String directory;
-    private String language = "c";
-    private String weightingTechnique = TF_IDF.getParameter();
-    private List<String> programs;
-    private String similarityMeasure = DICE.getParameter();
-    private Integer similarityThreshold = 50;
+    protected List<String> arguments;
+    protected String[] args;
+    protected String directory;
+    protected String language = "c";
+    protected String weightingTechnique = TF_IDF.getParameter();
+    protected List<String> programs;
+    protected String similarityMeasure = DICE.getParameter();
+    protected Integer similarityThreshold = null;
 
-    public void defineYouPlagDataInput(String ...args) {
-        for (int i = 0; i < args.length; i++) {
-            defineDirectory(args[0], args[1]);
-            defineLanguage(args[2], args[3]);
-            defineWeightingTechnique(args[4]);
-            defineSimilarityMethod(args[5]);
-            List<String> input = Arrays.asList(args);
-        }
+    public TerminalInputReader() {
     }
 
-    public void defineDirectory(String parameter, String input) {
-        if (verifyIfPropertyIsListed(parameter, DIRECTORY))
-            directory = input;
+    public TerminalInputReader(String[] arguments) {
+        this.arguments = Arrays.asList(arguments);
+        this.args = arguments;
     }
 
-    public void defineLanguage(String parameter, String input) {
-        if (verifyIfPropertyIsListed(parameter, LANGUAGE))
-            language = input;
+    public void defineYouPlagDataInput() {
+        defineDirectory();
+        defineLanguage();
+        defineWeightingTechnique();
+        defineSimilarityMeasure();
+        defineThreshold();
+        definePrograms();
     }
 
-    public void defineWeightingTechnique(String input) {
-        if (verifyIfPropertyIsListed(input, NIDF) || verifyIfPropertyIsListed(input, TF_IDF))
-            weightingTechnique = input;
+    private void defineWeightingTechnique() {
+        InputReader weightingInputReader = new WeightingTechniqueInputReader();
+        weightingInputReader.defineParameter();
     }
 
-    public void defineSimilarityMethod(String input) {
-        if (verifyIfPropertyIsListed(input, DICE) || verifyIfPropertyIsListed(input, COSINE))
-            similarityMeasure = input;
+    private void defineDirectory() {
+        InputReader directoryInputReader = new DirectoryInputReader();
+        directoryInputReader.defineParameter();
     }
 
-    public void defineSimilarityThreshold(String parameter, String input) {
-        if (verifyIfPropertyIsListed(parameter, SIMILARITY))
-            similarityThreshold = Integer.parseInt(input);
+    private void defineLanguage() {
+        InputReader languageInputReader = new LanguageInputReader();
+        languageInputReader.defineParameter();
     }
 
-    public void getPrograms(String parameter, String ...inputs) {
-        if (verifyIfPropertyIsListed(parameter, PROGRAMS))
-            programs = FileInputUtil.getAllFilesPath(directory, inputs);
+    private void defineSimilarityMeasure() {
+        InputReader similarityMeasureInputReader = new SimilarityMeasureInputReader();
+        similarityMeasureInputReader.defineParameter();
     }
+
+    private void defineThreshold() {
+        InputReader thresholdInputReader = new ThresholdInputReader();
+        thresholdInputReader.defineParameter();
+    }
+
+    private void definePrograms() {
+        InputReader programsInputReader = new ProgramsInputReader();
+        programsInputReader.defineParameter();
+    }
+
+
+
+
+    protected boolean argumentContainsProperty(ParametersInputRegex parametersInputRegex) {
+        return arguments.contains(parametersInputRegex.getParameter());
+    }
+
 }
