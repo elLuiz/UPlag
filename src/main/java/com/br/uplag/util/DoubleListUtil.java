@@ -8,7 +8,7 @@ public class DoubleListUtil {
 
     public static List<Double> getSubListList(List<Double> probabilities, int startPosition, int index) {
         if (startPosition >= index)
-            return Collections.singletonList(probabilities.get(index));
+            return Collections.singletonList(probabilities.get(startPosition - 1));
         return probabilities.subList(startPosition, index);
     }
 
@@ -35,7 +35,7 @@ public class DoubleListUtil {
         double sum = 0.0;
         for (int index = 0; index < classDoubleList.size(); index++) {
             if (cumulativeProbability > 0.0)
-                sum += Math.pow((index - classMean), 2) * classDoubleList.get(index) / cumulativeProbability;
+                sum += Math.pow((index - classMean), 2) * classDoubleList.get(index);
         }
 
         return sum;

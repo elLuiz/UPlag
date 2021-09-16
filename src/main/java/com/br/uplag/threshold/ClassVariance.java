@@ -36,7 +36,7 @@ public class ClassVariance {
         List<Double> probabilities = getDoubles();
         for (int index = 0; index <= 9; index++) {
             List<Double> classOneList = getSubListList(probabilities, 0, index + 1);
-            List<Double> classTwoList = getSubListList(probabilities, index + 1, 9);
+            List<Double> classTwoList = getSubListList(probabilities, index + 1, 10);
             firstClassCumulativeProbabilities = sumList(classOneList);
             secondClassCumulativeProbabilities = sumList(classTwoList);
             meanOfFirstClass = calculateMean(classOneList, firstClassCumulativeProbabilities);
