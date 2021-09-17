@@ -3,8 +3,8 @@ package com.br.uplag.util;
 import java.util.Collections;
 import java.util.List;
 
-public class DoubleListUtil {
-    private DoubleListUtil() {}
+public class ListStatisticsUtil {
+    private ListStatisticsUtil() {}
 
     public static List<Double> getSubListList(List<Double> probabilities, int startPosition, int index) {
         if (startPosition >= index)
@@ -25,7 +25,7 @@ public class DoubleListUtil {
     }
 
     public static Double calculateMean(List<Double> classDoubleList, Double classCumulativeProbability) {
-        double weightedProbabilities = DoubleListUtil.multiplyListOfProbabilities(classDoubleList);
+        double weightedProbabilities = ListStatisticsUtil.multiplyListOfProbabilities(classDoubleList);
         if (classCumulativeProbability > 0.0)
             return weightedProbabilities / classCumulativeProbability;
         return 0.0;

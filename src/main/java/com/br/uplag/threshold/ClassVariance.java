@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.br.uplag.util.DoubleListUtil.*;
+import static com.br.uplag.util.ListStatisticsUtil.*;
 
 public class ClassVariance {
     private final Map<Integer, HistogramDTO> histogramDTOMap;

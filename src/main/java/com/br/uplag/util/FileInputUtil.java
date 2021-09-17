@@ -30,7 +30,7 @@ public class FileInputUtil {
         } else {
             getSpecifiedFiles(directory, files, upperBound, args);
         }
-
+        Collections.sort(files);
         return files;
     }
 

@@ -4,7 +4,10 @@ import com.br.uplag.threshold.ClassVariance;
 import com.br.uplag.threshold.Histogram;
 import com.br.uplag.util.DoubleUtil;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SimilarityResult {
     public static final int PLACES = 2;

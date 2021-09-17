@@ -1,5 +1,6 @@
 package com.br.uplag;
 
+import com.br.uplag.chart.SimilarityChartGenerator;
 import com.br.uplag.input.*;
 import com.br.uplag.parameters.ParametersInputRegex;
 import com.br.uplag.reader.CReader;
@@ -7,6 +8,7 @@ import com.br.uplag.result.SimilarityResult;
 import com.br.uplag.similarity.CodeSimilarity;
 import com.br.uplag.similarity.CosineSimilarity;
 import com.br.uplag.similarity.OverlapSimilarity;
+import com.br.uplag.util.DoubleUtil;
 import com.br.uplag.weight.NormalizedWeight;
 import com.br.uplag.weight.TfIdfWeight;
 import com.br.uplag.weight.Weight;
@@ -68,6 +70,8 @@ public class YouPlag {
             Double threshold = similarityThreshold == null ? null : Double.valueOf(similarityThreshold);
             SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), threshold);
             similarityResult.displaySimilarityResults();
+            SimilarityChartGenerator similarityChartGenerator = new SimilarityChartGenerator(directory);
+            similarityChartGenerator.createBarChart(DoubleUtil.convertListOfDoubleToPrimitiveArray(stringDoubleMap.values()));
         } else {
             LOGGER.info("Invalid language");
             LOGGER.info("Available languages: c");
