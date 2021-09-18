@@ -39,6 +39,6 @@ public class ListStatisticsUtilTest {
 
     @Test
     public void shouldCalculateVariance() {
-        Assert.assertEquals(Double.valueOf(1.5432573492388943), ListStatisticsUtil.calculateVariance(prob, 1.499593826, 123.1));
+        Assert.assertEquals(Double.valueOf(1.5432573492388943), ListStatisticsUtil.calculateVariance(prob, 1.499593826));
     }
 }

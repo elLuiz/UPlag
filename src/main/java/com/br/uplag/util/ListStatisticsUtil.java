@@ -31,11 +31,10 @@ public class ListStatisticsUtil {
         return 0.0;
     }
 
-    public static Double calculateVariance(List<Double> classDoubleList, Double classMean, Double cumulativeProbability) {
+    public static Double calculateVariance(List<Double> classDoubleList, Double classMean) {
         double sum = 0.0;
         for (int index = 0; index < classDoubleList.size(); index++) {
-            if (cumulativeProbability > 0.0)
-                sum += Math.pow((index - classMean), 2) * classDoubleList.get(index);
+            sum += Math.pow((index - classMean), 2) * classDoubleList.get(index);
         }
 
         return sum;

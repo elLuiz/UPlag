@@ -17,6 +17,7 @@ public class ClassVariance {
     private Double secondClassVariance;
     private Double meanOfFirstClass;
     private Double meanOfSecondClass;
+    private Double globalMean;
     private final OtsuThreshold otsuThreshold;
 
     public ClassVariance(Collection<Double> similarityVector) {
@@ -34,6 +35,7 @@ public class ClassVariance {
 
     public void calculateCumulativeProbability() {
         List<Double> probabilities = getDoubles();
+        globalMean = multiplyListOfProbabilities(probabilities);
         for (int index = 0; index <= 9; index++) {
             List<Double> classOneList = getSubListList(probabilities, 0, index + 1);
             List<Double> classTwoList = getSubListList(probabilities, index + 1, 10);
@@ -41,8 +43,8 @@ public class ClassVariance {
             secondClassCumulativeProbabilities = sumList(classTwoList);
             meanOfFirstClass = calculateMean(classOneList, firstClassCumulativeProbabilities);
             meanOfSecondClass = calculateMean(classTwoList, secondClassCumulativeProbabilities);
-            firstClassVariance = calculateVariance(classOneList, meanOfFirstClass, firstClassCumulativeProbabilities);
-            secondClassVariance = calculateVariance(classTwoList, meanOfSecondClass, secondClassCumulativeProbabilities);
+            firstClassVariance = calculateVariance(classOneList, meanOfFirstClass);
+            secondClassVariance = calculateVariance(classTwoList, meanOfSecondClass);
             otsuThreshold.storeThreshold(calculateWithinClassVariance(), calculateBetweenClassVariance());
         }
     }
@@ -57,7 +59,7 @@ public class ClassVariance {
     }
 
     public Double calculateBetweenClassVariance() {
-        return firstClassCumulativeProbabilities * secondClassCumulativeProbabilities * Math.pow((meanOfFirstClass - meanOfSecondClass), 2);
+        return firstClassCumulativeProbabilities * Math.pow((meanOfFirstClass - globalMean), 2) + secondClassCumulativeProbabilities * Math.pow((meanOfSecondClass - globalMean), 2);
     }
 
     public OtsuThreshold getOtsuThreshold() {

@@ -30,6 +30,7 @@ public class SimilarityResult {
         Histogram histogram = new Histogram();
         histogram.createHistogram(similarityMap.values());
         Map<String, Double> documentsSimilarityMap = sortMapDescending();
+        System.out.println("Threshold: " + threshold + '%');
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
             if (fileEntry.getValue() >= threshold) {
                 System.out.println(fileEntry.getKey() + " -> " + DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES) + "%");

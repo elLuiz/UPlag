@@ -12,7 +12,7 @@ public class OtsuThreshold {
 
     public void storeThreshold(Double withinClass, Double betweenClass) {
         if (betweenClass > 0) {
-            Double threshold = withinClass / betweenClass;
+            Double threshold = withinClass + betweenClass;
             candidatesThresholds.add(threshold);
         } else
             candidatesThresholds.add(0.0);
