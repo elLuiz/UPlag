@@ -1,237 +1,213 @@
-#include <stdlib.h>
+
+
 #include <stdio.h>
-#include <limits.h>
-#include"SkipList.h"
-#define NIVEL_MAX 7
+#include <stdlib.h>
+#include <time.h>
+#include "skiplist.h"
 
-Skiplist *cria_skiplist(Skiplist *lista) {
+#define P 0.5
+#define MAX_LEVEL 5
 
-    no *cabe = (no *) malloc(sizeof(struct no));
 
-    lista->cabe = cabe;
-    cabe->chave = INT_MAX;
-    cabe->proximo = (no **) malloc(sizeof(no*) * (NIVEL_MAX + 1));
+struct NO{
+    int N;
+    int level; //nível do nó
+    struct NO** proximo;
+};
 
-        int i;
+struct skiplist {
+    struct NO* cabecalho; //nó cabeçalho da skiplist
+    int level;
+};
 
-        //CRIAï¿½ï¿½O DE UM CABEï¿½ALHO PARA TODOS OS Nï¿½VEIS DA SKIPLIST
-        for (i = 0; i <= NIVEL_MAX; i++) {
-            cabe->proximo[i] = lista->cabe;
-        }
+//Gerar números aletórios entre 0 e 1.
+float random(){
+    float result = 0.0;
 
-    lista->nivel = 1;
+    result = ((float)rand()) / (float)(RAND_MAX);
 
-    return lista;
+    return result;
 }
 
-int nivel_aleatorio() {
 
-    int nivel = 1;
+//Criar um novo nível aleatório.
+int random_level(){
+    int result = 1;
 
-    //ESCOLHA ALEATï¿½RIA DE UM Nï¿½VEL ENTRE O PRIMEIRO E O Nï¿½VEL Mï¿½XIMO
+    while(random() < P && result < MAX_LEVEL){
+        result++;
+    }
 
-    while (rand() < RAND_MAX / 2 && nivel < NIVEL_MAX)
-        nivel++;
-
-    return nivel;
+    return result;
 }
 
-int insere_skiplist(Skiplist *lista, int chave, int valor) {
 
-    no *aux_troca[NIVEL_MAX + 1];
-    no *x = lista->cabe;
-    int i, nivel;
+struct NO* criar_NO(int level, int* N){
+    struct NO* result = 0;
 
-//O FOR IRA PERCORRER OS NIVEIS ENQUANTO O WHILE PERCORRE AS LISTA NOS RESPECTIVOS NIVEIS
-    for (i = lista->nivel; i >= 1; i--) {
-        while (x->proximo[i]->chave < chave)
+    // Alocando memória para armazenar uma instância de um no.
+     result = malloc(sizeof(struct NO));
+
+    //Atribuindo ao novo nó o seu level.
+    result->level = level;
+
+    result->proximo = malloc( (level + 1) * sizeof(struct NO*));
+
+    //Configurar todas as posições do proximo com 0 (null).
+    int indice = 0;
+    while(indice < (result->level + 1)){
+
+        result->proximo[indice] = 0;
+
+        indice++;
+    }
+
+    //Atribuindo o valor do novo nó.
+    result->N=N;
+
+    return result;
+}
+
+
+struct skiplist* criaSkipList(){
+    struct skiplist* result = 0;
+
+    result = malloc(sizeof(struct skiplist));
+
+    // Criando o nó cabecalho, sendo seu nível o valor máximo.
+    result->cabecalho = criar_NO(MAX_LEVEL,NULL);
+
+    // Configurando level da skip list como zero.
+    result->level = 0;
+
+    return result;
+}
+
+
+//Procurar na skip list por N e retornar o nó onde esse valor está.
+struct NO* procurar(struct skiplist* sl, int* N){
+
+    // x incialmente aponta para o cabecalho da skiplist.
+    struct NO* x = sl->cabecalho;
+
+    // Nível inicial.
+    int _level = x->level;
+
+    // Iniciar pelo topo, descendo até o nível mais baixo.
+    for(int i = _level; i >= 0; i--){
+        while((x->proximo[i] != 0) && (x->proximo[i]->N < N)){
+            // Andar para frente.
             x = x->proximo[i];
-        aux_troca[i] = x; //RECEBE O ï¿½LTIMO Nï¿½ MENOR QUE O Nï¿½ QUE SE DESEJA INSERIR
-    }
-
-    x = x->proximo[1];
-
-// CASO AS CHAVES SEJAM IGUAIS OCORRE A SUBST. DOS VALORES
-    if (chave == x->chave) {
-        x->valor = valor;
-        return 1;
-    }
-    else {
-        nivel = nivel_aleatorio();
-        if (nivel > lista->nivel) {
-            for (i = lista->nivel + 1; i <= nivel; i++) {
-                aux_troca[i] = lista->cabe;
-            }
-            lista->nivel = nivel;
-        }
-
-        //ALOCAï¿½ï¿½O DO NOVO Nï¿½
-        x = (no *) malloc(sizeof(no));
-        x->chave = chave;
-        x->valor = valor;
-        x->proximo = (no **) malloc(sizeof(no*) * (nivel + 1));
-
-        //O NOVO Nï¿½ ï¿½ INSERIDO APï¿½S O AUX TROCA , DEFINIDO ANTERIORMENTE
-        for (i = 1; i <= nivel; i++) {
-            x->proximo[i] = aux_troca[i]->proximo[i];
-            aux_troca[i]->proximo[i] = x;
         }
     }
-    return 1;
+
+    /* Nesse ponto existem 3 possibilidades para o valor de x, são elas:
+     * - x está apontando para o valor que estava sendo procurado;
+     * - x está apontando para um valor maior que o procurado;
+     * - x está null.
+    */
+
+    x = x->proximo[0];
+
+    return (struct NO*)x;
 }
 
-no *busca_skiplist(Skiplist *lista, int chave) {
+int buscaSkipList(struct skiplist* sl, int* N){
+    int result = 0;
 
-    no *x = lista->cabe;
+    struct NO* encontrado = procurar(sl, N);
+    if(encontrado != 0){
+        if(encontrado->N == N){
+            // Existe
+            result = 1;
+        }
+    }
+
+    return result;
+}
+
+
+void insereSkipList(struct skiplist* sl, int* N){
+    struct NO** update = malloc( (MAX_LEVEL + 1) * sizeof(struct NO*) );
+
+    //x aponta para o cabeçalho da skip list.
+    struct NO* x = sl->cabecalho;
+
+    int _level = x->level;
+
+    // Iniciar pelo topo, descendo até o nível mais baixo.
+    for(int i = _level; i >= 0; i--){
+        while((x->proximo[i] != 0) && (x->proximo[i]->N < N)){
+            // Andar para frente.
+             x = x->proximo[i];
+        }
+        //Guardar em update o nó que será atualizado.
+        update[i] = x;
+    }
+
+    /* Nesse ponto existem 3 possibilidades para o valor de x, são elas:
+     * - x está apontando para o valor que estava sendo procurado;
+     * - x está apontando para um valor maior que o procurado;
+     * - x está null.
+     */
+    x = x->proximo[0];
+
+    //Caso x seja null ou x->N não seja igual à N
+    if((x == 0) || (x->N)!= N){
+
+        // Obter o nível do nó novo.
+        int newLevel = random_level();
+
+        // Caso o nível do nó novo seja maior que o nível da skiplist
+        if(newLevel > _level){
+            for(int indice = _level + 1; indice <= newLevel; indice++){
+                update[indice] = sl->cabecalho;
+            }
+
+            // Atualizar o nível da skip list.
+            sl->level = newLevel;
+        }
+
+        x = criar_NO(newLevel, N);
+
+        // Inserindo o nó novo na skiplist.
+        for(int indice = 0; indice <= newLevel; indice++){
+            x->proximo[indice] = update[indice]->proximo[indice];
+            update[indice]->proximo[indice] = x;
+        }
+    }
+}
+
+int removeSkipList(struct skiplist* sl, int* N){
+    struct NO* x = sl->cabecalho;
+    int _level = x->level;
+
     int i;
-    //PERCORRE-SE OS NIVEIS E AS LISTAS ATï¿½ ENCONTRAR UMA CHAVE QUE NAO SEJA MENOR QUE A QUE PROCURAMOS
-    for (i = lista->nivel; i >= 1; i--) {
-        while (x->proximo[i]->chave < chave)
+
+    for(i = _level - 1; i >= 0; i--) {
+        while(x->proximo[i] != 0 && x->proximo[i]->N < N) {
             x = x->proximo[i];
-    }
-    //VERIFICA SE A PROXIMA CHAVE,OU SEJA,A CHAVE QUE Nï¿½O ï¿½ MENOR QUE A PROCURAMOS ï¿½ IGUAL A ELA
-    //SE SIM ï¿½ RETORNAMOS SE Nï¿½O RETORNAMOS NULL
-    if (x->proximo[1]->chave == chave) {
-        return x->proximo[1];
-    } else {
-        return NULL;
-    }
-    return NULL;
-}
-
- void libera_no(no *x) {
-
-    if (x) {
-        free(x->proximo);
-        free(x);
-    }
-}
-
-int remove_skiplist(Skiplist *lista, int chave) {
-
-    int i;
-    no *aux_troca[NIVEL_MAX + 1];
-    no *x = lista->cabe;
-
-    //PERCORRE-SE OS NIVEIS E AS LISTAS D CADA NIVEL ATE ENCONTRAR UMA CHAVE QUE NAO SEJA MENOR QUE A QUE DESEJAMOS EXCLUIR
-    //GUARDAMOS ESTE NO NO VETOR AUX_TROCA
-    for (i = lista->nivel; i >= 1; i--) {
-        while (x->proximo[i]->chave < chave)
-            x = x->proximo[i];
-        aux_troca[i] = x;
-    }
-
-    //DESLOCA-SE X PARA A SUPOSTA POSICAO DA CHAVE QUE QUEREMOS REMOVER
-    x = x->proximo[1];
-
-    //SE A CHAVE DA POSIï¿½ï¿½O X FOR IGUAL A QUE QUEREMOS REMOVER
-    //FAZEMOS AS DEVIDAS ALTERAï¿½OES USANDO O VETOR AUX_TROCA QUE CONTEM O NO ANTERIOR AO QUE DESEJAMOS REMOVER
-    if (x->chave == chave) {
-        for (i = 1; i <= lista->nivel; i++) {
-            if (aux_troca[i]->proximo[i] != x)
-                break;
-            if(x->proximo == NULL){
-                aux_troca[i]->proximo = NULL;
-                break;
-            }
-            else{
-                aux_troca[i]->proximo[1] = x->proximo[i];
-                break;
-            }
         }
-        libera_no(x);
-    //CASO NAO HAJA NENHUM ELEMENTO EM ALGUM NIVEL DIMINUIMOS O NIVEL DA LISTA
-        while (lista->nivel > 1 && lista->cabe->proximo[lista->nivel]== lista->cabe)
-            lista->nivel--;
+    }
+
+
+    x = x->proximo[0];
+
+    if(x == 0 || x->N != N) {
         return 0;
     }
+
+    /* depois de encontrado separamos */
+    for(i = _level- 1; i >= 0; i--) {
+        while(sl->proximo[i]!=0 && sl->proximo[i]->N < N) {
+            sl = sl->proximo[i];
+        }
+
+        if(sl->proximo[i] == x) {
+            sl->proximo[i] = x->proximo[i];
+        }
+    }
+
+    free(x);
     return 1;
 }
-
- void imprime_skiplist(Skiplist *lista) {
-
-    no *x = lista->cabe;
-
-    int i;
-
-    if(x->proximo[1] == x)
-    {
-        printf("Skiplist Vazia\n");
-
-    }
-
-    else {
-
-    //IMPRESSï¿½O DE TODOS OS VALORES DA SKIPLIST , PERCORRENDO AS LISTAS EM TODOS OS NIVEIS
-    for(i = lista->nivel ; i>= 1;i--){
-
-        if(x == lista->cabe){
-            printf("[Nivel: %d]",i);
-            x = x->proximo[i];
-        }
-
-        while (x != lista->cabe) {
-
-            printf("[%d|%d] -> ", x->chave, x->valor);//[CHAVE|VALOR]
-
-            x = x->proximo[i];
-        }
-
-        x = lista->cabe;
-
-        printf("NULL\n");
-        printf("\n");
-
-    }
-    }
-}
-
-//UTILIZANDO A MESMA ESTRATï¿½GIA DA IMPRESSï¿½O, PERCORREMOS A SKIPLIST NO NIVEL 1 E AQUI IMPLEMETAMOS UM CONTADOR
-//NESTE CASO CONSIDERAMOS O TAMANHO A QUANTIDADE DE ELEMENTOS NA LISTA, CONSIDERANDO APENAS O 1 NIVEL
- int tamanho_skiplist(Skiplist *lista) {
-    no *x = lista->cabe;
-
-    int contador = 0;
-
-    while (x->proximo[1] != lista->cabe) {
-        contador++;
-        x = x->proximo[1];
-    }
-    return contador;
-}
-
-//O FINAL DE CADA NIVEL DA SKIPLIST APONTA PARA O CABEï¿½ALHO ENTAO SE O PROXIMO DO CABEï¿½ALHO FOR O PROPRIO CABEï¿½ALHO A LISTA ESTA VAZIA;
-
-int vazia_skiplist(Skiplist *lista){
-
-    if(lista->cabe->proximo[lista->nivel]== lista->cabe){
-
-        return 1;
-
-    }
-    else
-        return 0;
-}
-
-//PERCORRE-SE TODOS OS VALORES DA SKIPLIST E OS REMOVE UM A UM, LIBERANDO A MEMï¿½RIA DE SEUS Nï¿½S
-
- void libera_skiplist(Skiplist *lista){
-
-    int i;
-
-    no *x = lista->cabe;
-    no *aux;
-
-    for(i = lista->nivel; i>=1;i--){
-        while(x->proximo[i] != lista->cabe){
-            aux = x->proximo[i];
-            libera_no(x);
-            x = aux;
-        }
-
-    }
-
-}
-
-
-

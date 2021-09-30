@@ -2,8 +2,9 @@ package com.br.uplag.c.directive;
 
 public enum DirectiveRegex {
     IMPORT("(#include\\s?[a-zA-Zp{Punct}<.>\"]+)", ""),
-    DEFINE("#define\\s.+", "CONST"),
-    STRUCT("(typedef\\s)?struct\\s[\\w]+\\s?\\{[\\s\\S]*?\\}\\s?[a-z]*?;", "");
+    DEFINE("#\\s?define\\s.+", "Y"),
+    STRUCT("(typedef\\s)?struct\\s[\\w]+\\s?\\{[\\s\\S]*?\\}\\s?[a-z]*?;", " S "),
+    NULL("null", " P ");
 
 
     private final String regex;

@@ -1,219 +1,143 @@
-/*
-Grupo LMT
-Integrantes:
-Leonardo Santos Baia - 11621BCC021
-Matheus Henrique Ferreira Protásio - 11521BCC020
-Thiago Duarte Brito - 11611BCC019
-*/
-
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include "skiplist.h"
+#include <stdio.h>
+#include "Skiplist.h"
+#include <limits.h>
 
-#define P 0.5
-#define MAX_LEVEL 5
+#define SKIPLIST_MAXIMO 6
 
-
-struct NO{
-    int N;
-    int level; //nível do nó
-    struct NO** proximo;
-};
-
-struct skiplist {
-    struct NO* cabecalho; //nó cabeçalho da skiplist
-    int level;
-};
-
-//Gerar números aletórios entre 0 e 1.
-float random(){
-    float result = 0.0;
-
-    result = ((float)rand()) / (float)(RAND_MAX);
-
-    return result;
-}
-
-
-//Criar um novo nível aleatório.
-int random_level(){
-    int result = 1;
-
-    while(random() < P && result < MAX_LEVEL){
-        result++;
+skiplist *criaSkipList() {
+    skiplist *list=(skiplist*)malloc(sizeof(skiplist));
+    int i;
+    node *header = (node *) malloc(sizeof(struct node));
+    list->header = header;
+    header->chave = INT_MAX;
+    header->next = (node **) malloc(
+            sizeof(node*) * (SKIPLIST_MAXIMO + 1));
+    for (i = 0; i <= SKIPLIST_MAXIMO; i++) {
+        header->next[i] = list->header;
     }
 
-    return result;
+    list->level = 1;
+    list->size = 0;
+
+    return list;
 }
 
+void liberaSkipList(skiplist *sl)
+{
+    if(!sl)
+        return;
 
-struct NO* criar_NO(int level, int* N){
-    struct NO* result = 0;
-
-    // Alocando memória para armazenar uma instância de um no.
-     result = malloc(sizeof(struct NO));
-
-    //Atribuindo ao novo nó o seu level.
-    result->level = level;
-
-    result->proximo = malloc( (level + 1) * sizeof(struct NO*));
-
-    //Configurar todas as posições do proximo com 0 (null).
-    int indice = 0;
-    while(indice < (result->level + 1)){
-
-        result->proximo[indice] = 0;
-
-        indice++;
+    node *q=sl->header;
+	node *next;
+	while(q)
+    {
+		next=q->next[0];
+		free(q);
+		q=next;
     }
-
-    //Atribuindo o valor do novo nó.
-    result->N=N;
-
-    return result;
+    free(sl);
 }
 
-
-struct skiplist* criaSkipList(){
-    struct skiplist* result = 0;
-
-    result = malloc(sizeof(struct skiplist));
-
-    // Criando o nó cabecalho, sendo seu nível o valor máximo.
-    result->cabecalho = criar_NO(MAX_LEVEL,NULL);
-
-    // Configurando level da skip list como zero.
-    result->level = 0;
-
-    return result;
+int rand_level() {
+    int level = 1;
+    while (rand() < RAND_MAX / 2 && level < SKIPLIST_MAXIMO)
+        level++;
+    return level;
 }
 
+int insereSkipList(skiplist *list, int chave, int info) {
+    node *update[SKIPLIST_MAXIMO + 1];
+    node *x = list->header;
+    int i, level;
+    for (i = list->level; i >= 1; i--) {
+        while (x->next[i]->chave < chave)
+            x = x->next[i];
+        update[i] = x;
+    }
+    x = x->next[1];
 
-//Procurar na skip list por N e retornar o nó onde esse valor está.
-struct NO* procurar(struct skiplist* sl, int* N){
+    if (chave == x->chave) {
+        x->info = info;
+        return 0;
+    } else {
+        level = rand_level();
+        if (level > list->level) {
+            for (i = list->level + 1; i <= level; i++) {
+                update[i] = list->header;
+            }
+            list->level = level;
+        }
 
-    // x incialmente aponta para o cabecalho da skiplist.
-    struct NO* x = sl->cabecalho;
-
-    // Nível inicial.
-    int _level = x->level;
-
-    // Iniciar pelo topo, descendo até o nível mais baixo.
-    for(int i = _level; i >= 0; i--){
-        while((x->proximo[i] != 0) && (x->proximo[i]->N < N)){
-            // Andar para frente.
-            x = x->proximo[i];
+        x = (node *) malloc(sizeof(node));
+        x->chave = chave;
+        x->info = info;
+        x->next = (node **) malloc(sizeof(node*) * (level + 1));
+        for (i = 1; i <= level; i++) {
+            x->next[i] = update[i]->next[i];
+            update[i]->next[i] = x;
         }
     }
-
-    /* Nesse ponto existem 3 possibilidades para o valor de x, são elas:
-     * - x está apontando para o valor que estava sendo procurado;
-     * - x está apontando para um valor maior que o procurado;
-     * - x está null.
-    */
-
-    x = x->proximo[0];
-
-    return (struct NO*)x;
+    return 0;
 }
 
-int buscaSkipList(struct skiplist* sl, int* N){
-    int result = 0;
-
-    struct NO* encontrado = procurar(sl, N);
-    if(encontrado != 0){
-        if(encontrado->N == N){
-            // Existe
-            result = 1;
-        }
+node *buscaSkipList(skiplist *list, int chave) {
+    node *x = list->header;
+    int i;
+    for (i = list->level; i >= 1; i--) {
+        while (x->next[i]->chave < chave)
+            x = x->next[i];
     }
-
-    return result;
+    if (x->next[1]->chave == chave) {
+        return x->next[1];
+    } else {
+        return NULL;
+    }
+    return NULL;
 }
 
+void liberaNoSkipList(node *x) {
+    if (x) {
+        free(x->next);
+        free(x);
+    }
+}
 
-void insereSkipList(struct skiplist* sl, int* N){
-    struct NO** update = malloc( (MAX_LEVEL + 1) * sizeof(struct NO*) );
-
-    //x aponta para o cabeçalho da skip list.
-    struct NO* x = sl->cabecalho;
-
-    int _level = x->level;
-
-    // Iniciar pelo topo, descendo até o nível mais baixo.
-    for(int i = _level; i >= 0; i--){
-        while((x->proximo[i] != 0) && (x->proximo[i]->N < N)){
-            // Andar para frente.
-             x = x->proximo[i];
-        }
-        //Guardar em update o nó que será atualizado.
+int removeSkipList(skiplist *list, int chave) {
+    int i;
+    node *update[SKIPLIST_MAXIMO + 1];
+    node *x = list->header;
+    for (i = list->level; i >= 1; i--) {
+        while (x->next[i]->chave < chave)
+            x = x->next[i];
         update[i] = x;
     }
 
-    /* Nesse ponto existem 3 possibilidades para o valor de x, são elas:
-     * - x está apontando para o valor que estava sendo procurado;
-     * - x está apontando para um valor maior que o procurado;
-     * - x está null.
-     */
-    x = x->proximo[0];
-
-    //Caso x seja null ou x->N não seja igual à N
-    if((x == 0) || (x->N)!= N){
-
-        // Obter o nível do nó novo.
-        int newLevel = random_level();
-
-        // Caso o nível do nó novo seja maior que o nível da skiplist
-        if(newLevel > _level){
-            for(int indice = _level + 1; indice <= newLevel; indice++){
-                update[indice] = sl->cabecalho;
-            }
-
-            // Atualizar o nível da skip list.
-            sl->level = newLevel;
+    x = x->next[1];
+    if (x->chave == chave) {
+        for (i = 1; i <= list->level; i++) {
+            if (update[i]->next[i] != x)
+                break;
+            update[i]->next[1] = x->next[i];
         }
+        liberaNoSkipList(x);
 
-        x = criar_NO(newLevel, N);
-
-        // Inserindo o nó novo na skiplist.
-        for(int indice = 0; indice <= newLevel; indice++){
-            x->proximo[indice] = update[indice]->proximo[indice];
-            update[indice]->proximo[indice] = x;
-        }
-    }
-}
-
-int removeSkipList(struct skiplist* sl, int* N){
-    struct NO* x = sl->cabecalho;
-    int _level = x->level;
-
-    int i;
-
-    for(i = _level - 1; i >= 0; i--) {
-        while(x->proximo[i] != 0 && x->proximo[i]->N < N) {
-            x = x->proximo[i];
-        }
-    }
-
-
-    x = x->proximo[0];
-
-    if(x == 0 || x->N != N) {
+        while (list->level > 1 && list->header->next[list->level]
+                == list->header)
+            list->level--;
         return 0;
     }
-
-    /* depois de encontrado separamos */
-    for(i = _level- 1; i >= 0; i--) {
-        while(sl->proximo[i]!=0 && sl->proximo[i]->N < N) {
-            sl = sl->proximo[i];
-        }
-
-        if(sl->proximo[i] == x) {
-            sl->proximo[i] = x->proximo[i];
-        }
-    }
-
-    free(x);
     return 1;
 }
+
+void imprimeSkipList(skiplist *list){
+    node *x = list->header;
+    while (x && x->next[1] != list->header) {
+        printf("%d[%d]->", x->next[1]->chave, x->next[1]->info);
+        x = x->next[1];
+    }
+    printf("NULL\n");
+}
+
+
+

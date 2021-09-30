@@ -1,7 +1,7 @@
 package com.br.uplag.c.loops;
 
 public enum LoopRegex {
-    LOOP_REGEX("(while|for)", " LOOP ");
+    LOOP_REGEX("(while|for)", " L ");
 
     private final String regex;
     private final String token;

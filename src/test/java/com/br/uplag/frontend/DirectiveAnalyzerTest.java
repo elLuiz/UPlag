@@ -20,7 +20,7 @@ public class DirectiveAnalyzerTest {
     @Test
     public void shouldConvertAllDefineToItsToken() {
         DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
-        Assert.assertEquals(true, directiveAnalyzer.convertDefineToToken(CodeText.code).contains("CONST"));
+        Assert.assertEquals(true, directiveAnalyzer.convertDefineToToken(CodeText.code).contains("c"));
     }
 
     @Test

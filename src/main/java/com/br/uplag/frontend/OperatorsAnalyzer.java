@@ -5,7 +5,7 @@ import com.br.uplag.c.operators.RelationOperatorRegex;
 
 
 
-public class OperatorsAnalyzer extends FrontEND {
+public class OperatorsAnalyzer extends FrontEnd {
     private static OperatorsAnalyzer operatorsAnalyzer;
     private OperatorsAnalyzer(){}
     public static OperatorsAnalyzer getInstance() {

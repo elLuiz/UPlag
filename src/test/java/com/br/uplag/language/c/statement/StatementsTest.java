@@ -47,7 +47,7 @@ public class StatementsTest {
             "    if(aux->valor == N && aux != sl)\n" +
             "        return 1;\n" +
             "    else\n" +
-            "        return 0;\n" +
+            "        return;\n" +
             "}";
 
     @Test

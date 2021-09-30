@@ -1,7 +1,8 @@
 package com.br.uplag.c.operations;
 
 public enum DigitsRegex {
-    DIGITS_REGEX("[+-]?([0-9]*[.])?[0-9]+", "DIG");
+    // MAY BE DIFFERENCIATE BETWEEN DOUBLE AND INTEGER, POSITIVE AND NEGATIVE NUMBERS
+    DIGITS_REGEX("[+-]?([0-9]*[.])?[0-9]+", " D ");
 
     private final String regex;
     private final String token;

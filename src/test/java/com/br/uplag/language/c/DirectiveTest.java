@@ -17,12 +17,12 @@ public class DirectiveTest {
     @Test
     public void shouldRemoveImportDirective() {
         String result = code.replaceAll(DirectiveRegex.IMPORT.getRegex(), DirectiveRegex.IMPORT.getToken());
-        Assert.assertEquals(false, result.contains("#import"));
+        Assert.assertEquals(false, result.contains("#include"));
     }
 
     @Test
     public void shouldConvertDefineDirectiveToConst() {
         String result = code.replaceAll(DirectiveRegex.DEFINE.getRegex(), DirectiveRegex.DEFINE.getToken());
-        Assert.assertEquals(true, result.contains("CONST"));
+        Assert.assertEquals(true, result.contains("c"));
     }
 }

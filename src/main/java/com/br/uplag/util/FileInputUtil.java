@@ -17,25 +17,30 @@ import java.util.stream.Stream;
 public class FileInputUtil {
     private static final Logger LOGGER = Logger.getLogger("File input");
 
-    public static List<String> getAllFilesPath(String directory, String ...args) {
+    private FileInputUtil() {
+    }
+
+    public static List<String> getAllFilesPath(String directory, Integer index, String... args) {
         List<String> files = new ArrayList<>();
         int upperBound = args.length;
-        if (isValidFileInputSize(upperBound)) {
-            boolean filesTerminatedWith = args[6].matches("\\.[a-z]+");
-            if (filesTerminatedWith) {
-                String extension = StringUtil.replaceBy(".", "", args[6]);
-                files.addAll(walkTroughDirectory(directory, extension));
-            } else {
-                for (int i = 5; i < upperBound; i++) {
-                    if (isExistingFile(directory + args[i]))
-                        files.add(directory + args[i]);
-                    else
-                        LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
-                }
-            }
+        boolean filesTerminatedWith = args[index].matches("\\.[a-z]+");
+        if (filesTerminatedWith) {
+            String extension = StringUtil.replaceBy(".", "", args[index]);
+            files.addAll(walkTroughDirectory(directory, extension));
+        } else {
+            getSpecifiedFiles(directory, files, upperBound, args);
         }
-
+        Collections.sort(files);
         return files;
+    }
+
+    private static void getSpecifiedFiles(String directory, List<String> files, int upperBound, String[] args) {
+        for (int i = 5; i < upperBound; i++) {
+            if (isExistingFile(directory + args[i]))
+                files.add(directory + args[i]);
+            else
+                LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
+        }
     }
 
     public static List<String> walkTroughDirectory(String directory, String fileExtension) {
@@ -58,20 +63,36 @@ public class FileInputUtil {
     // @Font: Baeldung
     public static String readFromInputStream(String directory) {
         StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = null;
         try {
-            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
+            bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
             String line;
             while ((line = bufferedReader.readLine()) != null)
                 if (!line.isEmpty() || !line.isBlank())
                     stringBuilder.append(line).append("\n");
+            bufferedReader.close();
         } catch (IOException ioException) {
-            LOGGER.log(Level.SEVERE, "An com.br.uplag.exception occurred for {0}", directory);
+            LOGGER.log(Level.SEVERE, "An exception occurred for {0}", directory);
             LOGGER.severe(ioException.getMessage());
             return "";
+        } finally {
+            closeBufferReader(bufferedReader);
+
         }
 
         return stringBuilder.toString().toLowerCase();
     }
+
+    private static void closeBufferReader(BufferedReader bufferedReader) {
+        if (bufferedReader != null) {
+            try {
+                bufferedReader.close();
+            } catch (IOException ioException) {
+                LOGGER.severe(ioException.getMessage());
+            }
+        }
+    }
+
     private static boolean isValidFileInputSize(int upperBound) {
         if (upperBound < 5) {
             LOGGER.severe("Invalid number of files");

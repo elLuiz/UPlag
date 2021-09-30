@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import com.br.uplag.c.misc.CommentsRegex;
 
-public class CommentsAnalyzer extends FrontEND {
+public class CommentsAnalyzer extends FrontEnd {
     private static CommentsAnalyzer commentsAnalyzer;
     private CommentsAnalyzer() {
 

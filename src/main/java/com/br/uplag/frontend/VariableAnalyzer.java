@@ -3,7 +3,7 @@ package com.br.uplag.frontend;
 import com.br.uplag.c.operations.VariableOperationsRegex;
 
 
-public class VariableAnalyzer extends FrontEND{
+public class VariableAnalyzer extends FrontEnd {
     private static VariableAnalyzer variableAnalyzer;
     private VariableAnalyzer() {}
     public static VariableAnalyzer getInstance() {

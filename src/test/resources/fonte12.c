@@ -1,166 +1,227 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include "SL.h"
-#define INT_MIN  (-2147483648)
-#define INT_MAX   (2147483647)
-#define MAX 5
+#include <stdio.h>
+#include <limits.h>
 
-/*
-    Grupo IV
-    Integrantes:
-    Igor Blanco Toneti - 11811BCC010
-    Vinicio Bernardes Silva - 11811BCC015
-    */
+#define MAX_LEVEL 6
 
-struct no {
-    int info;
-    Lista *prox;
-    Lista *baixo;
-};
+    //A estrutura de dados da skip list escolhida abaixo baseado na criterio de praticidade para a 
+    //implementação (vetor de ponteiros)
+typedef struct no {
+    int chave;
+    int val;
+    struct no **prox;
+} no;
 
+typedef struct skiplist {
+    int level;
+    int tam;
+    struct no *cab;
+} skiplist;
 
-Lista *criaLista(){ /* A ideia aqui � criar duas listas para servir como uma "parede", do lado esquerdo o menor interiro possivel e do direito o maior. Enquanto for criando pegar o N� mais alto
-                            da esquerda e retornar seu endere�o e a medida que for inserindo os numeros ficar�o entre essas paredes o q facilita e diminui os codigos condicionais (atua como
-                                                                                                                                                                                    um cabe�alho) */
-    Lista *P;
+// Função abaixo cria e inicializa a skip List, sendo necessário na main, 
+//apenas criar um struct skiplist e passar como parametro dessa função
+skiplist* criaSkipList(skiplist *l){
     int i;
-    Lista *aux;
-    for (i=0;i<MAX;i++){
-        Lista *N=(Lista*)malloc(sizeof(Lista));
-        if(N==NULL) return 0;
-
-        Lista *M=(Lista*)malloc(sizeof(Lista));
-        if(M==NULL) return 0;
-
-        N->info=INT_MIN;
-        M->info=INT_MAX;
-
-        N->baixo=NULL;/* o n� mais a esquerda recebe como endere�o primeiramente o elemento mais a direita e abaixo NULL, a medida que formos inserindo os n�s das camadas acima aponta
-                        para a camada de baixo*/
-        M->baixo=NULL;
-        M->prox=NULL;
-        N->prox=M;
-
-        if(i==0){ /* Caso seja o primeiro n� salvamos o endere�o para retornar no final da fun��o*/
-            P=N;
-            aux=N;
-        }else{
-            aux->baixo=N;
-            aux->prox->baixo=M;
-            aux=N;
-        }
+    no *cab = (no *)malloc(sizeof(struct no));
+    l->cab = cab;
+    cab->chave = INT_MAX;
+    cab->prox = (no **)malloc(sizeof(no*) * (MAX_LEVEL+1));
+    for (i = 0; i <= MAX_LEVEL; i++) {
+        cab->prox[i] = l->cab;
     }
-    return P;
+
+    l->level = 1;
+    l->tam = 0;
+
+    return l;
 }
 
-int insereSkipList(Lista *lst, int num){ /* Essa fun��o funciona da seguinte maneira: sorteamos um numero, este numero ser� a altura do elemento na SkipList, depois tiramos da altura max
-                                            para saber assim quantos degraus iremos descer, a partir dai percorrer a lista com um auxiliar para saber onde inserir (sempre parando no n� anterior)
-                                            e a medida que formos inserindo no n� mais de cima descemos na lista at� chegar em NULL*/
-
-    int rdm,nivel,i;
-    rdm=rand()%MAX+1;
-    nivel = MAX-rdm;
-    while(nivel--) lst=lst->baixo;/* calculo para saber o nivel que come�aremos a inserir na lista*/
-    Lista *aux;
-    Lista *aux2;
-    for(i=0;i<rdm;i++){ /* loop para quantidade de niveis que iremos inserir*/
-    aux=lst;
-        while(aux->prox->info < num) aux = aux->prox; /* caminhamos at� o momento que o prox seja maior para podermos inserir o elemento (por quest�o da "parede" que contem o maior infinito
-                                                         n�o necessitamos colocar condi��es adicionais como percorrer at� NULL)*/
-    Lista *N=(Lista*)malloc(sizeof(Lista));
-
-    if(N==NULL) return 0;
-
-    N->info=num; /* troca de ponteiros, fazer o prox do anterior ser o prox do n� que gostariamos de inserir*/
-    N->baixo=NULL;
-    N->prox=aux->prox;
-    aux->prox=N;
-    if(i!=0) /* caso seja o nivel mais alto do elemento que estamos inserindo criamos um auxiliar apontando para ele e assim podermos ligar o ponteiro "baixo" para conectarmos os n�s de
-                mesmo elemento*/
-        aux2->baixo=N;
-    aux2=N;
-    lst=lst->baixo;
-    }
-    return 1;
+// aqui é uma função feita para gerar os leveis usado a inserção, o level 
+//indica as alturas da minha skip list e que define em qual level ira ocorrer a inserção
+// foi usada a função rand() da biblioteca limits.h para implementação dessa função, que ira
+// gerar inteiros aleatorios dentro de um intervalo especifico, para interação com o level
+// se o numero aleatorio gerado, for menor que a constant maxima da função rand / 2 e ainda
+// o level ser menor que o level total, ai eu incremento o level e poderei inserir o novo val
+// no level abaixo conforme a necessidade da skip list implementada na função insere.
+int rand_level(){
+    int level = 1;
+    while (rand() < RAND_MAX/2 && level < MAX_LEVEL)
+        level++;
+    return level;
 }
 
-int removeSkipList(Lista *lst, int num){ /* A ideia dessa fun��o � percorrer a skiplist como se fosse uma matriz, deixaremos um aux na "parede" da skiplist para que possamos descer
-                                            os niveis e assim retirar os elementos sempre parando no anterior*/
-    if(vaziaSkipList(lst)){
+// Função simples que retorna o tamanho da minha skip List, toda vez que um elemento é inserido
+// na lista, eu atualizo o campo tam, feito na struct acima e retorno por essa função
+int tamanhoSkipList(skiplist *l){
+    if(l != NULL) return l->tam;
+    return -1;
+}
+
+// Outra função Simples que apenas verifica se o tamanho é zero, se for retorno 1, afirmando que
+// a lista está vazia, caso contrário retornará 0
+int vaziaSkipList(skiplist *l){
+    if(l->tam == 0) return 1;
+    return 0;
+}
+
+// Função insere foi baseado nos critérios padroes de inserção de uma skip List, onde alem
+// da lista, é preciso passar uma chave e o valor a ser inserido, possui
+// algumas verificações de validação, a primeira verifica se não há elementos na chave escolhida para
+// fazer a inserção, caso exista, o elemento não pode ser inserido naquela posição pois aquela chave ja
+// corresponde a um valor, o que invalida a inserção, sendo necessario inserir outra chave.
+// caso seja possivel inserir, sera gerado uma posição em level randomicamente e o campo level da struct
+// sera atualizado se o level randomizado para essa inserção for maior que o level ja contido na estrutura
+// e então aux o level, em seguida a função usa um campo cab, que seria dedicado ao cabeçalho, um campo
+// auxiliar usado para armazenar algum valor temporariamente, no caso ele armazena o começo da lista. Apos isso
+// o campo tam que armazena o tamanho da lista tambem é atualizado se a inserção for efetuada.
+// os demais passos são de criação de um novo nó e preparação para a inserção do mesmo, apos iniciado todos os
+// campos do novo nó, ele é inserido no level designado, e para isso ocorre um percorrimento até essa possição
+// partindo do nivel 1, também é usado um ponteiro auxiliar para ajudar no percorrimento e para não perder a posição
+// dos nós, após tudo isso é feito a inserção no devido level gerado pela rand_level() e na mesma posição do level
+int insereSkipList(skiplist *l, int chave, int val){
+    no *aux[MAX_LEVEL+1];
+    no *x = l->cab;
+    int i, level;
+    for (i = l->level; i >= 1; i--) {
+        while (x->prox[i]->chave < chave)
+            x = x->prox[i];
+        aux[i] = x;
+    }
+    x = x->prox[1];
+
+    if (chave == x->chave) {
+        x->val = val;
         return 0;
-    }else{
-        while(lst!=NULL){
-            Lista *aux=lst;
-            while(aux->prox->info<num) aux=aux->prox; /*percorrer e parar no anterior ao n� que gostariamos de retirar*/
-            if(aux->prox->info==num){
-                Lista *aux2= aux->prox;
-                aux->prox=aux2->prox; /*Troca de ponteiros*/
-                free(aux2);
+    } else {
+        level = rand_level();
+        if (level > l->level) {
+            for (i = l->level+1; i <= level; i++) {
+                aux[i] = l->cab;
             }
-            lst=lst->baixo; /* descer pela skiplist*/
+            l->level = level;
         }
+        l->tam++;
+        x = (no *)malloc(sizeof(no));
+        x->chave = chave;
+        x->val = val;
+        x->prox = (no **)malloc(sizeof(no*) * (level + 1));
+        for (i = 1; i <= level; i++) {
+            x->prox[i] = aux[i]->prox[i];
+            aux[i]->prox[i] = x;
+        }
+    }
+    return 0;
+}
+
+// A operação de busca, percorre apartir do ultimo level e vem voltando procurando o elemento pela chave
+// ela nada mais faz do que verificar se a chave possui um valor, se sim, ela retorna que existe um valor
+// naquela chave correspondente, mas não retorna o valor e sim que aquela chave possui um valor atrelado a ela
+// é usado um ponteiro auxiliar chamado de x, para percorrer a lista na busca.
+int buscaSkipList(skiplist *l, int chave){
+    no *x = l->cab;
+    int i;
+    for (i = l->level; i >= 1; i--) {
+        while (x->prox[i]->chave < chave)
+            x = x->prox[i];
+    }
+    if (x->prox[1]->chave == chave) {
         return 1;
-    }
-}
-
-int buscaSkipList(Lista *lst,int num){ /*Na busca vamos caminhar at� um maior elemento que o nosso, depois de achar passamos para o andar de baixo, e assim vamos caminhar, caso chegar no
-                                        mais infinito e embaixo ser NULL sabemos que o numero nao existe*/
-    if(vaziaSkipList(lst)){
+    } else {
         return 0;
-    }else{
-        while(1){
-            while(lst->prox->info<num) lst=lst->prox; /*Anda at� o maior elemento*/
-                if(lst->prox->info>num) lst=lst->baixo;/*Desce*/
-                if(lst->prox->info==num) return 1;
-                if(lst->prox->info==INT_MAX && lst->baixo==NULL) return 0;
-        }
+    }
+    return 0;
+}
+
+// Função libera, verifica se o nó não é NULL, se não for Null, libera o proximo 
+// nó e também o nó atual, (feita para ser usada recursivamente ou dentro de um loop com algumas chamadas)
+// o motivo da libera ser dessa forma, foi versatilidade para usa-la de outras formas, como na remoção essa.
+// função não libera todos os nós alocados na lista, tentei fazer a libera para remover e desalocar tudo, porem
+// ocorreram alguns erros de pointer type e demais fatores que fizeram com que nao funcionasse da outra forma,
+// então mantive uma libera simples que atua sobre um caso base, assim consigo chamar ela dentro de um loop e 
+// percorrer a lista liberando nó a nó.
+void liberaSkipList(no *x){
+    if (x) {
+        free(x->prox);
+        free(x);
     }
 }
 
-int tamanhoSkipList(Lista *lst){ /*Apenas andar pela skiplist como se fosse cada elemento da matriz e entao a cada elemento que passar somaremos 1 no tamanho (nro de n�s)*/
-    int tam=0;
-    while(lst!=NULL){ /* anda pela primeira coluna*/
-            Lista*aux=lst;
-            while(aux!=NULL){/*anda pelas linhas*/
-                aux=aux->prox;
-                tam++;
-            }
-            lst=lst->baixo;
-        }
-    return tam - MAX*2; /*Tiramos max*2 pois contamos os n�s "parede"*/
-}
-
-void liberaSkipList(Lista *lst){ /*A ideia aqui � usar 3 auxiliares, precisaremos de um para andar pelas linhas, outro que ser� dado o FREE e o terceiro usaremos para andar pelas colunas*/
-    while(lst!=NULL){
-        Lista *aux=lst; /*auxiliar para percorrer a linha*/
-        Lista *aux2=aux;/*auxiliar que sera deletado*/
-        lst=lst->baixo;
-        while(aux!=NULL){
-            aux2=aux;
-            aux=aux->prox;
-            free(aux2);
-        }
+//  Função remove é baseado na remoção atráves da chave, usei 2 ponteiros auxiliares para poder realizar
+// as buscas e condicionamentos, inicialmente o ponteiro auxiliar x recebe o inico da lista, e o outro
+// os leveis, aqui é usado a função libera para realizar a remoção, o busca pelo elemento a ser removido
+// é feita usando a chave passada como parametro em um loop usando os auxiliares que procura o elemento pela
+// chave no devido level correspondente, o que torna a complexidade O(log n) conforme a definição de skip list
+// o campo tam é decrementado para poder atualizar o tamanho, e caso o level não possua valores, ele também é
+// decrementado e atualizado.
+int removeSkipList(skiplist *l, int chave){
+    int i;
+    no *aux[MAX_LEVEL + 1];
+    no *x = l->cab;
+    for (i = l->level; i >= 1; i--) {
+        while (x->prox[i]->chave < chave)
+            x = x->prox[i];
+        aux[i] = x;
     }
-}
 
-int vaziaSkipList(Lista *lst){ /*A cada linha que passa checaremos se a informa��o do pr�ximo elemento � o maior infinito, se for para todas as linhas ent�o saberemos que � vazia*/
-    while(lst->baixo!=NULL){
-        if(lst->prox->info!=INT_MAX){
-            return 0;
+    x = x->prox[1];
+    if (x->chave == chave) {
+        for (i = 1; i <= l->level; i++) {
+            if (aux[i]->prox[i] != x)
+                break;
+            aux[i]->prox[1] = x->prox[i];
         }
-        lst=lst->baixo;
+        liberaSkipList(x);
+        l->tam--;
+
+        while (l->level > 1 && l->cab->prox[l->level] == l->cab)
+            l->level--;
+        return 0;
     }
     return 1;
 }
 
-void imprimeSkipList(Lista *lst){ /*mesma ideia de percorrimento de uma matriz*/
-    if(!vaziaSkipList(lst)){
-        while(lst->baixo!=NULL)lst = lst->baixo; /*a cada linha que passar printaremos os elementos das colunas*/
-        lst = lst->prox;
-        while(lst->prox!=NULL){ /*andaremos at� o prox ser diferente de NULL pois assim saberemos que estamos na parede e n�o necessitamos imprimir sua informa��o*/
-            printf("%d\n", lst->info);
-            lst = lst->prox;
+// Função simples para imprimir cada elem da Lista, ela percorre a lista, passando por todos os elem
+// e imprimi as chaves e os elementos correspondentes, é usado um ponteiro auxiliar chamado de x, para
+// poder executar o percorrimento condicionado. 
+void imprimeSkipList(skiplist *l){
+    no *x = l->cab;
+    while (x && x->prox[1] != l->cab) {
+        printf("%d[%d]->", x->prox[1]->chave, x->prox[1]->val);
+        x = x->prox[1];
+    }
+    printf("NULL\n");
+}
+
+
+// Uma Função main simples para testar função por função, favor desconsiderar caso necessário.
+int main(){
+    int arr[] = {3, 6, 9, 2, 11, 1, 4}, i;
+    skiplist l;
+    criaSkipList(&l);
+
+    printf("Inserir o conjunto: {3, 6, 9, 2, 11, 1}\n");
+    for (i = 0; i < sizeof(arr)/sizeof(arr[0]); i++) {
+        insereSkipList(&l, arr[i], arr[i]);
+    }
+    imprimeSkipList(&l);
+
+    printf("Realizando Buscas nas chaves {3, 4, 7, 10, 111}:\n");
+    int keys[] = {3, 4, 7, 10, 111};
+
+    for (i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) {
+        int x = buscaSkipList(&l, keys[i]);
+        if (x) {
+            printf("Existe Valor atrelado a chave %d na lista\n", keys[i]);
+        } else {
+            printf("NÃO EXISTE Valor atrelado a chave %d\n", keys[i]);
         }
     }
+
+    printf("Remover valor na chave 3 e exibir a SkipList:\n");
+    removeSkipList(&l, 3);
+    removeSkipList(&l, 9);
+    imprimeSkipList(&l);
+    int t = tamanhoSkipList(&l);
+    printf("O tamanho da SkipList é = %d\n", t);
+    return 0;
 }

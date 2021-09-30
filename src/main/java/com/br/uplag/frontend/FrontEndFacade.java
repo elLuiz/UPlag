@@ -18,7 +18,7 @@ public class FrontEndFacade {
     private final StatementAnalyzer statementAnalyzer;
     private final ArithmeticAnalyzer arithmeticAnalyzer;
     private final StylizationAnalyzer stylizationAnalyzer;
-
+    private final BuiltInFunctionAnalyzer builtInFunctionAnalyzer;
     public FrontEndFacade() {
         commentsAnalyzer = CommentsAnalyzer.getInstance();
         directiveAnalyzer = DirectiveAnalyzer.getInstance();
@@ -30,6 +30,7 @@ public class FrontEndFacade {
         statementAnalyzer = StatementAnalyzer.getInstance();
         arithmeticAnalyzer = ArithmeticAnalyzer.getInstance();
         stylizationAnalyzer = StylizationAnalyzer.getInstance();
+        builtInFunctionAnalyzer = new BuiltInFunctionAnalyzer();
     }
 
     public String createTokenSequence(String codeText) {
@@ -40,25 +41,46 @@ public class FrontEndFacade {
         tokenized = functionsAnalyzer.convertFunctionsCreationToItsToken(tokenized);
         tokenized = tokenizeRelationalOperators(tokenized);
         tokenized = tokenizeLogicalOperators(tokenized);
-        tokenized = functionsAnalyzer.convertInlineFunctionsCalls(tokenized);
-        tokenized = functionsAnalyzer.convertFunctionCallsInsideParenthesis(tokenized);
-        tokenized = functionsAnalyzer.convertFunctionBetweenOperatorsAndParenthesis(tokenized);
+        tokenized = builtInFunctionAnalyzer.tokenize(tokenized);
+        tokenized = tokenizeFunctions(tokenized);
         tokenized = tokenizeVariables(tokenized);
-        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.BREAK);
-        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.JUMP);
-        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.CONTINUE);
-        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.RETURN);
-        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.ADD);
-        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.DIV);
-        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.SUB);
-        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.MOD);
+        tokenized = tokenizeStatements(tokenized);
+        tokenized = tokenizeArithmetic(tokenized);
+        tokenized = tokenizeStylization(tokenized);
+        return tokenized.replaceAll("[a-z->_\\[\\]\"=]+", " ");
+    }
+
+    private String tokenizeStylization(String tokenized) {
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.LEFT_CURLY_BRACES);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.RIGHT_CURLY_BRACES);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.LEFT_PARENTHESES);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.RIGHT_PARENTHESES);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.COMMA);
         tokenized = stylizationAnalyzer.beautifyTokenization(tokenized, StylizationRegex.SEMICOLON);
-        return tokenized.replaceAll("[^A-Z]+", " ");
+        return tokenized;
+    }
+
+    private String tokenizeArithmetic(String tokenized) {
+        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.ADD);
+        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.DIV);
+        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.SUB);
+        tokenized = arithmeticAnalyzer.tokenizeArithmeticOccurrences(tokenized, ArithmeticOperatorsRegex.MOD);
+        return tokenized;
+    }
+
+    private String tokenizeStatements(String tokenized) {
+        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.BREAK);
+        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.JUMP);
+        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.CONTINUE);
+        tokenized = statementAnalyzer.tokenizeStatementsOccurrences(tokenized, StatementsRegex.RETURN);
+        return tokenized;
+    }
+
+    private String tokenizeFunctions(String tokenized) {
+        tokenized = functionsAnalyzer.convertInlineFunctionsCalls(tokenized);
+        tokenized = functionsAnalyzer.convertFunctionCallsInsideParenthesis(tokenized);
+        tokenized = functionsAnalyzer.convertFunctionBetweenOperatorsAndParenthesis(tokenized);
+        return tokenized;
     }
 
     private String tokenizeRelationalOperators(String tokenized) {

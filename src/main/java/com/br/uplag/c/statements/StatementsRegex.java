@@ -1,10 +1,10 @@
 package com.br.uplag.c.statements;
 
 public enum StatementsRegex {
-    BREAK("break;", "JUMP"),
-    JUMP("return;", "JUMP"),
-    CONTINUE("continue;", "JUMP"),
-    RETURN("return(?!\\;)", " STMT ");
+    BREAK("break;", "B"),
+    JUMP("return;", "B"),
+    CONTINUE("continue;", "B"),
+    RETURN("return(?!\\;)", " R ");
 
     private final String regex;
     private final String token;

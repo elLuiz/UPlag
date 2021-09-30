@@ -1,13 +1,14 @@
 package com.br.uplag.c.operators;
 
-public enum MiscellaneousOperatorsRegex {
-    SIZEOF("sizeof(.*)", " SIZE "),
-    NULL("NULL", " NULL ");
+public enum BuiltInFunctionsRegex {
+    SIZEOF("sizeof(.*)", " U "),
+    PRINTF("printf(.*)", " O "),
+    FREE("free(.*)", " G ");
 
     private final String regex;
     private final String token;
 
-    MiscellaneousOperatorsRegex(String regex, String token) {
+    BuiltInFunctionsRegex(String regex, String token) {
         this.regex = regex;
         this.token = token;
     }

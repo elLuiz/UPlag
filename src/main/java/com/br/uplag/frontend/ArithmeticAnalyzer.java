@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import com.br.uplag.c.operators.ArithmeticOperatorsRegex;
 
-public class ArithmeticAnalyzer extends FrontEND{
+public class ArithmeticAnalyzer extends FrontEnd {
     private static ArithmeticAnalyzer arithmeticAnalyzer;
     private ArithmeticAnalyzer() {}
     public static ArithmeticAnalyzer getInstance() {

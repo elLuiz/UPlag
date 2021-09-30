@@ -1,359 +1,160 @@
-/*
-    Grupo LM
-
-    Integrantes:
-        Leandro Fontellas Laurito - 11721BCC045
-        Marcela Neves Belchior - 11721BCC044
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <time.h>
-#include "skiplist.h"
-#define SKIPLIST_NIVEL_MAXIMO 6
+#include "SL.h"
+#define INT_MIN  (-2147483648)
+#define INT_MAX   (2147483647)
+#define MAX 5
 
-struct no{
-	int valor;
-	struct no *prox;
-	struct no *desce;
+
+struct no {
+    int info;
+    Lista *prox;
+    Lista *baixo;
 };
 
-struct lista{
-	struct no **vetor;
-};
 
-SkipList criaSkipList(){
-// retorna vetor de ponteiros de tamanho SKIPLIST_NIVEL_MAXIMO, retorna NULL se falhar
-	int j=0, i;
-	No aux;
-	SkipList Vetorzin;
-
-	Vetorzin = (SkipList) malloc(sizeof(SkipList));
-	// cria vetor de ponteiros do tipo Lista (alocando todos os niveis de 1 vez)
-	Vetorzin->vetor = (No*) malloc(SKIPLIST_NIVEL_MAXIMO * sizeof(No));
-
-	for(i=0; i<SKIPLIST_NIVEL_MAXIMO; i++){
-        //  aloca um nÃ³ e coloca em cada posiÃ§Ã£o (nÃ­veis) do vetor
-		Vetorzin->vetor[i] = (No) malloc(sizeof(No));
-
-		// verificando se o nÃ³ foi alocado
-		if(Vetorzin->vetor[i]!=NULL){
-            // ajustando os cabeÃ§alhos (INT_MIN = - infinito)
-			Vetorzin->vetor[i]->valor = INT_MIN;
-
-			// ajustando o campo ->desce do nÃ­vel 0
-            if(i==0)
-                Vetorzin->vetor[i]->desce = NULL;
-            else
-                Vetorzin->vetor[i]->desce=aux;
-
-			Vetorzin->vetor[i]->prox = NULL;
-
-			// ajustando o campo ->desce dos demais nÃ­veis
-            aux = Vetorzin->vetor[i];
-
-            // se chegou no final do vetor de listas, retorna a lista
-			if(j==SKIPLIST_NIVEL_MAXIMO-1)
-                return Vetorzin;
-
-			j++;
-		}
-	}
-	return NULL;
-}
-
-void liberaSkipList(SkipList Vetorzin){
-
-     if(vaziaSkipList(Vetorzin)){
-        printf("ERRO tamanho lista: 0");
-        return;
-     }
-
-     int nivel_comeco = SKIPLIST_NIVEL_MAXIMO-1;
-     // acha primeiro nivel com elementos comeÃ§ando por cima
-     while(1){
-        if(Vetorzin->vetor[nivel_comeco]->prox==NULL)
-            nivel_comeco--;
-        else
-            break;
-     }
-
-     // loop que percorre os niveis
-     while(1){
-        // duas variaveis auxiliares para percorrer o nivel
-        No aux=Vetorzin->vetor[nivel_comeco]->prox;
-        No aux2=Vetorzin->vetor[nivel_comeco]->prox->prox;
-
-        // loop que libera os elementos do nivel
-        while(aux2!=NULL){
-            free(aux);
-            aux=aux2;
-            aux2=aux2->prox;
-        }
-
-        // remove ultimo elem do nivel
-        free(aux);
-        nivel_comeco--;
-
-        if(nivel_comeco==-1){
-            break;
-        }
-     }
-
-     int i;
-
-     // libera nÃ³s com menos infinito dentro
-     for(i=0;i<SKIPLIST_NIVEL_MAXIMO;i++){
-        free(Vetorzin->vetor[i]);
-     }
-
-     // libera ponteiro da skiplist
-     free(Vetorzin);
-     return;
-}
-
-int insereSkipList(SkipList Vetorzin, int x){
-
-    int nivel;
-    No aux2;
-    No aux;
-
-    for(nivel=0; nivel<SKIPLIST_NIVEL_MAXIMO; nivel++){
-        // aloca espaÃ§o para novo no
-        No novo = (No) malloc(sizeof(struct no));
-
-        // se novo no nÃ£o foi criado, falha
-        if(novo==NULL)
-            return 0;
-
-        if(nivel==0)
-            novo->desce=NULL;
-        novo->prox=NULL;
-        novo->valor=x;
-
-        // salva ultimo endereÃ§o do ultimo elem inserido
-        if(nivel>0){
-            aux2 = aux->prox;
-        }
-        aux = Vetorzin->vetor[nivel];
-
-        // encontrando a posiÃ§Ã£o na lista
-        while(aux->prox!=NULL&&aux->prox->valor<x)
-            aux=aux->prox;
-
-        // parou pq a lista chegou no fim
-        if(aux->prox==NULL){
-            aux->prox=novo;
-
-            //  se nivel eh maior que 0 entao ele teve que inserir acima
-            if(nivel>0)
-                aux->prox->desce=aux2;
-            // decide se vai pro andar de cima
-            if(num_aleatorio())
-               continue;
-            else
-                return 1;
-        } else {
-            // inserindo no meio de dois elementos
-            novo->prox=aux->prox;
-            aux->prox=novo;
-
-            if(nivel>0)
-                aux->prox->desce=aux2;
-
-            // decide se vai pro proximo nivel
-            if(num_aleatorio())
-                continue;
-            else
-                return 1;
-        }
-    }
-    return 1;
-}
-
-int removeSkipList(SkipList Vetorzin, int x){
-    int nivel = SKIPLIST_NIVEL_MAXIMO-1;
-
-    // Se lista estiver vazia, remoÃ§Ã£o falha
-    if(vaziaSkipList(Vetorzin))
-        return 0;
-
-    // encontra o primeiro nÃ­vel com elementos
-    while(Vetorzin->vetor[nivel]->prox==NULL){
-        nivel--;
-    }
-
-    No aux = Vetorzin->vetor[nivel];
-    // do primeiro nÃ­vel com elementos, verifica se possui o elemento
-    while(aux->prox->valor < x){
-        aux = aux->prox;
-        if(aux->prox==NULL){
-            nivel--;
-            aux = Vetorzin->vetor[nivel];
-        }
-    }
-
-    // variavel auxiliar para percorrer skiplist
-    No aux2;
-
-    // percorre os niveis para remover o elemento em todos
-    while(nivel >= 0){
-        aux = Vetorzin->vetor[nivel];
-
-        // procura o elemento na lista
-        while(aux->prox != NULL && aux->prox->valor < x){
-            aux = aux->prox;
-        }
-        // encontrou o elemento, arruma ponteiros e libera no
-        if(aux->prox->valor==x){
-           aux2 = aux->prox;
-           aux->prox = aux2->prox;
-           free(aux2);
-        }
-
-        nivel--;
-    }
-
-    return 1;
-}
-
-int buscaSkipList(SkipList Vetorzin, int x){
-// retorna 1 para elemento encontrado e 0 para falha
-	int nivel_comeco = SKIPLIST_NIVEL_MAXIMO-1;
-
-	if(vaziaSkipList(Vetorzin))
-        return 0;
-
-    // encontra o primeiro nivel com elementos para comeÃ§ar a busca
-	while(1){
-		if(Vetorzin->vetor[nivel_comeco]->prox==NULL)
-            nivel_comeco--;
-		else
-            break;
-    }
-    while(1){
-        if(Vetorzin->vetor[nivel_comeco]->prox->valor>x && x>0)
-            nivel_comeco--;
-        else
-            break;
-    }
-
-    // variavel auxiliar para percorrer a skiplist
-    No aux = Vetorzin->vetor[nivel_comeco];
-
-    while(1){
-        // se valor do no atual for menor que o valor procurado, vai para proximo no
-        if(aux->prox!=NULL && x>=aux->prox->valor){
-            aux=aux->prox;
-            continue;
-        }
-
-        // se no atual nÃ£o for o ultimo da lista
-        if(aux->prox!=NULL){
-             // se o valor do no atual for igual ao valor procurado, retorna 1 (valor encontrado)
-             if(aux->valor==x){
-                return 1;
-            }else{
-                // desce para proximo nivel
-                if(aux->desce!=NULL){
-                    aux=aux->desce;
-                    continue;
-                }else
-                    return 0;
-            }
-              // se no atual for o ultimo da lista
-        }else if(aux->prox==NULL && aux->desce!=NULL){
-            // numero procurado nao encontrado, desce
-            if(aux->valor!=x)
-                aux=aux->desce;
-                // numero procurado encontrado, retorna 1
-            else if(aux->valor==x)
-                return 1;
-            continue;
-        }else
-            return 0;
-    }
-}
-
-int tamanhoSkipList(SkipList Vetorzin){
-// retorno a quantidade de nos da lista, incluindo todos os niveis
-	if(vaziaSkipList(Vetorzin)){
-		//printf("Tamanho lista: 0");
-		return 0;
-	}
-
-	int tamanho_max = 0;
-	int tamanho_por_nivel = 0;
-	int nivel_comeco = SKIPLIST_NIVEL_MAXIMO-1;
-
-    // encontra o primeiro nivel com elementos
-	while(1){
-		if(Vetorzin->vetor[nivel_comeco]->prox==NULL)
-            nivel_comeco--;
-		else break;
-	}
-
-	while(1){
-		No aux = Vetorzin->vetor[nivel_comeco]->prox;
-
-		while(aux->prox!=NULL){
-			tamanho_por_nivel++;
-			aux = aux->prox;
-		}
-
-		tamanho_por_nivel++;
-		//printf("Tamanho do nivel[%d]: %d\n", nivel_comeco, tamanho_por_nivel);
-
-		tamanho_max = tamanho_max+tamanho_por_nivel;
-		tamanho_por_nivel = 0;
-		nivel_comeco--;
-
-		if(nivel_comeco==-1){
-			//printf("Tamanho lista total: %d", tamanho_max);
-			return tamanho_max;
-		}
-		continue;
-	}
-}
-
-int vaziaSkipList(SkipList Vetorzin){
-// retorna 1 se lista vazia e 0 para lista nao vazia
-	if(Vetorzin->vetor[0]->prox == NULL||Vetorzin==NULL)
-        return 1;
-	else
-        return 0;
-}
-
-void imprimeSkipList(SkipList Vetorzin){
-	if(vaziaSkipList(Vetorzin)){
-		printf("{}\n");
-	}
-
+Lista *criaLista(){ /* A ideia aqui é criar duas listas para servir como uma "parede", do lado esquerdo o menor interiro possivel e do direito o maior. Enquanto for criando pegar o Nó mais alto
+                            da esquerda e retornar seu endereço e a medida que for inserindo os numeros ficarão entre essas paredes o q facilita e diminui os codigos condicionais (atua como
+                                                                                                                                                                                    um cabeçalho) */
+    Lista *P;
     int i;
-    No aux;
+    Lista *aux;
+    for (i=0;i<MAX;i++){
+        Lista *N=(Lista*)malloc(sizeof(Lista));
+        if(N==NULL) return 0;
 
-    for(i=SKIPLIST_NIVEL_MAXIMO-2;i>=0;i--){
+        Lista *M=(Lista*)malloc(sizeof(Lista));
+        if(M==NULL) return 0;
 
-        if(Vetorzin->vetor[i]->prox==NULL){
-            printf("{}\n");
+        N->info=INT_MIN;
+        M->info=INT_MAX;
+
+        N->baixo=NULL;/* o nó mais a esquerda recebe como endereço primeiramente o elemento mais a direita e abaixo NULL, a medida que formos inserindo os nós das camadas acima aponta
+                        para a camada de baixo*/
+        M->baixo=NULL;
+        M->prox=NULL;
+        N->prox=M;
+
+        if(i==0){ /* Caso seja o primeiro nó salvamos o endereço para retornar no final da função*/
+            P=N;
+            aux=N;
+        }else{
+            aux->baixo=N;
+            aux->prox->baixo=M;
+            aux=N;
         }
+    }
+    return P;
+}
 
-        aux = Vetorzin->vetor[i]->prox;
+int insereSkipList(Lista *lst, int num){ /* Essa função funciona da seguinte maneira: sorteamos um numero, este numero será a altura do elemento na SkipList, depois tiramos da altura max
+                                            para saber assim quantos degraus iremos descer, a partir dai percorrer a lista com um auxiliar para saber onde inserir (sempre parando no nó anterior)
+                                            e a medida que formos inserindo no nó mais de cima descemos na lista até chegar em NULL*/
 
-		printf("{");
-		// loop para imprimir o nivel
-		while(aux->prox!=NULL){
-			printf("%d, ", aux->valor);
-			aux = aux->prox;
-		}
-		// perfumaria para imprimir o ultimo elem do nivel
-		printf("%d}\n", aux->valor);
+    int rdm,nivel,i;
+    rdm=rand()%MAX+1;
+    nivel = MAX-rdm;
+    while(nivel--) lst=lst->baixo;/* calculo para saber o nivel que começaremos a inserir na lista*/
+    Lista *aux;
+    Lista *aux2;
+    for(i=0;i<rdm;i++){ /* loop para quantidade de niveis que iremos inserir*/
+    aux=lst;
+        while(aux->prox->info < num) aux = aux->prox; /* caminhamos até o momento que o prox seja maior para podermos inserir o elemento (por questão da "parede" que contem o maior infinito
+                                                         não necessitamos colocar condições adicionais como percorrer até NULL)*/
+    Lista *N=(Lista*)malloc(sizeof(Lista));
+
+    if(N==NULL) return 0;
+
+    N->info=num; /* troca de ponteiros, fazer o prox do anterior ser o prox do nó que gostariamos de inserir*/
+    N->baixo=NULL;
+    N->prox=aux->prox;
+    aux->prox=N;
+    if(i!=0) /* caso seja o nivel mais alto do elemento que estamos inserindo criamos um auxiliar apontando para ele e assim podermos ligar o ponteiro "baixo" para conectarmos os nós de
+                mesmo elemento*/
+        aux2->baixo=N;
+    aux2=N;
+    lst=lst->baixo;
+    }
+    return 1;
+}
+
+int removeSkipList(Lista *lst, int num){ /* A ideia dessa função é percorrer a skiplist como se fosse uma matriz, deixaremos um aux na "parede" da skiplist para que possamos descer
+                                            os niveis e assim retirar os elementos sempre parando no anterior*/
+    if(vaziaSkipList(lst)){
+        return 0;
+    }else{
+        while(lst!=NULL){
+            Lista *aux=lst;
+            while(aux->prox->info<num) aux=aux->prox; /*percorrer e parar no anterior ao nó que gostariamos de retirar*/
+            if(aux->prox->info==num){
+                Lista *aux2= aux->prox;
+                aux->prox=aux2->prox; /*Troca de ponteiros*/
+                free(aux2);
+            }
+            lst=lst->baixo; /* descer pela skiplist*/
+        }
+        return 1;
     }
 }
 
-int num_aleatorio(){
-// retorna um nÃºmero aleatÃ³tio (0 ou 1)
-	int x = rand()%2;
-	return x;
+int buscaSkipList(Lista *lst,int num){ /*Na busca vamos caminhar até um maior elemento que o nosso, depois de achar passamos para o andar de baixo, e assim vamos caminhar, caso chegar no
+                                        mais infinito e embaixo ser NULL sabemos que o numero nao existe*/
+    if(vaziaSkipList(lst)){
+        return 0;
+    }else{
+        while(1){
+            while(lst->prox->info<num) lst=lst->prox; /*Anda até o maior elemento*/
+                if(lst->prox->info>num) lst=lst->baixo;/*Desce*/
+                if(lst->prox->info==num) return 1;
+                if(lst->prox->info==INT_MAX && lst->baixo==NULL) return 0;
+        }
+    }
+}
+
+int tamanhoSkipList(Lista *lst){ /*Apenas andar pela skiplist como se fosse cada elemento da matriz e entao a cada elemento que passar somaremos 1 no tamanho (nro de nós)*/
+    int tam=0;
+    while(lst!=NULL){ /* anda pela primeira coluna*/
+            Lista*aux=lst;
+            while(aux!=NULL){/*anda pelas linhas*/
+                aux=aux->prox;
+                tam++;
+            }
+            lst=lst->baixo;
+        }
+    return tam - MAX*2; /*Tiramos max*2 pois contamos os nós "parede"*/
+}
+
+void liberaSkipList(Lista *lst){ /*A ideia aqui é usar 3 auxiliares, precisaremos de um para andar pelas linhas, outro que será dado o FREE e o terceiro usaremos para andar pelas colunas*/
+    while(lst!=NULL){
+        Lista *aux=lst; /*auxiliar para percorrer a linha*/
+        Lista *aux2=aux;/*auxiliar que sera deletado*/
+        lst=lst->baixo;
+        while(aux!=NULL){
+            aux2=aux;
+            aux=aux->prox;
+            free(aux2);
+        }
+    }
+}
+
+int vaziaSkipList(Lista *lst){ /*A cada linha que passa checaremos se a informação do próximo elemento é o maior infinito, se for para todas as linhas então saberemos que é vazia*/
+    while(lst->baixo!=NULL){
+        if(lst->prox->info!=INT_MAX){
+            return 0;
+        }
+        lst=lst->baixo;
+    }
+    return 1;
+}
+
+void imprimeSkipList(Lista *lst){ /*mesma ideia de percorrimento de uma matriz*/
+    if(!vaziaSkipList(lst)){
+        while(lst->baixo!=NULL)lst = lst->baixo; /*a cada linha que passar printaremos os elementos das colunas*/
+        lst = lst->prox;
+        while(lst->prox!=NULL){ /*andaremos até o prox ser diferente de NULL pois assim saberemos que estamos na parede e não necessitamos imprimir sua informação*/
+            printf("%d\n", lst->info);
+            lst = lst->prox;
+        }
+    }
 }

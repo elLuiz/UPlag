@@ -1,10 +1,10 @@
 package com.br.uplag.c.misc;
 
 public enum StylizationRegex {
-    LEFT_CURLY_BRACES("\\{", " LC "),
-    RIGHT_CURLY_BRACES("\\}", " RC "),
-    LEFT_PARENTHESES("\\(", " LP "),
-    RIGHT_PARENTHESES("\\)", " RP "),
+    LEFT_CURLY_BRACES("\\{", " W "),
+    RIGHT_CURLY_BRACES("\\}", " Z "),
+    LEFT_PARENTHESES("\\(", " Ç "),
+    RIGHT_PARENTHESES("\\)", " V "),
     COMMA("\\,", ""),
     SEMICOLON("\\;", "");
 

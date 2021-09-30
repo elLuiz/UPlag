@@ -2,7 +2,7 @@ package com.br.uplag.frontend;
 
 import com.br.uplag.c.statements.StatementsRegex;
 
-public class StatementAnalyzer extends FrontEND{
+public class StatementAnalyzer extends FrontEnd {
     private static StatementAnalyzer statementAnalyzer;
     private StatementAnalyzer() {}
 

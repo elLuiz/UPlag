@@ -25,7 +25,7 @@ public class StringUtilTest {
 
     @Test
     public void shouldReplaceDotCharacter() {
-        Assert.assertEquals("com/br/uplag/c", StringUtil.replaceBy(".", "", ".com.br.uplag.c"));
+        Assert.assertEquals("c", StringUtil.replaceBy(".", "", ".c"));
     }
 
     @Test

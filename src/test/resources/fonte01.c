@@ -1,10 +1,4 @@
-/*
-Grupo GVY
-Integrantes:
-Gabriel Mendes de Souza Santiago - 11621BCC015
-Vinï¿½cius Guardieiro Sousa - 11811BCC008
-Yan Lucas Damasceno Dias - 11621BCC029
-*/
+
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -16,50 +10,50 @@ Yan Lucas Damasceno Dias - 11621BCC029
 // Retorna 1 caso o elemento esteja na lista.
 int buscaSkipList(skiplist *sk, int chave){
 
-    // Verifica se a lista foi alocada e se estï¿½ vazia.
+    // Verifica se a lista foi alocada e se está vazia.
 	if(vaziaSkipList(sk)){
         printf("Lista nao alocada ou vazia.\n");
 		return 0;
 	}
 
-    // Aponta para o nï¿½ mais acima do cabeï¿½alho.
+    // Aponta para o nó mais acima do cabeçalho.
     no *x = sk->inicio->prox;
 
-    // Enquanto o nï¿½ for diferente de nulo percorrer a lista.
+    // Enquanto o nó for diferente de nulo percorrer a lista.
     while(x != NULL){
 
-        // Se a chave for maior que o valor do nï¿½ atual, ir para o proximo nï¿½.
+        // Se a chave for maior que o valor do nó atual, ir para o proximo nó.
         while(x->prox != NULL && x->prox->info < chave)
             x = x->prox;
 
-        // Verifica se o valor do nï¿½ atual ï¿½ igual ao valor da chave e retorna 1 caso seja.
+        // Verifica se o valor do nó atual é igual ao valor da chave e retorna 1 caso seja.
         if(x->prox != NULL && x->prox->info == chave)
             return 1;
 
-        // Caso nï¿½o satisfaï¿½a nenhuma das condiï¿½ï¿½es acima, vai para o nï¿½ abaixo e repete o processo.
+        // Caso não satisfaça nenhuma das condições acima, vai para o nó abaixo e repete o processo.
         x = x->abaixo;
     }
     return 0;
 }
 
-// Cria a skiplist, alocando-a e alocando os nï¿½s dela.
-// Retorna a skiplist ou retorna nulo, caso nï¿½o tenha
-// sido possï¿½vel alocar memï¿½ria para ela ou para os nï¿½s.
+// Cria a skiplist, alocando-a e alocando os nós dela.
+// Retorna a skiplist ou retorna nulo, caso não tenha
+// sido possível alocar memória para ela ou para os nós.
 skiplist *criaSkipList(){
 
-    // Faz a alocaï¿½ï¿½o da skiplist e dos nï¿½s.
+    // Faz a alocação da skiplist e dos nós.
     skiplist *sk = (skiplist*) malloc(sizeof(skiplist));
     no *cabecalhoPrimeiroNivel = (no*) malloc(sizeof(no));
     no *novo = (no*) malloc(sizeof(no));
 
-    // Verifica se a alocaï¿½ï¿½o ocorreu com sucesso.
-    // Retorna nulo caso nï¿½o tenha sido.
+    // Verifica se a alocação ocorreu com sucesso.
+    // Retorna nulo caso não tenha sido.
     if(cabecalhoPrimeiroNivel == NULL || sk == NULL || novo == NULL){
         printf("Ocorreu algum erro de alocacao.\n");
         return NULL;
     }
 
-    // Seta os valores iniciais para uma skiplist vazia e para seus respectivos nï¿½s.
+    // Seta os valores iniciais para uma skiplist vazia e para seus respectivos nós.
     sk->level = 1;
     sk->inicio = novo;
 
@@ -74,25 +68,25 @@ skiplist *criaSkipList(){
     return sk;
 }
 
-// Recebe uma SkipList e imprime os elementos alocados nos nï¿½s mais abaixo da lista.
+// Recebe uma SkipList e imprime os elementos alocados nos nós mais abaixo da lista.
 void imprimeSkipList(skiplist *sk) {
 
-    // Verifica se a lista estï¿½ vazia.
+    // Verifica se a lista está vazia.
     if(vaziaSkipList(sk)){
         printf("Lista vazia ou nao alocada!\n");
         return;
     }
 
-    // Aponta para o nï¿½ mais acima do cabeï¿½alho.
+    // Aponta para o nó mais acima do cabeçalho.
     no *aux = sk->inicio->prox;
 
-    // Desce atï¿½ o nï¿½ mais abaixo do cabeï¿½alho e
-    // aponta para a primeira posiï¿½ï¿½o da lista.
+    // Desce até o nó mais abaixo do cabeçalho e
+    // aponta para a primeira posição da lista.
     while(aux->abaixo != NULL)
         aux = aux->abaixo;
     aux = aux->prox;
 
-    // Imprime cada elemento atï¿½ chegar no ï¿½ltimo.
+    // Imprime cada elemento até chegar no último.
     while(aux != NULL){
         printf("%d", aux->info);
         if(aux->prox != NULL){
@@ -104,8 +98,8 @@ void imprimeSkipList(skiplist *sk) {
     printf("\n");
 }
 
-// Funï¿½ï¿½o auxiliar ï¿½ insereSkipList, pois se um nï¿½ nï¿½o pode ser alocado,
-// os nos que foram alocados durante a execuï¿½ï¿½o dessa funï¿½ï¿½o naquele
+// Função auxiliar à insereSkipList, pois se um nó não pode ser alocado,
+// os nos que foram alocados durante a execução dessa função naquele
 // momento devem ser liberados
 void reseta(no **novo,skiplist *sk){
     int i = 0;
@@ -118,8 +112,8 @@ void reseta(no **novo,skiplist *sk){
     }
 }
 
-// Recebe uma skiplist e um nï¿½mero e o insere na lista.
-// Retorna 1 caso a inserï¿½ï¿½o tenha funcionado.
+// Recebe uma skiplist e um número e o insere na lista.
+// Retorna 1 caso a inserção tenha funcionado.
 // Retorna 0 caso algo tenha dado errado.
 int insereSkipList(skiplist *sk, int numero){
     if(sk == NULL){
@@ -131,11 +125,11 @@ int insereSkipList(skiplist *sk, int numero){
     int tamanho = sk->level;
     int i;
 
-    no *salvaAnt[tamanho]; // Vetor para armazenar a posiï¿½ï¿½o anterior de onde o novo no serï¿½ colcoado
-    no *salvaNovo[tamanho]; // Vetor que salva a posiï¿½ï¿½o da memoria dos novos nï¿½s
-    no *aux3 = NULL; // Nï¿½ auxiliar para corrigir o abaixo dos novos nï¿½s
+    no *salvaAnt[tamanho]; // Vetor para armazenar a posição anterior de onde o novo no será colcoado
+    no *salvaNovo[tamanho]; // Vetor que salva a posição da memoria dos novos nós
+    no *aux3 = NULL; // Nó auxiliar para corrigir o abaixo dos novos nós
 
-    // Setar vetor em null para posterior verificaï¿½ï¿½o
+    // Setar vetor em null para posterior verificação
     for(i = 0; i < tamanho+1; i++){
         salvaAnt[i] = NULL;
         salvaNovo[i] = NULL;
@@ -144,12 +138,12 @@ int insereSkipList(skiplist *sk, int numero){
     // Verifica necessidade de criar uma nova camada
     if((elementos+1) % ((int)pow(2, sk->level)) == 0){
 
-        // Aloca o cabeï¿½alho e um nï¿½ para adicionar na camada
+        // Aloca o cabeçalho e um nó para adicionar na camada
         no *novo1 = (no *) malloc(sizeof(no));
         if(novo1 == NULL)
             return 0;
 
-        // Configura o cabeï¿½alho
+        // Configura o cabeçalho
         novo1->info = sk->level;
         novo1->abaixo = sk->inicio->prox;
         novo1->prox = NULL;
@@ -163,21 +157,21 @@ int insereSkipList(skiplist *sk, int numero){
     int contador = sk->level-1;
     no *andarNos = sk->inicio->prox; // Aponta cabecalho
 
-    // Cria todos os novos nï¿½s
+    // Cria todos os novos nós
     while(andarNos != NULL){
         int pot = (int) pow(2, contador);
 
-        // Verifica se hï¿½ necessidade de adicionar o nï¿½ na camada em que o andarNos estï¿½
+        // Verifica se há necessidade de adicionar o nó na camada em que o andarNos está
         if((elementos+1) % pot == 0){
 
-            // Aloca novo nï¿½
+            // Aloca novo nó
             no *novo = (no *) malloc(sizeof(no));
             if(novo == NULL){
                 reseta(salvaNovo, sk);
                 return 0;
             }
 
-            // Coloca o nï¿½mero a ser inserido no novo nï¿½
+            // Coloca o número a ser inserido no novo nó
             novo->info = numero;
             salvaNovo[contador] = novo;
         }
@@ -190,18 +184,18 @@ int insereSkipList(skiplist *sk, int numero){
     // Anda na skiplist
     while(andarNos != NULL){
 
-        // Anda na horizontal para achar a posiï¿½ï¿½o
+        // Anda na horizontal para achar a posição
         while(andarNos->prox != NULL && andarNos->prox->info < numero){
             andarNos = andarNos->prox;
         }
 
-        // Verifica se o elemento jï¿½ existe
+        // Verifica se o elemento já existe
         if(andarNos->prox != NULL && andarNos->prox->info == numero){
             reseta(salvaNovo, sk);
             return 0;
         }
 
-        // Armazena a posiï¿½ï¿½o anterior que os novos nï¿½s irï¿½o ficar
+        // Armazena a posição anterior que os novos nós irão ficar
         if(salvaNovo[contador]!= NULL){
             salvaAnt[contador] = andarNos;
         }
@@ -211,7 +205,7 @@ int insereSkipList(skiplist *sk, int numero){
         contador --;
     }
 
-    // Arruma o abaixo e os proxs dos novos nï¿½s que estï¿½o no vetor salvarNovo
+    // Arruma o abaixo e os proxs dos novos nós que estão no vetor salvarNovo
     for(i = 0; i <= sk->level-1; i++){
         if(salvaNovo[i] == NULL)
             break;
@@ -227,7 +221,7 @@ int insereSkipList(skiplist *sk, int numero){
     return 1;
 }
 
-// Recebe uma skiplist e libera a memï¿½ria alocada para ela.
+// Recebe uma skiplist e libera a memória alocada para ela.
 void liberaSkipList(skiplist *sk){
     if(sk != NULL){
         no *aux = sk->inicio->prox;
@@ -236,7 +230,7 @@ void liberaSkipList(skiplist *sk){
         while(aux != NULL){
             auxLiberar = aux->prox;
 
-            // Anda pro lado liberando os nï¿½s
+            // Anda pro lado liberando os nós
             while(auxLiberar != NULL){
                 no *aux2 = auxLiberar;
                 auxLiberar = auxLiberar->prox;
@@ -249,15 +243,15 @@ void liberaSkipList(skiplist *sk){
             free(aux3);
         }
 
-        // Libera o aux e o ponteiro que apontava pro cabeï¿½alho
+        // Libera o aux e o ponteiro que apontava pro cabeçalho
         aux = sk->inicio;
         free(aux);
         free(sk);
-        sk = NULL; // Coloca null para corrigir possiveis erros quando for checar se estï¿½ vazia.
+        sk = NULL; // Coloca null para corrigir possiveis erros quando for checar se está vazia.
     }
 }
 
-// Recebe uma skiplist e um valor. Remove o valor e retorna 1 caso tenha removido, retorna 0 caso nï¿½o tenha removido.
+// Recebe uma skiplist e um valor. Remove o valor e retorna 1 caso tenha removido, retorna 0 caso não tenha removido.
 int removeSkipList(skiplist *sk, int valor){
     if(vaziaSkipList(sk)){
         printf("Lista nao alocada ou vazia.\n");
@@ -265,12 +259,12 @@ int removeSkipList(skiplist *sk, int valor){
     }
 
     no *andar = sk->inicio->prox;
-    int removeu = 0; // Flag para ver se jï¿½ removeu
+    int removeu = 0; // Flag para ver se já removeu
 
     // Percorrer a skiplist
     while(andar != NULL){
 
-        // Percorre atï¿½ achar o elemento ou um elemento maior
+        // Percorre até achar o elemento ou um elemento maior
         while(andar->prox != NULL && andar->prox->info < valor){
             andar = andar->prox;
         }
@@ -303,20 +297,18 @@ int removeSkipList(skiplist *sk, int valor){
     return 0;
 }
 
-// Recebe uma skiplist e retorna o tamanho dela. Retorna 0 caso ela nï¿½o tenha sido alocada.
+// Recebe uma skiplist e retorna o tamanho dela. Retorna 0 caso ela não tenha sido alocada.
 int tamanhoSkipList(skiplist *sk){
     if(sk == NULL)
         return 0;
 
     return sk->inicio->info;
-    return sk == NULL ? 0 : sk->inicio->info;
 }
 
-// Recebe uma skiplist e verifica se estï¿½ vazia. Retorna 1 caso esteja. Retorna 0 caso nï¿½o esteja vazia.
+// Recebe uma skiplist e verifica se está vazia. Retorna 1 caso esteja. Retorna 0 caso não esteja vazia.
 int vaziaSkipList(skiplist *sk){
     if(sk == NULL || sk->inicio->info == 0)
         return 1;
 
     return 0;
-    return sk == NULL || sk->inicio->info == 0 ? 1 : 0;
 }

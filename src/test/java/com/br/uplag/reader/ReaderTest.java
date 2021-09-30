@@ -12,14 +12,15 @@ import java.util.List;
 public class ReaderTest {
     @Test
     public void shouldReadFile() {
-        String[] args = new String[6];
+        String[] args = new String[7];
         args[0] = "-d";
         args[1] = "src/test/resources/";
         args[2] = "-l";
-        args[3] = "com/br/uplag/c";
-        args[4] = "-p";
-        args[5] = ".com.br.uplag.c";
-        List<String> files = FileInputUtil.getAllFilesPath(args[1], args);
+        args[3] = "c";
+        args[4] = "-tfidf";
+        args[5] = "-p";
+        args[6] = ".c";
+        List<String> files = FileInputUtil.getAllFilesPath(args[1], 9, args);
         Reader reader = new CReader();
         Assert.assertEquals(false, reader.startReadingInputFiles(files).isEmpty());
     }
