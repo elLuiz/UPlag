@@ -1,7 +1,6 @@
 package com.br.uplag.result;
 
 import com.br.uplag.threshold.ClassVariance;
-import com.br.uplag.threshold.Histogram;
 import com.br.uplag.util.DoubleUtil;
 
 import java.util.LinkedHashMap;
@@ -20,23 +19,24 @@ public class SimilarityResult {
         this.documentStatisticsMap = documentStatisticsMap;
         if (threshold == null) {
             ClassVariance classVariance = new ClassVariance(similarityMap.values());
-            classVariance.calculateCumulativeProbability();
+            classVariance.calculateBetweenClassVariance();
             this.threshold = classVariance.getOtsuThreshold().findMaxThresholdValue();
         } else
             this.threshold = threshold;
     }
 
     public void displaySimilarityResults() {
-        Histogram histogram = new Histogram();
-        histogram.createHistogram(similarityMap.values());
         Map<String, Double> documentsSimilarityMap = sortMapDescending();
+        int count = 0;
         System.out.println("Threshold: " + threshold + '%');
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
-            if (fileEntry.getValue() >= threshold) {
+            if (fileEntry.getValue() > threshold) {
                 System.out.println(fileEntry.getKey() + " -> " + DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES) + "%");
                 displayStatisticalDataWithinDocumentsPairs(fileEntry.getKey());
+                count++;
             }
         }
+        System.out.println("Possible plagiarisms: " + count);
     }
 
     // font: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/

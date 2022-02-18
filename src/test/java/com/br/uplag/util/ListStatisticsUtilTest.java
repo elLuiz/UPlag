@@ -14,12 +14,12 @@ public class ListStatisticsUtilTest {
     private List<Double> prob = Arrays.asList(39.3, 23.3, 20.2, 40.3);
     @Test
     public void shouldGetSubList() {
-        Assert.assertEquals(2, ListStatisticsUtil.getSubListList(prob, 0, 2).size());
+        Assert.assertEquals(2, ListStatisticsUtil.getSublist(prob, 0, 2).size());
     }
 
     @Test
     public void shouldGetOnlyOneElementWhenStartPositionIsGreaterThanIndex() {
-        Assert.assertEquals(Collections.singletonList(40.3), ListStatisticsUtil.getSubListList(prob, 4, 3));
+        Assert.assertEquals(Collections.singletonList(40.3), ListStatisticsUtil.getSublist(prob, 4, 3));
     }
 
     @Test

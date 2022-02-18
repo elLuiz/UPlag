@@ -24,7 +24,6 @@ public class CReader implements Reader{
             codeText = codeText.replace(" ", "");
            fileContentMap.put(path, codeText);
         }
-
         return fileContentMap;
     }
 }

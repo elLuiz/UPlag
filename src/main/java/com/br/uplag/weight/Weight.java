@@ -12,19 +12,12 @@ public abstract class Weight {
     protected Integer termFrequencyInCollection;
     protected  Map<String, Map<String, Double>> termWeightMap;
 
-    protected Weight(Map<String, Map<String, Integer>> invertedIndexMap, Integer collectionSize) {
-        this.invertedIndexMap = invertedIndexMap;
-        this.collectionSize = collectionSize;
-        termWeightMap = new LinkedHashMap<>();
-    }
-
     protected Weight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
         this.invertedIndexMap = invertedIndexMap;
         this.programs = programs;
         this.collectionSize = programs.size();
         termWeightMap = new LinkedHashMap<>();
     }
-
 
     protected double calculateIDF() {
         return Math.log10((double) collectionSize / termFrequencyInCollection);

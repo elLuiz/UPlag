@@ -10,17 +10,14 @@ public class OtsuThreshold {
         this.candidatesThresholds = new ArrayList<>();
     }
 
-    public void storeThreshold(Double withinClass, Double betweenClass) {
-        if (betweenClass > 0) {
-            Double threshold = withinClass + betweenClass;
-            candidatesThresholds.add(threshold);
-        } else
-            candidatesThresholds.add(0.0);
+    public void storeThreshold(Double betweenClass) {
+        candidatesThresholds.add(betweenClass);
     }
 
     public Double findMaxThresholdValue() {
         double position = 0.0;
         double maxThreshold = 0.0;
+
         for (int i = 0; i < candidatesThresholds.size(); i++) {
             if (candidatesThresholds.get(i) > maxThreshold) {
                 maxThreshold = candidatesThresholds.get(i);

@@ -6,7 +6,7 @@ import java.util.List;
 public class ListStatisticsUtil {
     private ListStatisticsUtil() {}
 
-    public static List<Double> getSubListList(List<Double> probabilities, int startPosition, int index) {
+    public static List<Double> getSublist(List<Double> probabilities, int startPosition, int index) {
         if (startPosition >= index)
             return Collections.singletonList(probabilities.get(startPosition - 1));
         return probabilities.subList(startPosition, index);
