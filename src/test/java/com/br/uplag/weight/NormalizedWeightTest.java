@@ -1,7 +1,6 @@
 package com.br.uplag.weight;
 
 import com.br.uplag.index.InvertedIndex;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -17,7 +16,7 @@ public class NormalizedWeightTest {
     public void shouldGetTermsWeight() {
         List<String> files = FileInputUtil.walkTroughDirectory("src/test/resources/", "c");
         Reader reader = new CReader();
-        Map<String, String> stringStringMap = reader.startReadingInputFiles(files);
+        Map<String, String> stringStringMap = reader.createFilesContentMap(files);
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(stringStringMap);
         NormalizedWeight normalizedWeight = new NormalizedWeight(invertedIndex.getInvertedIndex(), files);

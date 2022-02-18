@@ -41,19 +41,19 @@ public class FileInputUtilTest {
     public void shouldWalkThroughDirectory() {
         String directory = "src/test/resources/";
         String fileExtension = "c";
-        Assert.assertEquals(false, FileInputUtil.walkTroughDirectory(directory, fileExtension).isEmpty());
+        Assert.assertFalse(FileInputUtil.walkTroughDirectory(directory, fileExtension).isEmpty());
     }
 
     @Test
     public void shouldReadFile() {
         String directory = "src/test/resources/fonte01.c";
         String code = FileInputUtil.readFromInputStream(directory);
-        Assert.assertEquals(false, code.isEmpty());
+        Assert.assertFalse(code.isEmpty());
     }
 
     @Test
     public void shouldThrowExceptionAndReturnEmptyStringWhenPathDoesNotExist() {
         String directory = "src/test/resources/unknown/path";
-        Assert.assertEquals(true, FileInputUtil.readFromInputStream(directory).isEmpty());
+        Assert.assertTrue(FileInputUtil.readFromInputStream(directory).isEmpty());
     }
 }
