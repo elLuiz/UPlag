@@ -20,7 +20,7 @@ public class ClassVariance {
         otsuThreshold = new OtsuThreshold();
     }
 
-    // reference: http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html
+    // reference: http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html, https://en.wikipedia.org/wiki/Otsu%27s_method
     public void calculateBetweenClassVariance() {
         double sumBackground = 0.0;
         double firstClassWeight = 0.0;

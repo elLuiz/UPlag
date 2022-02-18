@@ -5,11 +5,7 @@ import com.br.uplag.util.StringUtil;
 import java.util.List;
 import java.util.Map;
 
-public class TfIdfWeight extends Weight{
-    public TfIdfWeight(Map<String, Map<String, Integer>> invertedIndexMap, Integer collectionSize) {
-        super(invertedIndexMap, collectionSize);
-    }
-
+public class TfIdfWeight extends Weight {
     public TfIdfWeight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
         super(invertedIndexMap, programs);
     }

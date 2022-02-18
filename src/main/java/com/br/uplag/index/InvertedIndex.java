@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class InvertedIndex {
-    private Map<String, Map<String, Integer>> invertedIndexMap;
+    private final Map<String, Map<String, Integer>> invertedIndexMap;
 
     public InvertedIndex() {
         this.invertedIndexMap = new LinkedHashMap<>();
@@ -16,18 +16,29 @@ public class InvertedIndex {
     public void createInvertedIndex(Map<String, String> fileContent) {
         for (Map.Entry<String, String> fileEntry : fileContent.entrySet()) {
             String filename = StringUtil.getFileNameAfterLastSlash(fileEntry.getKey());
-            String[] tokens = fileEntry.getValue().split(" ");
-            for (String token : tokens) {
+            for (String token : getTokens(fileEntry)) {
                 if (!token.isEmpty() && invertedIndexMap.get(token) == null) {
-                    Map<String, Integer> documentOccurrences = new HashMap<>();
-                    documentOccurrences.put(filename, 1);
-                    invertedIndexMap.put(token, documentOccurrences);
+                    addNewEntryToInvertedIndex(filename, token);
                 } else if (invertedIndexMap.get(token) != null) {
-                    Map<String, Integer> tokenOccurrencesInDocument = invertedIndexMap.get(token);
-                    tokenOccurrencesInDocument.merge(filename, 1, Integer::sum);
+                    incrementInvertedIndexEntry(filename, token);
                 }
             }
         }
+    }
+
+    private String[] getTokens(Map.Entry<String, String> fileEntry) {
+        return fileEntry.getValue().split(" ");
+    }
+
+    private void addNewEntryToInvertedIndex(String filename, String token) {
+        Map<String, Integer> documentOccurrences = new HashMap<>();
+        documentOccurrences.put(filename, 1);
+        invertedIndexMap.put(token, documentOccurrences);
+    }
+
+    private void incrementInvertedIndexEntry(String filename, String token) {
+        Map<String, Integer> tokenOccurrencesInDocument = invertedIndexMap.get(token);
+        tokenOccurrencesInDocument.merge(filename, 1, Integer::sum);
     }
 
     public Map<String, Map<String, Integer>> getInvertedIndex() {

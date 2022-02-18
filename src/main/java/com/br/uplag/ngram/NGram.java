@@ -1,7 +1,7 @@
 package com.br.uplag.ngram;
 
 public class NGram {
-    private Integer windowSize;
+    private final Integer windowSize;
 
     public NGram(Integer windowSize) {
         this.windowSize = windowSize;
