@@ -62,7 +62,7 @@ public class FileInputUtil {
 
     // @Font: Baeldung
     public static String readFromInputStream(String directory) {
-        StringBuilder stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = Files.newBufferedReader(Paths.get(directory), StandardCharsets.ISO_8859_1);
@@ -91,14 +91,5 @@ public class FileInputUtil {
                 LOGGER.severe(ioException.getMessage());
             }
         }
-    }
-
-    private static boolean isValidFileInputSize(int upperBound) {
-        if (upperBound < 5) {
-            LOGGER.severe("Invalid number of files");
-            return false;
-        }
-
-        return true;
     }
 }

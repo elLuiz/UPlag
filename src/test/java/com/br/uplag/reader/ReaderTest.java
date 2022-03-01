@@ -22,7 +22,7 @@ public class ReaderTest {
         args[6] = ".c";
         List<String> files = FileInputUtil.getAllFilesPath(args[1], 9, args);
         Reader reader = new CReader();
-        Assert.assertEquals(false, reader.startReadingInputFiles(files).isEmpty());
+        Assert.assertEquals(false, reader.createFilesContentMap(files).isEmpty());
     }
 }
 

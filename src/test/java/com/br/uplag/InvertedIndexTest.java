@@ -18,7 +18,7 @@ public class InvertedIndexTest {
     public void shouldCreateInvertedIndex() {
         List<String> codePaths = FileInputUtil.walkTroughDirectory("src/test/resources/", "c");
         Reader reader = new CReader();
-        Map<String, String> filesContent = reader.startReadingInputFiles(codePaths);
+        Map<String, String> filesContent = reader.createFilesContentMap(codePaths);
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(filesContent);
         Assert.assertEquals(false, invertedIndex.getInvertedIndex().isEmpty());

@@ -45,7 +45,7 @@ public class CodeProcessor {
     }
 
     public Map<String, String> getFilesCodeText() {
-        return reader.startReadingInputFiles(programs);
+        return reader.createFilesContentMap(programs);
     }
 
     public void setPrograms(List<String> programs) {

@@ -7,9 +7,9 @@ import com.br.uplag.result.SimilarityResult;
 import com.br.uplag.similarity.CodeSimilarity;
 import com.br.uplag.similarity.CosineSimilarity;
 import com.br.uplag.similarity.OverlapSimilarity;
-import com.br.uplag.weight.NormalizedWeight;
-import com.br.uplag.weight.TfIdfWeight;
-import com.br.uplag.weight.Weight;
+import com.br.uplag.weight.SublinearTFIDFWeightCalculator;
+import com.br.uplag.weight.TfIdfWeightCalculator;
+import com.br.uplag.weight.TermWeightCalculator;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 // args 5 - -p args 6 programs
 public class YouPlag {
     private static final Logger LOGGER = Logger.getLogger(YouPlag.class.getSimpleName());
-    private String directory;
     private String language;
     private String weightingTechnique;
     private List<String> programs;
@@ -37,7 +36,7 @@ public class YouPlag {
     public void readTerminalInput(String ...args) {
         DirectoryInputReader directoryInputReader = new DirectoryInputReader(args);
         directoryInputReader.defineParameter();
-        directory = directoryInputReader.getDirectory();
+        String directory = directoryInputReader.getDirectory();
         LanguageInputReader languageInputReader = new LanguageInputReader(args);
         languageInputReader.defineParameter();
         language = languageInputReader.getLanguage();
@@ -61,8 +60,8 @@ public class YouPlag {
             CodeProcessor codeProcessor = new CodeProcessor(new CReader());
             codeProcessor.setPrograms(programs);
             Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
-            Weight weight = defineTermWeightingTechnique(invertedIndex);
-            Map<String, Map<String, Double>> documentsWeightMap = weight.calculateTermWeight();
+            TermWeightCalculator termWeightCalculator = defineTermWeightingTechnique(invertedIndex);
+            Map<String, Map<String, Double>> documentsWeightMap = termWeightCalculator.calculateTermWeight();
             CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
             Map<String, Double> stringDoubleMap = codeSimilarity.calculateSimilarity();
             Double threshold = similarityThreshold == null ? null : Double.valueOf(similarityThreshold);
@@ -74,11 +73,11 @@ public class YouPlag {
         }
     }
 
-    private Weight defineTermWeightingTechnique(Map<String, Map<String, Integer>> invertedIndex) {
+    private TermWeightCalculator defineTermWeightingTechnique(Map<String, Map<String, Integer>> invertedIndex) {
         if (ParametersInputRegex.TF_IDF.getParameter().equals(weightingTechnique))
-            return new TfIdfWeight(invertedIndex, programs);
+            return new TfIdfWeightCalculator(invertedIndex, programs);
         else
-            return new NormalizedWeight(invertedIndex, programs);
+            return new SublinearTFIDFWeightCalculator(invertedIndex, programs);
     }
 
     private CodeSimilarity defineCodeSimilarityMethod(Map<String, Map<String, Double>> documentsWeightMap) {
