@@ -1,6 +1,6 @@
 package com.br.uplag.histogram;
 
-import com.br.uplag.threshold.Histogram;
+import com.br.uplag.threshold.otsu.Histogram;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

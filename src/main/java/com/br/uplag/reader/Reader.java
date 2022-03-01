@@ -27,7 +27,7 @@ public abstract class Reader {
     }
   }
 
-  private static String readFile(BufferedReader bufferedReader) throws IOException {
+  private String readFile(BufferedReader bufferedReader) throws IOException {
     String line;
     var stringBuilder = new StringBuilder();
     while ((line = bufferedReader.readLine()) != null) {
@@ -37,7 +37,7 @@ public abstract class Reader {
     return stringBuilder.toString().toLowerCase();
   }
 
-  private static void closeBufferReader(BufferedReader bufferedReader) {
+  private void closeBufferReader(BufferedReader bufferedReader) {
     if (bufferedReader != null) {
       try {
         bufferedReader.close();

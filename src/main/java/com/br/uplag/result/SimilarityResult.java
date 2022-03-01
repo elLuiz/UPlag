@@ -1,6 +1,6 @@
 package com.br.uplag.result;
 
-import com.br.uplag.threshold.ClassVariance;
+import com.br.uplag.threshold.otsu.ClassVariance;
 import com.br.uplag.util.DoubleUtil;
 
 import java.util.LinkedHashMap;
