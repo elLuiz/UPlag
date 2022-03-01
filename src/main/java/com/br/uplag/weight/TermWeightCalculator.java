@@ -1,22 +1,21 @@
 package com.br.uplag.weight;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Weight {
+public abstract class TermWeightCalculator {
     protected Map<String, Map<String, Integer>> invertedIndexMap;
     protected List<String> programs;
     protected Integer collectionSize;
     protected Integer termFrequencyInCollection;
     protected  Map<String, Map<String, Double>> termWeightMap;
 
-    protected Weight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
+    protected TermWeightCalculator(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
         this.invertedIndexMap = invertedIndexMap;
         this.programs = programs;
         this.collectionSize = programs.size();
-        termWeightMap = new LinkedHashMap<>();
+        termWeightMap = new HashMap<>();
     }
 
     protected double calculateIDF() {

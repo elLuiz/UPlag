@@ -5,9 +5,8 @@ import com.br.uplag.util.StringUtil;
 import java.util.List;
 import java.util.Map;
 
-public class NormalizedWeight extends Weight{
-
-    public NormalizedWeight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
+public class TfIdfWeightCalculator extends TermWeightCalculator {
+    public TfIdfWeightCalculator(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
         super(invertedIndexMap, programs);
     }
 
@@ -26,9 +25,7 @@ public class NormalizedWeight extends Weight{
         return termWeightMap;
     }
 
-    public double calculateWeight(int tf) {
-        if (tf > 0)
-            return (1 + Math.log10(tf)) * calculateIDF();
-        return 0.0;
+    public double calculateWeight(int termFrequency) {
+        return termFrequency > 0 ? (termFrequency) * calculateIDF() :  0.0;
     }
 }

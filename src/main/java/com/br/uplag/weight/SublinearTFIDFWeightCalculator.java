@@ -5,8 +5,9 @@ import com.br.uplag.util.StringUtil;
 import java.util.List;
 import java.util.Map;
 
-public class TfIdfWeight extends Weight {
-    public TfIdfWeight(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
+public class SublinearTFIDFWeightCalculator extends TermWeightCalculator {
+
+    public SublinearTFIDFWeightCalculator(Map<String, Map<String, Integer>> invertedIndexMap, List<String> programs) {
         super(invertedIndexMap, programs);
     }
 
@@ -25,7 +26,9 @@ public class TfIdfWeight extends Weight {
         return termWeightMap;
     }
 
-    public double calculateWeight(int termFrequency) {
-        return termFrequency > 0 ?  (termFrequency)*calculateIDF() :  0.0;
+    public double calculateWeight(int tf) {
+        if (tf > 0)
+            return (1 + Math.log10(tf)) * calculateIDF();
+        return 0.0;
     }
 }
