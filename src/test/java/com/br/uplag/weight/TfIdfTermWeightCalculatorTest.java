@@ -42,6 +42,7 @@ public class TfIdfTermWeightCalculatorTest {
     @Test
     public void shouldCalculateTermWeight() {
         Map<String, Map<String, Double>> resultMap = termWeightCalculator.calculateTermWeight();
-        Assert.assertEquals(Arrays.asList(0.18454966338194143, 0.3010299956639812, 0.0), new ArrayList<>(resultMap.get("doc1").values()));
+        List<Double> collectionTermsWeightInDoc1 = Arrays.asList(0.3748162098248998, 0.3010299956639812, 0.0);
+        Assert.assertEquals(collectionTermsWeightInDoc1, new ArrayList<>(resultMap.get("doc1").values()));
     }
 }
