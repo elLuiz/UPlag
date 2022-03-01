@@ -1,4 +1,4 @@
-package com.br.uplag.threshold;
+package com.br.uplag.threshold.otsu;
 
 import lombok.Getter;
 import lombok.Setter;

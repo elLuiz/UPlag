@@ -1,5 +1,6 @@
 package com.br.uplag.threshold;
 
+import com.br.uplag.threshold.otsu.ClassVariance;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

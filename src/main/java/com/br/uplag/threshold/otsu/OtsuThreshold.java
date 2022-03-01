@@ -1,4 +1,4 @@
-package com.br.uplag.threshold;
+package com.br.uplag.threshold.otsu;
 
 import java.util.ArrayList;
 import java.util.List;
