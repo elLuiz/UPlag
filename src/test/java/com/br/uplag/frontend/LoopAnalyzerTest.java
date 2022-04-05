@@ -12,6 +12,6 @@ public class LoopAnalyzerTest {
     public void shouldConvertLoopsOccurrences() {
         LoopAnalyzer loopAnalyzer = LoopAnalyzer.getInstance();
         String result = loopAnalyzer.tokenize(CodeText.code);
-        Assert.assertEquals(true, result.contains("L"));
+        Assert.assertTrue(result.contains("L"));
     }
 }

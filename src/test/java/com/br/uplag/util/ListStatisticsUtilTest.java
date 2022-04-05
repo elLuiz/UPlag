@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RunWith(JUnit4.class)
+// TODO: Refactor this
 public class ListStatisticsUtilTest {
     private List<Double> prob = Arrays.asList(39.3, 23.3, 20.2, 40.3);
     @Test

@@ -16,13 +16,13 @@ public class CommentsAnalyzerTest {
     public void shouldRemoveAllOccurrencesOfDoubleSlashComments() {
         CommentsAnalyzer commentsAnalyzer = CommentsAnalyzer.getInstance();
         commentsAnalyzer.setCodeText(CodeText.code);
-        Assert.assertEquals(false, commentsAnalyzer.convertDoubleSlashCommentsToToken(CodeText.code).contains("//"));
+        Assert.assertFalse(commentsAnalyzer.convertDoubleSlashCommentsToToken(CodeText.code).contains("//"));
     }
 
     @Test
     public void shouldRemoveAllOccurrencesOfAsterisksComments() {
         CommentsAnalyzer commentsAnalyzer = CommentsAnalyzer.getInstance();
         commentsAnalyzer.setCodeText(CodeText.code);
-        Assert.assertEquals(false, commentsAnalyzer.convertAsterisksCommentsToToken(CodeText.code).contains("/*"));
+        Assert.assertFalse(commentsAnalyzer.convertAsterisksCommentsToToken(CodeText.code).contains("/*"));
     }
 }

@@ -9,11 +9,11 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class VariableAnalyzerTest {
-    private VariableAnalyzer variableAnalyzer = VariableAnalyzer.getInstance();
+    private final VariableAnalyzer variableAnalyzer = VariableAnalyzer.getInstance();
     @Test
     public void shouldTokenizeVariableIncrement() {
         String token = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.INCREMENT_REGEX);
-        Assert.assertEquals(true, token.contains("A a D"));
+        Assert.assertEquals(true, token.contains("A O D"));
     }
 
     @Test
@@ -31,6 +31,6 @@ public class VariableAnalyzerTest {
     @Test
     public void shouldTokenizeVariableDecrementIfAny() {
         String result = variableAnalyzer.tokenizeVariable(CodeText.binaryTreeCode, VariableOperationsRegex.ASSIGNMENT_ADD);
-        Assert.assertEquals(true, result.contains("A a"));
+        Assert.assertTrue(result.contains("A O"));
     }
 }

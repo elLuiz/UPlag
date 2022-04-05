@@ -14,20 +14,20 @@ public class OperatorsAnalyzerTest {
     public void shouldTokenizeEqualRelationalOperator() {
         OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeRelationalOperator(CodeText.binaryTreeCode, RelationOperatorRegex.EQ);
-        Assert.assertEquals(true, result.contains("E"));
+        Assert.assertTrue(result.contains("E"));
     }
 
     @Test
     public void shouldTokenizeGreaterThanRelationalOperator() {
         OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeRelationalOperator(CodeText.binaryTreeCode, RelationOperatorRegex.GT);
-        Assert.assertEquals(true, result.contains("G"));
+        Assert.assertTrue(result.contains("G"));
     }
 
     @Test
     public void shouldTokenizeAndOperators() {
         OperatorsAnalyzer operatorsAnalyzer = OperatorsAnalyzer.getInstance();
         String result = operatorsAnalyzer.tokenizeLogicalOperators(CodeText.binaryTreeCode, LogicalOperatorsRegexEnum.AND);
-        Assert.assertEquals(true, result.contains("H"));
+        Assert.assertTrue(result.contains("H"));
     }
 }

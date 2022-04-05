@@ -12,6 +12,6 @@ public class ConditionalsAnalyzerTest {
     public void shouldConvertAllConditionsToCommonToken() {
         ConditionalsAnalyzer conditionalsAnalyzer = ConditionalsAnalyzer.getInstance();
         String code = conditionalsAnalyzer.tokenize(CodeText.binaryTreeCode);
-        Assert.assertEquals(true, code.contains("C"));
+        Assert.assertTrue(code.contains("C"));
     }
 }

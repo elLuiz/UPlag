@@ -14,19 +14,19 @@ public class DirectiveAnalyzerTest {
     @Test
     public void shouldRemoveAllImports() {
         DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
-        Assert.assertEquals(false, directiveAnalyzer.convertImportsToToken(CodeText.code).contains("#include"));
+        Assert.assertFalse(directiveAnalyzer.convertImportsToToken(CodeText.code).contains("#include"));
     }
 
     @Test
     public void shouldConvertAllDefineToItsToken() {
         DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
-        Assert.assertEquals(true, directiveAnalyzer.convertDefineToToken(CodeText.code).contains("c"));
+        Assert.assertTrue(directiveAnalyzer.convertDefineToToken(CodeText.code).contains("c"));
     }
 
     @Test
     public void shouldRemoveAllStructOccurrences() {
         DirectiveAnalyzer directiveAnalyzer = DirectiveAnalyzer.getInstance();
         String result = directiveAnalyzer.removeStructOccurrences(CodeText.code);
-        Assert.assertEquals(false, result.contains("struct NO{"));
+        Assert.assertFalse(result.contains("struct NO{"));
     }
 }
