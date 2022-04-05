@@ -11,6 +11,6 @@ public class NGramTest {
     public void shouldCreateNGrams() {
         NGram nGram = new NGram(4);
         String content = "cFoAaDRp";
-        Assert.assertEquals(true, nGram.createNGrams(content).contains("cFoA FoAa oAaD AaDR aDRp"));
+        Assert.assertTrue(nGram.createNGrams(content).contains("cFoA FoAa oAaD AaDR aDRp"));
     }
 }

@@ -6,6 +6,7 @@ import com.br.uplag.c.operations.VariableOperationsRegex;
 public class VariableAnalyzer extends FrontEnd {
     private static VariableAnalyzer variableAnalyzer;
     private VariableAnalyzer() {}
+
     public static VariableAnalyzer getInstance() {
         if (variableAnalyzer == null)
             variableAnalyzer = new VariableAnalyzer();

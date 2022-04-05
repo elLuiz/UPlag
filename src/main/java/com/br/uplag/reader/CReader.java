@@ -20,19 +20,19 @@ public class CReader extends Reader {
 
     @Override
     public Map<String, String> createFilesContentMap(List<String> codeFilePath) {
-        Map<String, String> fileContentMap = new HashMap<>();
+        Map<String, String> filenameToContent = new HashMap<>();
         for (String path : codeFilePath) {
-            addFileContentToMap(fileContentMap, path);
+            addFileContentToMap(filenameToContent, path);
         }
-        return fileContentMap;
+        return filenameToContent;
     }
 
     private void addFileContentToMap(Map<String, String> fileContentMap, String path) {
         try {
             String codeText = readFileContentAccordingToStandardCharset(path, StandardCharsets.ISO_8859_1);
-            codeText = removeCharacterFromTokenString(frontEndFacade.createTokenSequence(codeText), "\n");
-            codeText = removeCharacterFromTokenString(codeText, "\t");
-            codeText = removeCharacterFromTokenString(codeText, " ");
+            codeText = removeCharacterFromTokenizedCode(frontEndFacade.createTokenSequence(codeText), "\n");
+            codeText = removeCharacterFromTokenizedCode(codeText, "\t");
+            codeText = removeCharacterFromTokenizedCode(codeText, " ");
             if (!codeText.isEmpty()) {
                 fileContentMap.put(path, codeText);
             }
@@ -42,7 +42,7 @@ public class CReader extends Reader {
         }
     }
 
-    private String removeCharacterFromTokenString(String tokenString, String character) {
+    private String removeCharacterFromTokenizedCode(String tokenString, String character) {
         return tokenString.replace(character, "");
     }
 }

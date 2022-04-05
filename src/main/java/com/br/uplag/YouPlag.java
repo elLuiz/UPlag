@@ -58,8 +58,7 @@ public class YouPlag {
     public void startReadingCodeFiles() {
         if ("c".equalsIgnoreCase(language)) {
             CodeProcessor codeProcessor = new CodeProcessor(new CReader());
-            codeProcessor.setPrograms(programs);
-            Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex();
+            Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex(programs);
             TermWeightCalculator termWeightCalculator = defineTermWeightingTechnique(invertedIndex);
             Map<String, Map<String, Double>> documentsWeightMap = termWeightCalculator.calculateTermWeight();
             CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);

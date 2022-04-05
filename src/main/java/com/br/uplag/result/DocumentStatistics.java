@@ -14,7 +14,7 @@ public class DocumentStatistics {
     private String[] nGrams;
     private Double containment;
 
-    public void defineTotalNumberOfTokens(String nGrams) {
+    public void setTotalNumberOfTokens(String nGrams) {
         this.totalNumberOfTokens = nGrams.split(" ").length;
     }
 

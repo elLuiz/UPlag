@@ -22,6 +22,7 @@ public class FrontEndFacade {
     private final ArithmeticAnalyzer arithmeticAnalyzer;
     private final StylizationAnalyzer stylizationAnalyzer;
     private final BuiltInFunctionAnalyzer builtInFunctionAnalyzer;
+
     public FrontEndFacade() {
         commentsAnalyzer = CommentsAnalyzer.getInstance();
         directiveAnalyzer = DirectiveAnalyzer.getInstance();
