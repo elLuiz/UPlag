@@ -3,7 +3,6 @@ package com.br.uplag.threshold.otsu;
 
 import com.br.uplag.util.ListStatisticsUtil;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -34,17 +33,16 @@ public class ClassVariance {
                 double meanBackground = sumBackground / firstClassWeight;
                 double meanForeground = (sum - sumBackground) / secondClassWeight;
                 double betweenClassVariance = firstClassWeight * secondClassWeight * (meanBackground - meanForeground) * (meanBackground - meanForeground);
-                otsuThreshold.storeThreshold(betweenClassVariance);
+                otsuThreshold.storeBetweenClassVariance(betweenClassVariance);
             }
         }
     }
 
     private List<Double> getProbabilities() {
-        List<HistogramDTO> histogramValues = new ArrayList<>(histogramDTOMap.values());
-        return histogramValues.stream().map(HistogramDTO::getProbability).collect(Collectors.toList());
+        return histogramDTOMap.values().stream().map(HistogramDTO::getProbability).collect(Collectors.toList());
     }
 
-    public OtsuThreshold getOtsuThreshold() {
-        return otsuThreshold;
+    public Double getPredictedThreshold() {
+        return otsuThreshold.findMaxThresholdValue();
     }
 }

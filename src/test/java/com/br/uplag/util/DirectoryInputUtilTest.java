@@ -9,13 +9,13 @@ import org.junit.runners.JUnit4;
 public class DirectoryInputUtilTest {
     @Test
     public void shouldReturnTrueForValidTest() {
-        String path = "/home/luiz/Downloads/fontes";
-        Assert.assertEquals(true, DirectoryInputUtil.isExistentDirectory(path));
+        String path = "src/test/resources";
+        Assert.assertTrue(DirectoryInputUtil.isExistentDirectory(path));
     }
 
     @Test
     public void shouldReturnTrueWhenPathDoesNotExist() {
         String path = "/home/luiz/Downloads/fontes/2092/";
-        Assert.assertEquals(false, DirectoryInputUtil.isExistentDirectory(path));
+        Assert.assertFalse(DirectoryInputUtil.isExistentDirectory(path));
     }
 }

@@ -21,6 +21,6 @@ public class InvertedIndexTest {
         Map<String, String> filesContent = reader.createFilesContentMap(codePaths);
         InvertedIndex invertedIndex = new InvertedIndex();
         invertedIndex.createInvertedIndex(filesContent);
-        Assert.assertEquals(false, invertedIndex.getInvertedIndex().isEmpty());
+        Assert.assertFalse(invertedIndex.getInvertedIndex().isEmpty());
     }
 }

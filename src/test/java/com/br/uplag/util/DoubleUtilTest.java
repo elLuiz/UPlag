@@ -15,10 +15,4 @@ public class DoubleUtilTest {
         Double value = 50.3049039343;
         Assert.assertEquals(Double.valueOf(50.31), DoubleUtil.prettifyDouble(value, 2));
     }
-
-    @Test
-    public void shouldConvertListOfDoubleToPrimitiveArray() {
-        List<Double> doubles = Arrays.asList(2.0, 40.0, 10.1);
-        Assert.assertEquals(3, DoubleUtil.convertListOfDoubleToPrimitiveArray(doubles).length);
-    }
 }

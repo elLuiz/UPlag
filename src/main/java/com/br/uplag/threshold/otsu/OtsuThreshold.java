@@ -10,7 +10,7 @@ public class OtsuThreshold {
         this.candidatesThresholds = new ArrayList<>();
     }
 
-    public void storeThreshold(Double betweenClass) {
+    public void storeBetweenClassVariance(Double betweenClass) {
         candidatesThresholds.add(betweenClass);
     }
 

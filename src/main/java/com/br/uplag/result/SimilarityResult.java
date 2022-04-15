@@ -3,12 +3,13 @@ package com.br.uplag.result;
 import com.br.uplag.threshold.otsu.ClassVariance;
 import com.br.uplag.util.DoubleUtil;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimilarityResult {
+    private static final Logger LOGGER = Logger.getLogger(SimilarityResult.class.getSimpleName());
+
     public static final int PLACES = 2;
     private final Map<String, Double> similarityMap;
     private final Map<String, DocumentStatistics> documentStatisticsMap;
@@ -20,7 +21,7 @@ public class SimilarityResult {
         if (threshold == null) {
             ClassVariance classVariance = new ClassVariance(similarityMap.values());
             classVariance.calculateBetweenClassVariance();
-            this.threshold = classVariance.getOtsuThreshold().findMaxThresholdValue();
+            this.threshold = classVariance.getPredictedThreshold();
         } else
             this.threshold = threshold;
     }
@@ -28,22 +29,22 @@ public class SimilarityResult {
     public void displaySimilarityResults() {
         Map<String, Double> documentsSimilarityMap = sortMapDescending();
         int count = 0;
-        System.out.println("Threshold: " + threshold + '%');
+        LOGGER.log(Level.INFO, "Threshold: {0}%", threshold);
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
             if (fileEntry.getValue() > threshold) {
-                System.out.println(fileEntry.getKey() + " -> " + DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES) + "%");
+                LOGGER.log(Level.INFO, "{0} -> {1}%", new Object[]{fileEntry.getKey(), DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES)});
                 displayStatisticalDataWithinDocumentsPairs(fileEntry.getKey());
                 count++;
             }
         }
-        System.out.println("Possible plagiarisms: " + count);
+        LOGGER.log(Level.INFO, "Number of possible plagiarisms: {0}", count);
     }
 
     // font: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
     public Map<String, Double> sortMapDescending() {
-        List<Map.Entry<String, Double>> entryList = new LinkedList<>(similarityMap.entrySet());
+        List<Map.Entry<String, Double>> entryList = new ArrayList<>(similarityMap.entrySet());
         entryList.sort((value1, value2) -> value2.getValue().compareTo(value1.getValue()));
-        Map<String, Double> resultMap = new LinkedHashMap<>();
+        Map<String, Double> resultMap = new HashMap<>();
         for (Map.Entry<String, Double> entry : entryList) {
             resultMap.put(entry.getKey(), entry.getValue());
         }

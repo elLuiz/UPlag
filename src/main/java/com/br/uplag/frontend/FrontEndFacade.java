@@ -7,9 +7,6 @@ import com.br.uplag.c.operators.LogicalOperatorsRegexEnum;
 import com.br.uplag.c.operators.RelationOperatorRegex;
 import com.br.uplag.c.statements.StatementsRegex;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FrontEndFacade {
     private final CommentsAnalyzer commentsAnalyzer;
     private final DirectiveAnalyzer directiveAnalyzer;

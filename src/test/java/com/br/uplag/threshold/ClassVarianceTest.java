@@ -22,9 +22,8 @@ public class ClassVarianceTest {
     }
 
     @Test
-    public void shouldCalculateCumulativeProbability() {
+    public void shouldGetPredictedThreshold() {
         classVariance.calculateBetweenClassVariance();
-        Assert.assertEquals(Double.valueOf(3.6875), classVariance.getOtsuThreshold().findMaxThresholdValue());
-
+        Assert.assertEquals(Double.valueOf(0.0), classVariance.getPredictedThreshold());
     }
 }

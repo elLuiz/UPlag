@@ -2,7 +2,6 @@ package com.br.uplag.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collection;
 
 public class DoubleUtil {
     private DoubleUtil() {}
@@ -12,9 +11,5 @@ public class DoubleUtil {
         BigDecimal bigDecimal = BigDecimal.valueOf(input);
         bigDecimal = bigDecimal.setScale(places, RoundingMode.UP);
         return bigDecimal.doubleValue();
-    }
-
-    public static double[] convertListOfDoubleToPrimitiveArray(Collection<Double> doubles) {
-        return doubles.stream().mapToDouble(Double::doubleValue).toArray();
     }
 }

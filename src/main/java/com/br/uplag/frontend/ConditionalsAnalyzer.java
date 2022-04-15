@@ -7,8 +7,9 @@ public class ConditionalsAnalyzer extends FrontEnd {
     private ConditionalsAnalyzer(){}
 
     public static ConditionalsAnalyzer getInstance() {
-        if (conditionalsAnalyzer == null);
+        if (conditionalsAnalyzer == null) {
             conditionalsAnalyzer = new ConditionalsAnalyzer();
+        }
         return conditionalsAnalyzer;
     }
 

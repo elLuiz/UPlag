@@ -6,7 +6,6 @@ public enum ParametersInputRegex {
     TF_IDF("-tfidf"),
     NIDF("-nidf"),
     DICE("-dice"),
-    OVERLAP("-overlap"),
     COSINE("-cosine"),
     SIMILARITY("-t"),
     PROGRAMS("-p");

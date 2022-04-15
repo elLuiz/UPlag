@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 public class DirectoryInputUtil {
     private static final Logger LOGGER = Logger.getLogger(DirectoryInputUtil.class.getName());
 
+    private DirectoryInputUtil() {}
+
     public static boolean isExistentDirectory(String directoryPath) {
         if (StringUtil.isValid(directoryPath) && Files.exists(Paths.get(directoryPath)))
             return true;

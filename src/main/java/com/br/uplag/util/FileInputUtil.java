@@ -15,32 +15,30 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileInputUtil {
-    private static final Logger LOGGER = Logger.getLogger("File input");
+    private static final Logger LOGGER = Logger.getLogger(FileInputUtil.class.getSimpleName());
+    private static final String FILE_EXTENSION_REGEX = "\\.[a-z]+";
 
     private FileInputUtil() {
     }
 
-    public static List<String> getAllFilesPath(String directory, Integer index, String... args) {
+    public static List<String> getAllFilesPath(String directory, int programsIndex, String... args) {
         List<String> files = new ArrayList<>();
-        int upperBound = args.length;
-        boolean filesTerminatedWith = args[index].matches("\\.[a-z]+");
-        if (filesTerminatedWith) {
-            String extension = StringUtil.replaceBy(".", "", args[index]);
-            files.addAll(walkTroughDirectory(directory, extension));
+        if (isTerminatedWithProgramExtension(args[programsIndex])) {
+            getAllDirectoryFilesTerminatedWithExtension(directory, files, args[programsIndex]);
         } else {
-            getSpecifiedFiles(directory, files, upperBound, args);
+            getSpecifiedFiles(directory, files, args);
         }
         Collections.sort(files);
         return files;
     }
 
-    private static void getSpecifiedFiles(String directory, List<String> files, int upperBound, String[] args) {
-        for (int i = 5; i < upperBound; i++) {
-            if (isExistingFile(directory + args[i]))
-                files.add(directory + args[i]);
-            else
-                LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
-        }
+    private static boolean isTerminatedWithProgramExtension(String args) {
+        return args.matches(FILE_EXTENSION_REGEX);
+    }
+
+    private static void getAllDirectoryFilesTerminatedWithExtension(String directory, List<String> files, String args) {
+        String extension = StringUtil.replaceBy(".", "", args);
+        files.addAll(walkTroughDirectory(directory, extension));
     }
 
     public static List<String> walkTroughDirectory(String directory, String fileExtension) {
@@ -54,6 +52,16 @@ public class FileInputUtil {
         }
 
         return Collections.emptyList();
+    }
+
+    private static void getSpecifiedFiles(String directory, List<String> files, String[] args) {
+        int upperBound = args.length;
+        for (int i = 5; i < upperBound; i++) {
+            if (isExistingFile(directory + args[i]))
+                files.add(directory + args[i]);
+            else
+                LOGGER.log(Level.SEVERE, "File {0} not found", args[i]);
+        }
     }
 
     public static boolean isExistingFile(String filePath) {
@@ -77,7 +85,6 @@ public class FileInputUtil {
             return "";
         } finally {
             closeBufferReader(bufferedReader);
-
         }
 
         return stringBuilder.toString().toLowerCase();
