@@ -68,7 +68,7 @@ public class FileInputUtil {
         return Files.exists(Paths.get(filePath));
     }
 
-    // @Font: Baeldung
+    // Fonte: Baeldung
     public static String readFromInputStream(String directory) {
         var stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;

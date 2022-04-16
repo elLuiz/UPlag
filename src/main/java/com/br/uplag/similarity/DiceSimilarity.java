@@ -8,7 +8,7 @@ public class DiceSimilarity extends CodeSimilarity {
     }
 
     @Override
-    protected double personalizeDistance(double firstDocumentDistance, double secondDocumentDistance) {
+    protected double getDistance(double firstDocumentDistance, double secondDocumentDistance) {
         return firstDocumentDistance + secondDocumentDistance;
     }
 

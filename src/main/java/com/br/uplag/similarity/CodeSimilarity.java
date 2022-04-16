@@ -49,10 +49,10 @@ public abstract class CodeSimilarity {
             distanceTwo += Math.pow(secondDocumentTermWeights.get(i), 2);
         }
 
-        return personalizeDistance(distanceOne, distanceTwo);
+        return getDistance(distanceOne, distanceTwo);
     }
 
-    protected abstract double personalizeDistance(double firstDocumentDistance, double secondDocumentDistance);
+    protected abstract double getDistance(double firstDocumentDistance, double secondDocumentDistance);
 
     protected abstract Double calculateSimilarity(Double dotProduct, Double distance);
 

@@ -8,7 +8,7 @@ public class CosineSimilarity extends CodeSimilarity{
     }
 
     @Override
-    protected double personalizeDistance(double firstDocumentDistance, double secondDocumentDistance) {
+    protected double getDistance(double firstDocumentDistance, double secondDocumentDistance) {
         return Math.sqrt(firstDocumentDistance) * Math.sqrt(secondDocumentDistance);
     }
 
