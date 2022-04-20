@@ -27,13 +27,13 @@ public class SimilarityResult {
     }
 
     public void displaySimilarityResults() {
-        Map<String, Double> documentsSimilarityMap = sortMapDescending();
+        Map<String, Double> documentsSimilarityMap = sortDescendingBySimilarity();
         int count = 0;
         LOGGER.log(Level.INFO, "Threshold: {0}%", threshold);
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
             if (fileEntry.getValue() > threshold) {
                 LOGGER.log(Level.INFO, "{0} -> {1}%", new Object[]{fileEntry.getKey(), DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES)});
-                displayStatisticalDataWithinDocumentsPairs(fileEntry.getKey());
+                displayStatisticsByDocumentsPairs(fileEntry.getKey());
                 count++;
             }
         }
@@ -41,7 +41,7 @@ public class SimilarityResult {
     }
 
     // font: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
-    public Map<String, Double> sortMapDescending() {
+    private Map<String, Double> sortDescendingBySimilarity() {
         List<Map.Entry<String, Double>> entryList = new ArrayList<>(similarityMap.entrySet());
         entryList.sort((value1, value2) -> value2.getValue().compareTo(value1.getValue()));
         Map<String, Double> resultMap = new HashMap<>();
@@ -52,7 +52,7 @@ public class SimilarityResult {
         return resultMap;
     }
 
-    public void displayStatisticalDataWithinDocumentsPairs(String documentPairString) {
+    private void displayStatisticsByDocumentsPairs(String documentPairString) {
         String[] split = documentPairString.split(", ");
         String documentOne = split[0].replace("(", "");
         String documentTwo = split[1].replace(")", "");
@@ -64,15 +64,15 @@ public class SimilarityResult {
         displayNumberOfTokens(documentTwo, documentBStatistics);
         displayContainment(documentOne, documentTwo, documentAStatistics);
         displayContainment(documentTwo, documentOne, documentBStatistics);
-        System.out.println("------------------------------------------------------------------");
+        LOGGER.info("============================================");
     }
 
-    private void displayNumberOfTokens(String document, DocumentStatistics documentAStatistics) {
-        System.out.println(document + " : " + documentAStatistics.toString());
+    private void displayNumberOfTokens(String filename, DocumentStatistics documentAStatistics) {
+        LOGGER.log(Level.INFO, "Document {0}: {1}", new Object[]{filename, documentAStatistics});
     }
 
     private void displayContainment(String documentOne, String documentTwo, DocumentStatistics documentAStatistics) {
-        System.out.println("Containment of " + documentOne + " in " + documentTwo + " : " + DoubleUtil.prettifyDouble(documentAStatistics.getContainment() * 100, PLACES) + "%");
+        LOGGER.log(Level.INFO, "Containment of {0} in {1} -> {2}%", new Object[]{documentOne, documentTwo, DoubleUtil.prettifyDouble(documentAStatistics.getContainment() * 100, PLACES)});
     }
 
 }

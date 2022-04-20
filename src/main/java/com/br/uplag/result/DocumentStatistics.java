@@ -13,6 +13,14 @@ public class DocumentStatistics {
     private String[] nGrams;
     private Double containment;
 
+    public DocumentStatistics() {
+    }
+
+    public DocumentStatistics(int totalNumberOfTokens, String[] nGrams) {
+        this.totalNumberOfTokens = totalNumberOfTokens;
+        this.nGrams = nGrams;
+    }
+
     public void setTotalNumberOfTokens(String nGrams) {
         this.totalNumberOfTokens = nGrams.split(" ").length;
     }
@@ -21,7 +29,7 @@ public class DocumentStatistics {
         Set<String> documentANgrams = getNGramsSet(this.getNGrams());
         Set<String> documentBNgrams = getNGramsSet(secondDocumentStatistics.getNGrams());
         intersectCommonNgrams(documentANgrams, documentBNgrams);
-        this.containment = ((double) documentANgrams.size() / getNgramsSize());
+        this.containment = Math.min((double) documentANgrams.size() / getNgramsSize(), 1.0);
     }
 
     private Set<String> getNGramsSet(String[] ngrams) {
