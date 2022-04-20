@@ -32,4 +32,12 @@ public class SimilarityResultTest {
 
         Assert.assertEquals(Double.valueOf(1.0), documentStatisticsMap.get("file3").getContainment());
     }
+
+    @Test
+    public void shouldDisplayStatisticsByOtsuThreshold() {
+        similarityResult = new SimilarityResult(similarityMap, documentStatisticsMap, null);
+        similarityResult.displaySimilarityResults();
+
+        Assert.assertEquals(Double.valueOf(1.0), documentStatisticsMap.get("file3").getContainment());
+    }
 }
