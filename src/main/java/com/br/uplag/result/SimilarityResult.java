@@ -33,7 +33,7 @@ public class SimilarityResult {
         for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
             if (fileEntry.getValue() > threshold) {
                 LOGGER.log(Level.INFO, "{0} -> {1}%", new Object[]{fileEntry.getKey(), DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES)});
-                displayStatisticsByDocumentsPairs(fileEntry.getKey());
+                displayStatisticsForPair(new Pair(fileEntry.getKey()));
                 count++;
             }
         }
@@ -52,19 +52,16 @@ public class SimilarityResult {
         return resultMap;
     }
 
-    private void displayStatisticsByDocumentsPairs(String documentPairString) {
-        String[] split = documentPairString.split(", ");
-        String documentOne = split[0].replace("(", "");
-        String documentTwo = split[1].replace(")", "");
-        DocumentStatistics documentAStatistics = documentStatisticsMap.get(documentOne);
-        DocumentStatistics documentBStatistics = documentStatisticsMap.get(documentTwo);
+    private void displayStatisticsForPair(Pair pair) {
+        DocumentStatistics documentAStatistics = documentStatisticsMap.get(pair.getDocumentOne());
+        DocumentStatistics documentBStatistics = documentStatisticsMap.get(pair.getDocumentTwo());
         documentAStatistics.calculateContainment(documentBStatistics);
         documentBStatistics.calculateContainment(documentAStatistics);
-        displayNumberOfTokens(documentOne, documentAStatistics);
-        displayNumberOfTokens(documentTwo, documentBStatistics);
-        displayContainment(documentOne, documentTwo, documentAStatistics);
-        displayContainment(documentTwo, documentOne, documentBStatistics);
-        LOGGER.info("============================================");
+        displayNumberOfTokens(pair.getDocumentOne(), documentAStatistics);
+        displayNumberOfTokens(pair.getDocumentTwo(), documentBStatistics);
+        displayContainment(pair.getDocumentOne(), pair.getDocumentTwo(), documentAStatistics);
+        displayContainment(pair.getDocumentTwo(), pair.getDocumentOne(), documentBStatistics);
+        LOGGER.info("------------------------------------------------------");
     }
 
     private void displayNumberOfTokens(String filename, DocumentStatistics documentAStatistics) {
