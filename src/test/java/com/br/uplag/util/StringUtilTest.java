@@ -10,22 +10,22 @@ public class StringUtilTest {
     @Test
     public void shouldReturnTrueWhenStringIsValid() {
         String input = "Files.com.br.uplag.c";
-        Assert.assertEquals(true, StringUtil.isValid(input));
+        Assert.assertEquals(true, StringUtil.isNotNullNorEmpty(input));
     }
 
     @Test
     public void shouldReturnFalseWhenStringIsEmpty() {
-        Assert.assertEquals(false, StringUtil.isValid(""));
+        Assert.assertFalse(StringUtil.isNotNullNorEmpty(""));
     }
 
     @Test
     public void shouldReturnFalseWhenStringIsNull() {
-        Assert.assertEquals(false, StringUtil.isValid(null));
+        Assert.assertFalse(StringUtil.isNotNullNorEmpty(null));
     }
 
     @Test
     public void shouldReplaceDotCharacter() {
-        Assert.assertEquals("c", StringUtil.replaceBy(".", "", ".c"));
+        Assert.assertEquals("c", StringUtil.replaceByCharacter(".c", "", "."));
     }
 
     @Test

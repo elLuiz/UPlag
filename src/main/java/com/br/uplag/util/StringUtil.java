@@ -3,11 +3,11 @@ package com.br.uplag.util;
 public class StringUtil {
     private StringUtil() {}
 
-    public static boolean isValid(String input) {
+    public static boolean isNotNullNorEmpty(String input) {
         return input != null && !input.isEmpty();
     }
 
-    public static String replaceBy(String character, String replacement, String input) {
+    public static String replaceByCharacter(String input, String replacement, String character) {
         return input.replace(character, replacement);
     }
 
