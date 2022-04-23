@@ -37,7 +37,7 @@ public class FileInputUtil {
     }
 
     private static void getAllDirectoryFilesTerminatedWithExtension(String directory, List<String> files, String args) {
-        String extension = StringUtil.replaceBy(".", "", args);
+        String extension = StringUtil.replaceByCharacter(args, "", ".");
         files.addAll(walkTroughDirectory(directory, extension));
     }
 

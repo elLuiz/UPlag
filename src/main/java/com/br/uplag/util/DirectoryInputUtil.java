@@ -11,7 +11,7 @@ public class DirectoryInputUtil {
     private DirectoryInputUtil() {}
 
     public static boolean isExistentDirectory(String directoryPath) {
-        if (StringUtil.isValid(directoryPath) && Files.exists(Paths.get(directoryPath)))
+        if (StringUtil.isNotNullNorEmpty(directoryPath) && Files.exists(Paths.get(directoryPath)))
             return true;
         else
             LOGGER.log(Level.SEVERE, "Unknown path: {0}", directoryPath);
