@@ -36,7 +36,7 @@ public class FileInputUtilTest {
 
     @Test
     public void shouldReadFile() {
-        String directory = "src/test/resources/fonte01.c";
+        String directory = "src/test/resources/exercise01.c";
         String code = FileInputUtil.readFromInputStream(directory);
         Assert.assertFalse(code.isEmpty());
     }
