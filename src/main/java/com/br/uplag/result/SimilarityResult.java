@@ -6,6 +6,7 @@ import com.br.uplag.util.DoubleUtil;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class SimilarityResult {
     private static final Logger LOGGER = Logger.getLogger(SimilarityResult.class.getSimpleName());
@@ -13,24 +14,27 @@ public class SimilarityResult {
     public static final int PLACES = 2;
     private final Map<String, Double> similarityMap;
     private final Map<String, DocumentStatistics> documentStatisticsMap;
-    private final Double threshold;
+    private Double threshold;
 
     public SimilarityResult(Map<String, Double> similarityMap, Map<String, DocumentStatistics> documentStatisticsMap, Double threshold) {
         this.similarityMap = similarityMap;
         this.documentStatisticsMap = documentStatisticsMap;
         if (threshold == null) {
-            ClassVariance classVariance = new ClassVariance(similarityMap.values());
-            classVariance.calculateBetweenClassVariance();
-            this.threshold = classVariance.getPredictedThreshold();
+            setOtsuThreshold(this.similarityMap.values());
         } else
             this.threshold = threshold;
     }
 
+    private void setOtsuThreshold(Collection<Double> similarityValues) {
+        ClassVariance classVariance = new ClassVariance(similarityValues);
+        classVariance.calculateBetweenClassVariance();
+        this.threshold = classVariance.getPredictedThreshold();
+    }
+
     public void displaySimilarityResults() {
-        Map<String, Double> documentsSimilarityMap = sortDescendingBySimilarity();
         int count = 0;
         LOGGER.log(Level.INFO, "Threshold: {0}%", threshold);
-        for (Map.Entry<String, Double> fileEntry : documentsSimilarityMap.entrySet()) {
+        for (Map.Entry<String, Double> fileEntry : getPlagiarizedFilesOrderedBySimilarityRank().entrySet()) {
             if (fileEntry.getValue() > threshold) {
                 LOGGER.log(Level.INFO, "{0} -> {1}%", new Object[]{fileEntry.getKey(), DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES)});
                 displayStatisticsForPair(new Pair(fileEntry.getKey()));
@@ -40,16 +44,22 @@ public class SimilarityResult {
         LOGGER.log(Level.INFO, "Number of possible plagiarisms: {0}", count);
     }
 
-    // font: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
-    private Map<String, Double> sortDescendingBySimilarity() {
-        List<Map.Entry<String, Double>> entryList = new ArrayList<>(similarityMap.entrySet());
-        entryList.sort((value1, value2) -> value2.getValue().compareTo(value1.getValue()));
+    private Map<String, Double> getPlagiarizedFilesOrderedBySimilarityRank() {
         Map<String, Double> resultMap = new HashMap<>();
-        for (Map.Entry<String, Double> entry : entryList) {
+        for (Map.Entry<String, Double> entry : sortDescendingBySimilarity()) {
             resultMap.put(entry.getKey(), entry.getValue());
         }
 
         return resultMap;
+    }
+
+    // @Reference: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
+    private List<Map.Entry<String, Double>> sortDescendingBySimilarity() {
+        return similarityMap.entrySet()
+                .stream()
+                .filter(similarityEntry -> similarityEntry.getValue() > threshold)
+                .sorted((value1, value2) -> value2.getValue().compareTo(value1.getValue()))
+                .collect(Collectors.toList());
     }
 
     private void displayStatisticsForPair(Pair pair) {
