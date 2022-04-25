@@ -14,15 +14,21 @@ public class ThresholdInputReader extends TerminalInputReader implements InputRe
     public void defineParameter() {
         if (argumentContainsProperty(ParametersInputRegex.SIMILARITY)) {
             int index = arguments.indexOf(ParametersInputRegex.SIMILARITY.getParameter());
-            convertSimilarityInput(arguments.get(index + 1));
+            getSimilarityThreshold(arguments.get(index + 1));
         }
     }
 
-    public void convertSimilarityInput(String input) {
+    public void getSimilarityThreshold(String input) {
+        similarityThreshold = getThreshold(input);
+    }
+
+    // If the value is not compliant with the limits, then UPlag uses Otsu Threshol
+    private Integer getThreshold(String input) {
         try {
-            similarityThreshold = Integer.valueOf(input);
+            int threshold = Integer.parseInt(input);
+            return threshold >= 0 && threshold <= 100 ? threshold : null;
         } catch (NumberFormatException numberFormatException) {
-            similarityThreshold = null;
+            return null;
         }
     }
 }

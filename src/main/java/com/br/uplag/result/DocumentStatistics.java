@@ -21,8 +21,10 @@ public class DocumentStatistics {
         this.nGrams = nGrams;
     }
 
-    public void setTotalNumberOfTokens(String nGrams) {
-        this.totalNumberOfTokens = nGrams.split(" ").length;
+    public void setNgramsInfo(String nGrams) {
+        String[] ngramsSplit = nGrams.split(" ");
+        this.totalNumberOfTokens = ngramsSplit.length;
+        this.nGrams = ngramsSplit;
     }
 
     public void calculateContainment(DocumentStatistics secondDocumentStatistics) {

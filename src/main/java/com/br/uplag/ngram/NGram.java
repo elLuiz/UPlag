@@ -7,7 +7,6 @@ public class NGram {
         this.windowSize = windowSize;
     }
 
-
     public String createNGrams(String content) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < content.length() - windowSize + 1; i++) {
