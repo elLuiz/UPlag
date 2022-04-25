@@ -38,7 +38,7 @@ public class CodeProcessor {
 
     public void calculateDocumentStatistics(String document, String nGrams) {
         DocumentStatistics documentStatistics = new DocumentStatistics();
-        documentStatistics.setTotalNumberOfTokens(nGrams);
+        documentStatistics.setNgramsInfo(nGrams);
         documentStatisticsMap.put(StringUtil.getFileNameAfterLastSlash(document), documentStatistics);
     }
 

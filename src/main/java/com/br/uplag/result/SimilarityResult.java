@@ -4,13 +4,9 @@ import com.br.uplag.threshold.otsu.ClassVariance;
 import com.br.uplag.util.DoubleUtil;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class SimilarityResult {
-    private static final Logger LOGGER = Logger.getLogger(SimilarityResult.class.getSimpleName());
-
     public static final int PLACES = 2;
     private final Map<String, Double> similarityMap;
     private final Map<String, DocumentStatistics> documentStatisticsMap;
@@ -33,19 +29,19 @@ public class SimilarityResult {
 
     public void displaySimilarityResults() {
         int count = 0;
-        LOGGER.log(Level.INFO, "Threshold: {0}%", threshold);
+        System.out.println("Threshold " + threshold);
         for (Map.Entry<String, Double> fileEntry : getPlagiarizedFilesOrderedBySimilarityRank().entrySet()) {
             if (fileEntry.getValue() > threshold) {
-                LOGGER.log(Level.INFO, "{0} -> {1}%", new Object[]{fileEntry.getKey(), DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES)});
+                System.out.println(fileEntry.getKey() + " -> " + DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES) + "%");
                 displayStatisticsForPair(new Pair(fileEntry.getKey()));
                 count++;
             }
         }
-        LOGGER.log(Level.INFO, "Number of possible plagiarisms: {0}", count);
+        System.out.println("Number of possible plagiarisms: " + count);
     }
 
     private Map<String, Double> getPlagiarizedFilesOrderedBySimilarityRank() {
-        Map<String, Double> resultMap = new HashMap<>();
+        Map<String, Double> resultMap = new LinkedHashMap<>();
         for (Map.Entry<String, Double> entry : sortDescendingBySimilarity()) {
             resultMap.put(entry.getKey(), entry.getValue());
         }
@@ -71,15 +67,14 @@ public class SimilarityResult {
         displayNumberOfTokens(pair.getDocumentTwo(), documentBStatistics);
         displayContainment(pair.getDocumentOne(), pair.getDocumentTwo(), documentAStatistics);
         displayContainment(pair.getDocumentTwo(), pair.getDocumentOne(), documentBStatistics);
-        LOGGER.info("------------------------------------------------------");
+        System.out.println("--------------------------------------------------------");
     }
 
-    private void displayNumberOfTokens(String filename, DocumentStatistics documentAStatistics) {
-        LOGGER.log(Level.INFO, "Document {0}: {1}", new Object[]{filename, documentAStatistics});
+    private void displayNumberOfTokens(String filename, DocumentStatistics documentStatistics) {
+        System.out.println("Document " + filename + " " + documentStatistics);
     }
 
     private void displayContainment(String documentOne, String documentTwo, DocumentStatistics documentAStatistics) {
-        LOGGER.log(Level.INFO, "Containment of {0} in {1} -> {2}%", new Object[]{documentOne, documentTwo, DoubleUtil.prettifyDouble(documentAStatistics.getContainment() * 100, PLACES)});
+        System.out.println("Containment of " + documentOne + " in " + documentTwo + " -> " + DoubleUtil.prettifyDouble(documentAStatistics.getContainment() * 100, PLACES) + "%");
     }
-
 }
