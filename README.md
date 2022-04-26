@@ -51,4 +51,4 @@ Running UPlag with **customized arguments** to detect similar pairs in C languag
 
 ## Disclaimer
 
-This project is passing through some refactorings and performances improvements. If you find any bug or fatal error, please do not hesitate to open an **Issue**.
+This project is passing through some refactorings and performance improvements. If you find any bug or fatal error, please do not hesitate to open an **Issue**.
