@@ -31,7 +31,7 @@ The default properties for defining plagiarism between pairs is:
 ### Alternative arguments
 
 As mentioned before, UPlag provides some extra properties to refine the similarity results:
-- `-wfidf`: TF term weighting;
+- `-wfidf`: TF term frequency weighting;
 - `-cosine`: Cosine similarity;
 - `-t N`: Threshold value, where N is an integer between 0 and 100.
 
