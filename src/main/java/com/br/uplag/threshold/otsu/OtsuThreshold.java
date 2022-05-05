@@ -21,7 +21,7 @@ public class OtsuThreshold {
     }
 
     public Double findMaxThresholdValue() {
-        int cumulativePositionAvg = 0;
+        int cumulativePositionIndex = 0;
         int totalOfDuplicates = 0;
         double position = 0.0;
         double maxThreshold = 0.0;
@@ -30,11 +30,11 @@ public class OtsuThreshold {
             if (candidatesThresholds.get(i) >= maxThreshold) {
                 if (candidatesThresholds.get(i) == maxThreshold) {
                     totalOfDuplicates++;
-                    position = (position * cumulativePositionAvg + i) / totalOfDuplicates;
-                    cumulativePositionAvg++;
+                    position = (position * cumulativePositionIndex + i) / totalOfDuplicates;
+                    cumulativePositionIndex++;
                 } else {
                     position =  i;
-                    cumulativePositionAvg = 1;
+                    cumulativePositionIndex = 1;
                     totalOfDuplicates = 1;
                 }
                 maxThreshold = candidatesThresholds.get(i);
