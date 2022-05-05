@@ -24,6 +24,6 @@ public class ClassVarianceTest {
     @Test
     public void shouldGetPredictedThreshold() {
         classVariance.calculateBetweenClassVariance();
-        Assert.assertEquals(Double.valueOf(0.0), classVariance.getPredictedThreshold());
+        Assert.assertEquals(Double.valueOf(5.0), classVariance.getPredictedThreshold());
     }
 }
