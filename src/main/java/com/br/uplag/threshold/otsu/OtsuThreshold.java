@@ -1,5 +1,7 @@
 package com.br.uplag.threshold.otsu;
 
+import com.br.uplag.util.DoubleUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,21 +12,35 @@ public class OtsuThreshold {
         this.candidatesThresholds = new ArrayList<>();
     }
 
+    public OtsuThreshold(List<Double> candidatesThresholds) {
+        this.candidatesThresholds = candidatesThresholds;
+    }
+
     public void storeBetweenClassVariance(Double betweenClass) {
         candidatesThresholds.add(betweenClass);
     }
 
     public Double findMaxThresholdValue() {
+        int cumulativePositionAvg = 0;
+        int totalOfDuplicates = 0;
         double position = 0.0;
         double maxThreshold = 0.0;
 
         for (int i = 0; i < candidatesThresholds.size(); i++) {
-            if (candidatesThresholds.get(i) > maxThreshold) {
+            if (candidatesThresholds.get(i) >= maxThreshold) {
+                if (candidatesThresholds.get(i) == maxThreshold) {
+                    totalOfDuplicates++;
+                    position = (position * cumulativePositionAvg + i) / totalOfDuplicates;
+                    cumulativePositionAvg++;
+                } else {
+                    position =  i;
+                    cumulativePositionAvg = 1;
+                    totalOfDuplicates = 1;
+                }
                 maxThreshold = candidatesThresholds.get(i);
-                position =  i;
             }
         }
 
-        return position * 10;
+        return DoubleUtil.prettifyDouble(position * 10, 2);
     }
 }

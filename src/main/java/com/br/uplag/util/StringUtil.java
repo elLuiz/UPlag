@@ -12,9 +12,12 @@ public class StringUtil {
     }
 
     public static String getFileNameAfterLastSlash(String input) {
-        int lastIndex = input.lastIndexOf('/');
-        String filename = input.substring(lastIndex + 1);
+        String filename = input.substring(getLastIndexOfSlashByOS(input) + 1);
         return filename.replaceAll("\\.[\\w]+", "");
+    }
+
+    private static int getLastIndexOfSlashByOS(String input) {
+        return input.lastIndexOf('/') == -1 ? input.lastIndexOf('\\') : input.lastIndexOf('/');
     }
 
     public static String buildPairsTemplate(String document1Name, String document2Name) {

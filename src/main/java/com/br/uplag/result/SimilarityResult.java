@@ -29,7 +29,7 @@ public class SimilarityResult {
 
     public void displaySimilarityResults() {
         int count = 0;
-        System.out.println("Threshold " + threshold);
+        System.out.printf("Threshold %s", threshold + "% \n");
         for (Map.Entry<String, Double> fileEntry : getPlagiarizedFilesOrderedBySimilarityRank().entrySet()) {
             if (fileEntry.getValue() > threshold) {
                 System.out.println(fileEntry.getKey() + " -> " + DoubleUtil.prettifyDouble(fileEntry.getValue(), PLACES) + "%");
