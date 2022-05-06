@@ -24,14 +24,14 @@ To run UPlag in the default settings a few commands are required:
 - `-p`: Defines the programs to be analyzed. To get all files in the directory specified earlier, use: .X; where X represents the file extension.
 
 The default properties for defining plagiarism between pairs is:
-- `-tfidf`: **TF-IDF**, or sublinear TF, for term weighting;
+- `-tfidf`: **TF-IDF** for term weighting;
 - `-dice`: **Dice Algorithm** for similarity calculation among pairs;
 -  **Otsu Algorithm** for thresholding.
 
 ### Alternative arguments
 
 As mentioned before, UPlag provides some extra properties to refine the similarity results:
-- `-wfidf`: TF term frequency weighting;
+- `-wfidf`: TF, or sublinear TF, term frequency weighting;
 - `-cosine`: Cosine similarity;
 - `-t N`: Threshold value, where N is an integer between 0 and 100.
 
