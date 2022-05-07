@@ -34,42 +34,69 @@ public class YouPlag {
     }
 
     public void readTerminalInput(String ...args) {
-        DirectoryInputReader directoryInputReader = new DirectoryInputReader(args);
-        directoryInputReader.defineParameter();
-        String directory = directoryInputReader.getDirectory();
+        defineLanguage(args);
+        defineWeightingTechnique(args);
+        getSimilarityMeasure(args);
+        getThreshold(args);
+        readPrograms(getDirectory(args), args);
+    }
+
+    private void defineLanguage(String[] args) {
         LanguageInputReader languageInputReader = new LanguageInputReader(args);
         languageInputReader.defineParameter();
         language = languageInputReader.getLanguage();
+    }
+
+    private void defineWeightingTechnique(String[] args) {
         WeightingTechniqueInputReader weightingTechniqueInputReader = new WeightingTechniqueInputReader(args);
         weightingTechniqueInputReader.defineParameter();
         weightingTechnique = weightingTechniqueInputReader.getWeightingTechnique();
+    }
+
+    private void getSimilarityMeasure(String[] args) {
         SimilarityMeasureInputReader similarityMeasureInputReader = new SimilarityMeasureInputReader(args);
         similarityMeasureInputReader.defineParameter();
         similarityMeasure = similarityMeasureInputReader.getSimilarityMeasure();
+    }
+
+    private void getThreshold(String[] args) {
         ThresholdInputReader thresholdInputReader = new ThresholdInputReader(args);
         thresholdInputReader.defineParameter();
         similarityThreshold = thresholdInputReader.getSimilarityThreshold();
+    }
+
+    private void readPrograms(String directory, String[] args) {
         ProgramsInputReader programsInputReader = new ProgramsInputReader(args);
         programsInputReader.setDirectory(directory);
         programsInputReader.defineParameter();
         programs = programsInputReader.getPrograms();
     }
 
+    private String getDirectory(String[] args) {
+        DirectoryInputReader directoryInputReader = new DirectoryInputReader(args);
+        directoryInputReader.defineParameter();
+        return directoryInputReader.getDirectory();
+    }
+
     public void startReadingCodeFiles() {
         if ("c".equalsIgnoreCase(language)) {
             CodeProcessor codeProcessor = new CodeProcessor(new CReader());
-            Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex(programs);
-            TermWeightCalculator termWeightCalculator = defineTermWeightingTechnique(invertedIndex);
-            Map<String, Map<String, Double>> documentsWeightMap = termWeightCalculator.calculateTermWeight();
-            CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
-            Map<String, Double> stringDoubleMap = codeSimilarity.calculateDocumentSimilarity();
-            Double threshold = similarityThreshold == null ? null : Double.valueOf(similarityThreshold);
-            SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), threshold);
-            similarityResult.displaySimilarityResults();
+            processSimilarityMetrics(codeProcessor);
         } else {
             LOGGER.info("Invalid language");
             LOGGER.info("Available languages: c");
         }
+    }
+
+    private void processSimilarityMetrics(CodeProcessor codeProcessor) {
+        Map<String, Map<String, Integer>> invertedIndex = codeProcessor.createInvertedIndex(programs);
+        TermWeightCalculator termWeightCalculator = defineTermWeightingTechnique(invertedIndex);
+        Map<String, Map<String, Double>> documentsWeightMap = termWeightCalculator.calculateTermWeight();
+        CodeSimilarity codeSimilarity = defineCodeSimilarityMethod(documentsWeightMap);
+        Map<String, Double> stringDoubleMap = codeSimilarity.calculateDocumentSimilarity();
+        Double threshold = similarityThreshold == null ? null : Double.valueOf(similarityThreshold);
+        SimilarityResult similarityResult = new SimilarityResult(stringDoubleMap, codeProcessor.getDocumentStatisticsMap(), threshold);
+        similarityResult.displaySimilarityResults();
     }
 
     private TermWeightCalculator defineTermWeightingTechnique(Map<String, Map<String, Integer>> invertedIndex) {
