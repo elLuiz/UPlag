@@ -4,7 +4,7 @@ public enum ParametersInputRegex {
     DIRECTORY("-d"),
     LANGUAGE("-l"),
     TF_IDF("-tfidf"),
-    NIDF("-nidf"),
+    WF_IDF("-wfidf"),
     DICE("-dice"),
     COSINE("-cosine"),
     SIMILARITY("-t"),

@@ -28,50 +28,7 @@ public class TerminalInputReader {
         this.args = arguments;
     }
 
-    public void defineYouPlagDataInput() {
-        defineDirectory();
-        defineLanguage();
-        defineWeightingTechnique();
-        defineSimilarityMeasure();
-        defineThreshold();
-        definePrograms();
-    }
-
-    private void defineWeightingTechnique() {
-        InputReader weightingInputReader = new WeightingTechniqueInputReader();
-        weightingInputReader.defineParameter();
-    }
-
-    private void defineDirectory() {
-        InputReader directoryInputReader = new DirectoryInputReader();
-        directoryInputReader.defineParameter();
-    }
-
-    private void defineLanguage() {
-        InputReader languageInputReader = new LanguageInputReader();
-        languageInputReader.defineParameter();
-    }
-
-    private void defineSimilarityMeasure() {
-        InputReader similarityMeasureInputReader = new SimilarityMeasureInputReader();
-        similarityMeasureInputReader.defineParameter();
-    }
-
-    private void defineThreshold() {
-        InputReader thresholdInputReader = new ThresholdInputReader();
-        thresholdInputReader.defineParameter();
-    }
-
-    private void definePrograms() {
-        InputReader programsInputReader = new ProgramsInputReader();
-        programsInputReader.defineParameter();
-    }
-
-
-
-
     protected boolean argumentContainsProperty(ParametersInputRegex parametersInputRegex) {
         return arguments.contains(parametersInputRegex.getParameter());
     }
-
 }

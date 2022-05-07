@@ -12,8 +12,8 @@ public class WeightingTechniqueInputReader extends TerminalInputReader implement
 
     @Override
     public void defineParameter() {
-        if (argumentContainsProperty(ParametersInputRegex.NIDF)) {
-            weightingTechnique = ParametersInputRegex.NIDF.getParameter();
+        if (argumentContainsProperty(ParametersInputRegex.WF_IDF)) {
+            weightingTechnique = ParametersInputRegex.WF_IDF.getParameter();
         }
     }
 }
