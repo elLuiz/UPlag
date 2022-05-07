@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 // args 0 - -d args 1 directory
 // args 2 - -l args 3 language
-// args 4 - -tf-idf/nidf
+// args 4 - -tf-idf/wf-idf
 // args 5 - -p args 6 programs
 public class YouPlag {
     private static final Logger LOGGER = Logger.getLogger(YouPlag.class.getSimpleName());

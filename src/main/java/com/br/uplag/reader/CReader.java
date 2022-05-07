@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class CReader extends Reader {
     private static final Logger LOGGER = Logger.getLogger(CReader.class.getSimpleName());
-
+    private static final String CHARACTERS_TO_REMOVE_REGEX = "[\n\t ]";
     private final FrontEndFacade frontEndFacade;
     public CReader() {
         frontEndFacade = new FrontEndFacade();
@@ -30,9 +30,7 @@ public class CReader extends Reader {
     private void addFileContentToMap(Map<String, String> fileContentMap, String path) {
         try {
             String codeText = readFileContentAccordingToStandardCharset(path, StandardCharsets.ISO_8859_1);
-            codeText = removeCharacterFromTokenizedCode(frontEndFacade.createTokenSequence(codeText), "\n");
-            codeText = removeCharacterFromTokenizedCode(codeText, "\t");
-            codeText = removeCharacterFromTokenizedCode(codeText, " ");
+            codeText = removeCharacters(frontEndFacade.createTokenSequence(codeText));
             if (!codeText.isEmpty()) {
                 fileContentMap.put(path, codeText);
             }
@@ -42,7 +40,7 @@ public class CReader extends Reader {
         }
     }
 
-    private String removeCharacterFromTokenizedCode(String tokenString, String character) {
-        return tokenString.replace(character, "");
+    private String removeCharacters(String token) {
+        return token.replaceAll(CHARACTERS_TO_REMOVE_REGEX, "");
     }
 }
