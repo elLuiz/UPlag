@@ -24,7 +24,7 @@ public class SimilarityResult {
     private void setOtsuThreshold(Collection<Double> similarityValues) {
         ClassVariance classVariance = new ClassVariance(similarityValues);
         classVariance.calculateBetweenClassVariance();
-        this.threshold = classVariance.getPredictedThreshold();
+        this.threshold = classVariance.getOtsuThreshold();
     }
 
     public void displaySimilarityResults() {

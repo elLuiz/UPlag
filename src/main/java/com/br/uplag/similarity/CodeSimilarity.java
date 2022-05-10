@@ -1,7 +1,7 @@
 package com.br.uplag.similarity;
 
+import com.br.uplag.result.Pair;
 import com.br.uplag.util.CollectionUtil;
-import com.br.uplag.util.StringUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ public abstract class CodeSimilarity {
                     double distance = calculateDistance(firstDocumentWeights, secondDocumentWeights);
                     double similarity = calculateSimilarity(dotProduct, distance);
                     if (!containsPair(documentsSimilarityMap, document, document2))
-                        documentsSimilarityMap.put(StringUtil.buildPairsTemplate(document, document2), getSimilarityPercentage(similarity));
+                        documentsSimilarityMap.put(Pair.buildPairsTemplate(document, document2), getSimilarityPercentage(similarity));
                 }
             }
         }
@@ -57,7 +57,7 @@ public abstract class CodeSimilarity {
     protected abstract Double calculateSimilarity(Double dotProduct, Double distance);
 
     private boolean containsPair(Map<String, Double> documentsSimilarityMap, String document, String document2) {
-        return documentsSimilarityMap.get(StringUtil.buildPairsTemplate(document2, document)) != null;
+        return documentsSimilarityMap.get(Pair.buildPairsTemplate(document2, document)) != null;
     }
 
     private double getSimilarityPercentage(double similarity) {

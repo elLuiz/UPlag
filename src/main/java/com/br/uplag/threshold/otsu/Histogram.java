@@ -4,37 +4,30 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Getter
 public class Histogram {
-    private Map<Integer, HistogramDTO> histogramMap;
+    private final Map<Integer, HistogramDTO> histogramMap;
 
     public Histogram() {
-        histogramMap = new LinkedHashMap<>();
-        histogramMap.put(0, new HistogramDTO());
-        histogramMap.put(1, new HistogramDTO());
-        histogramMap.put(2, new HistogramDTO());
-        histogramMap.put(3, new HistogramDTO());
-        histogramMap.put(4, new HistogramDTO());
-        histogramMap.put(5, new HistogramDTO());
-        histogramMap.put(6, new HistogramDTO());
-        histogramMap.put(7, new HistogramDTO());
-        histogramMap.put(8, new HistogramDTO());
-        histogramMap.put(9, new HistogramDTO());
+        histogramMap = HistogramDTO.buildHistogram();
     }
 
     public void createHistogram(Collection<Double> similarityValues) {
         for (Double similarity : similarityValues) {
-            double position = similarity / 10;
-            BigDecimal bigDecimal = new BigDecimal(String.valueOf(position));
-            int key = bigDecimal.intValue();
+            int key = getHistogramIndexBySimilarity(similarity);
             if (key == 10)
                 incrementValue(9, similarityValues.size());
             else
                 incrementValue(key, similarityValues.size());
         }
+    }
+
+    private int getHistogramIndexBySimilarity(Double similarity) {
+        double position = similarity / 10;
+        BigDecimal bigDecimal = new BigDecimal(String.valueOf(position));
+        return bigDecimal.intValue();
     }
 
     private void incrementValue(int position, int collectionSize) {
