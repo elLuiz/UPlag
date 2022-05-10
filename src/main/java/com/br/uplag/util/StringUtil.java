@@ -19,8 +19,4 @@ public class StringUtil {
     private static int getLastIndexOfSlashByOS(String input) {
         return input.lastIndexOf('/') == -1 ? input.lastIndexOf('\\') : input.lastIndexOf('/');
     }
-
-    public static String buildPairsTemplate(String document1Name, String document2Name) {
-        return "(" + document1Name + ", " + document2Name + ")";
-    }
 }

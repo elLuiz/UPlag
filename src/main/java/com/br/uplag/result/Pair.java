@@ -25,4 +25,8 @@ public class Pair {
     public String getDocumentTwo() {
         return documentTwo;
     }
+
+    public static String buildPairsTemplate(String document1Name, String document2Name) {
+        return "(" + document1Name + ", " + document2Name + ")";
+    }
 }

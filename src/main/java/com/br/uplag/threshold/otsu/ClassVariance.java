@@ -19,7 +19,7 @@ public class ClassVariance {
         otsuThreshold = new OtsuThreshold();
     }
 
-    // Reference: http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html, https://en.wikipedia.org/wiki/Otsu%27s_method
+    // References: http://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html, https://en.wikipedia.org/wiki/Otsu%27s_method
     public void calculateBetweenClassVariance() {
         double sumBackground = 0.0;
         double firstClassWeight = 0.0;
@@ -29,12 +29,7 @@ public class ClassVariance {
             firstClassWeight += probabilities.get(index);
             double secondClassWeight = 1 - firstClassWeight;
             sumBackground += index * probabilities.get(index);
-            if (firstClassWeight > 0.0 && secondClassWeight > 0.0) {
-                double meanBackground = sumBackground / firstClassWeight;
-                double meanForeground = (sum - sumBackground) / secondClassWeight;
-                double betweenClassVariance = firstClassWeight * secondClassWeight * (meanBackground - meanForeground) * (meanBackground - meanForeground);
-                otsuThreshold.storeBetweenClassVariance(betweenClassVariance);
-            }
+            calculateBetweenClassVariance(sumBackground, firstClassWeight, sum, secondClassWeight);
         }
     }
 
@@ -42,7 +37,16 @@ public class ClassVariance {
         return histogramDTOMap.values().stream().map(HistogramDTO::getProbability).collect(Collectors.toList());
     }
 
-    public Double getPredictedThreshold() {
+    private void calculateBetweenClassVariance(double sumBackground, double firstClassWeight, double sum, double secondClassWeight) {
+        if (firstClassWeight > 0.0 && secondClassWeight > 0.0) {
+            double meanBackground = sumBackground / firstClassWeight;
+            double meanForeground = (sum - sumBackground) / secondClassWeight;
+            double betweenClassVariance = firstClassWeight * secondClassWeight * (meanBackground - meanForeground) * (meanBackground - meanForeground);
+            otsuThreshold.storeBetweenClassVariance(betweenClassVariance);
+        }
+    }
+
+    public Double getOtsuThreshold() {
         return otsuThreshold.findMaxThresholdValue();
     }
 }
